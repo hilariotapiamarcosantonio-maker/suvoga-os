@@ -1,478 +1,1028 @@
 "use client";
 
-import { useState, useMemo, useTransition } from "react";
-import { X, TrendingUp, Award, RotateCcw, ChevronRight } from "lucide-react";
-import { DateRangePicker, type DateRange } from "@/components/ui/DateRangePicker";
-import { PageHeader } from "@/components/layout/PageHeader";
-import type { CapilarDashboardData, CapilarSale } from "@/types/crm";
+import { FormEvent, useEffect, useMemo, useState } from "react";
+import {
+  BookOpen,
+  CalendarDays,
+  ChevronLeft,
+  ChevronRight,
+  Clock,
+  DollarSign,
+  GraduationCap,
+  Leaf,
+  MessageCircle,
+  Plus,
+  Save,
+  Search,
+  ShieldCheck,
+  Sparkles,
+  Users,
+  X,
+} from "lucide-react";
 
-function formatDop(n: number) {
-  return new Intl.NumberFormat("es-DO", { style: "currency", currency: "DOP", maximumFractionDigits: 0 }).format(n);
+export type AdminInscriptionRow = {
+  idInscripcion: string;
+  nombreCompleto: string;
+  whatsapp: string;
+  cursoNombre: string;
+  cedula: string;
+  provincia: string;
+  estadoAnticipo: string;
+};
+
+export type AdminCourse = {
+  idServicio: string;
+  nombre: string;
+  tipo: string;
+  precioTotal: number;
+  montoAnticipo: number;
+  cuposTotales: number;
+};
+
+export type AdminScheduledCourse = {
+  id: string;
+  courseId: string;
+  courseName: string;
+  date: string;
+  time: string;
+  capacity: number;
+  remaining: number;
+};
+
+type AdminClientProps = {
+  rows: AdminInscriptionRow[];
+  courses: AdminCourse[];
+  scheduledCourses: AdminScheduledCourse[];
+  source: string;
+};
+
+type AdminTab = "inscripciones" | "calendario" | "cursos";
+
+type CourseFormState = {
+  nombre: string;
+  precio: string;
+  anticipo: string;
+  cupos: string;
+};
+
+type CalendarCell = {
+  day: number;
+  date: string;
+  currentMonth: boolean;
+};
+
+const weekdays = ["Dom", "Lun", "Mar", "Mie", "Jue", "Vie", "Sab"];
+const DEMO_COURSES_STORAGE_KEY = "suvoga_demo_courses";
+const initialCourseForm: CourseFormState = {
+  nombre: "",
+  precio: "",
+  anticipo: "1000",
+  cupos: "12",
+};
+
+function cleanPhoneForWhatsapp(phone: string) {
+  return phone.replace(/\D/g, "");
 }
 
-function inRange(dateStr: string, from: string, to: string) {
-  if (!dateStr) return false;
-  return dateStr >= from && dateStr <= to;
+function whatsappLink(row: AdminInscriptionRow) {
+  const phone = cleanPhoneForWhatsapp(row.whatsapp);
+  const message = `Hola ${row.nombreCompleto}. Te escribimos de SuVoGa Escuela de Masajes para confirmar tu solicitud para ${row.cursoNombre}.`;
+
+  return {
+    phone,
+    href: phone ? `https://wa.me/${phone}?text=${encodeURIComponent(message)}` : "",
+  };
 }
 
-function toDateInput(date: Date) {
+function isPending(status: string) {
+  const normalized = status.toLowerCase();
+  return (
+    !normalized ||
+    normalized.includes("pendiente") ||
+    normalized.includes("parcial")
+  );
+}
+
+function monthTitle(date: Date) {
+  return new Intl.DateTimeFormat("es-ES", {
+    month: "long",
+    year: "numeric",
+  }).format(date);
+}
+
+function toIsoDate(year: number, monthIndex: number, day: number) {
+  return `${year}-${String(monthIndex + 1).padStart(2, "0")}-${String(day).padStart(
+    2,
+    "0"
+  )}`;
+}
+
+function getDayGrid(date: Date): CalendarCell[] {
   const year = date.getFullYear();
-  const month = String(date.getMonth() + 1).padStart(2, "0");
-  const day = String(date.getDate()).padStart(2, "0");
-  return `${year}-${month}-${day}`;
-}
+  const month = date.getMonth();
+  const daysInMonth = new Date(year, month + 1, 0).getDate();
+  const firstDay = new Date(year, month, 1).getDay();
+  const previousMonthDays = new Date(year, month, 0).getDate();
+  const grid: CalendarCell[] = [];
 
-function addDaysInput(days: number) {
-  const date = new Date();
-  date.setDate(date.getDate() + days);
-  return toDateInput(date);
-}
-
-function saleDate(sale: CapilarSale) {
-  return sale.fechaVenta || sale.fechaRegistro || sale.fechaEntrega || "";
-}
-
-function weekKey(dateStr: string) {
-  if (!dateStr) return "sin-fecha";
-  const date = new Date(`${dateStr}T00:00:00`);
-  const day = (date.getDay() + 6) % 7;
-  date.setDate(date.getDate() - day);
-  return toDateInput(date);
-}
-
-function calculateMetaBonus(
-  sales: CapilarSale[],
-  metaSemanal: number,
-  bonoMeta: number
-) {
-  const grouped = new Map<string, number>();
-
-  for (const sale of sales) {
-    const key = weekKey(saleDate(sale));
-    grouped.set(key, (grouped.get(key) ?? 0) + 1);
+  for (let index = firstDay - 1; index >= 0; index -= 1) {
+    grid.push({
+      day: previousMonthDays - index,
+      date: "",
+      currentMonth: false,
+    });
   }
 
-  return Array.from(grouped.values()).reduce(
-    (sum, count) => sum + (count === metaSemanal ? bonoMeta : 0),
-    0
-  );
+  for (let day = 1; day <= daysInMonth; day += 1) {
+    grid.push({
+      day,
+      date: toIsoDate(year, month, day),
+      currentMonth: true,
+    });
+  }
+
+  while (grid.length < 42) {
+    grid.push({
+      day: grid.length - firstDay - daysInMonth + 1,
+      date: "",
+      currentMonth: false,
+    });
+  }
+
+  return grid;
 }
 
-const defaultRange: DateRange = { from: "2000-01-01", to: "2099-12-31" };
-
-// ── Drill-down panel ─────────────────────────────────────────────
-function DrillDown({
-  promotor,
-  sales,
-  config,
-  range,
-  onClose,
-}: {
-  promotor: string;
-  sales: CapilarSale[];
-  config: CapilarDashboardData["config"];
-  range: DateRange;
-  onClose: () => void;
-}) {
-  const myRange = sales.filter((s) =>
-    inRange(saleDate(s), range.from, range.to)
-  );
-
-  // Day breakdown
-  const byDay = useMemo(() => {
-    const map = new Map<string, { ventas: number; monto: number }>();
-    for (const s of myRange) {
-      const key = saleDate(s) || "Sin fecha";
-      const cur = map.get(key) ?? { ventas: 0, monto: 0 };
-      cur.ventas += 1;
-      cur.monto += s.totalVenta;
-      map.set(key, cur);
-    }
-    return Array.from(map.entries())
-      .sort(([a], [b]) => a.localeCompare(b))
-      .slice(-10); // last 10 days
-  }, [myRange]);
-
-  const totalVenta = myRange.reduce((s, r) => s + r.totalVenta, 0);
-  const devoluciones = myRange.filter((s) => s.estadoCobro?.toLowerCase().includes("devoluci")).length;
-
-  const comisionBase = myRange.length * config.comisionBasePorLinea;
-  const bonoMeta = calculateMetaBonus(
-    myRange,
-    config.metaSemanalLineas,
-    config.bonoMetaSemanal
-  );
-  const totalPagar = comisionBase + bonoMeta;
-
-  return (
-    <aside className="fixed inset-y-0 right-0 z-50 flex w-full max-w-sm flex-col overflow-y-auto
-                      border-l border-crm-line bg-crm-bg2 shadow-2xl
-                      animate-in slide-in-from-right duration-300">
-      {/* Header */}
-      <div className="sticky top-0 z-10 flex items-center justify-between border-b border-crm-line bg-crm-bg2 px-5 py-4">
-        <div>
-          <p className="text-[11px] uppercase tracking-widest text-crm-faint">Drill-Down</p>
-          <h2 className="text-base font-bold text-crm-text">{promotor}</h2>
-        </div>
-        <button
-          type="button"
-          aria-label="Cerrar panel"
-          onClick={onClose}
-          className="flex h-9 w-9 items-center justify-center rounded-lg border border-crm-line
-                     text-crm-faint hover:bg-crm-surface hover:text-crm-text"
-        >
-          <X className="h-4 w-4" />
-        </button>
-      </div>
-
-      <div className="flex-1 space-y-5 p-5">
-        {/* Date context */}
-        <p className="text-xs text-crm-faint">
-          Período: {range.from === "2000-01-01" ? "Todo el tiempo" : `${range.from} → ${range.to}`}
-        </p>
-
-        {/* Commission cards */}
-        <div className="grid grid-cols-2 gap-3">
-          <InfoCard label="Comision Base" value={formatDop(comisionBase)} color="text-crm-gold" />
-          <InfoCard label="Bono Meta" value={formatDop(bonoMeta)} color="text-crm-green" />
-          <InfoCard label="Venta Total" value={formatDop(totalVenta)} color="text-crm-amber" />
-          <InfoCard label="Devoluciones" value={String(devoluciones)} color="text-red-400" />
-        </div>
-
-        {/* Total a pagar */}
-        <div className="flex items-center justify-between rounded-xl bg-crm-gold/10 px-4 py-3">
-          <div className="flex items-center gap-2">
-            <Award className="h-4 w-4 text-crm-gold" />
-            <span className="text-sm font-semibold text-crm-text">Total a Pagar</span>
-          </div>
-          <span className="text-xl font-black text-crm-gold">{formatDop(totalPagar)}</span>
-        </div>
-
-        {/* Sales volume */}
-        <div className="flex gap-3">
-          <StatChip icon={<TrendingUp className="h-3.5 w-3.5" />} label={`${myRange.length} ventas`} />
-          <StatChip icon={<RotateCcw className="h-3.5 w-3.5" />} label={`${formatDop(config.comisionBasePorLinea)} por linea`} />
-        </div>
-
-        {/* Daily breakdown */}
-        {byDay.length > 0 && (
-          <div>
-            <p className="mb-2 text-xs font-semibold uppercase tracking-wide text-crm-faint">
-              Actividad por Día (últimos 10)
-            </p>
-            <div className="space-y-1.5">
-              {byDay.map(([day, stats]) => {
-                const maxMonto = Math.max(...byDay.map(([, s]) => s.monto));
-                const pct = maxMonto > 0 ? (stats.monto / maxMonto) * 100 : 0;
-                return (
-                  <div key={day} className="space-y-0.5">
-                    <div className="flex items-center justify-between text-xs">
-                      <span className="text-crm-faint">{day}</span>
-                      <span className="font-semibold text-crm-text">
-                        {stats.ventas}v · {formatDop(stats.monto)}
-                      </span>
-                    </div>
-                    <div className="h-1.5 overflow-hidden rounded-full bg-crm-surface2">
-                      <div
-                        className="h-full rounded-full bg-crm-gold transition-all"
-                        style={{ width: `${pct}%` }}
-                      />
-                    </div>
-                  </div>
-                );
-              })}
-            </div>
-          </div>
-        )}
-
-        {/* Individual sales list */}
-        <div>
-          <p className="mb-2 text-xs font-semibold uppercase tracking-wide text-crm-faint">
-            Ventas ({myRange.length})
-          </p>
-          <div className="space-y-1">
-            {myRange.map((s) => (
-              <div
-                key={s.ventaId}
-                className="flex items-center justify-between rounded-lg border border-crm-line bg-crm-surface/60 px-3 py-2"
-              >
-                <div className="min-w-0 flex-1">
-                  <p className="truncate text-xs font-medium text-crm-text">{s.nombreCliente}</p>
-                  <p className="text-[10px] text-crm-faint">{saleDate(s)} · {s.lineaVendida}</p>
-                </div>
-                <span className={`ml-2 text-xs font-bold ${s.montoRestante <= 0 ? "text-crm-green" : "text-crm-amber"}`}>
-                  {formatDop(s.totalVenta)}
-                </span>
-              </div>
-            ))}
-          </div>
-        </div>
-      </div>
-    </aside>
-  );
+function parsePositiveNumber(value: string) {
+  const normalized = value.replace(/,/g, "").replace(/[^\d.]/g, "");
+  const parsed = Number(normalized);
+  return Number.isFinite(parsed) && parsed >= 0 ? parsed : NaN;
 }
 
-// ── Sub-components ───────────────────────────────────────────────
-function InfoCard({ label, value, color }: { label: string; value: string; color: string }) {
-  return (
-    <div className="rounded-xl border border-crm-line bg-crm-surface p-3 space-y-1">
-      <p className="text-[10px] text-crm-faint">{label}</p>
-      <p className={`text-base font-bold ${color}`}>{value}</p>
-    </div>
-  );
+function formatDop(value: number) {
+  return new Intl.NumberFormat("es-DO", {
+    style: "currency",
+    currency: "DOP",
+    maximumFractionDigits: 0,
+  }).format(value);
 }
 
-function StatChip({ icon, label }: { icon: React.ReactNode; label: string }) {
-  return (
-    <div className="flex items-center gap-1.5 rounded-full border border-crm-line bg-crm-surface px-3 py-1.5 text-xs font-medium text-crm-muted">
-      {icon}{label}
-    </div>
-  );
-}
+function normalizeStoredCourses(value: unknown): AdminCourse[] {
+  if (!Array.isArray(value)) return [];
 
-// ── Main AdminClient ─────────────────────────────────────────────
-export function AdminClient({ data }: { data: CapilarDashboardData }) {
-  const [range, setRange] = useState<DateRange>(defaultRange);
-  const [drillPromotor, setDrillPromotor] = useState<string | null>(null);
-  const [, startTransition] = useTransition();
+  return value
+    .map((item) => {
+      if (!item || typeof item !== "object") return null;
 
-  const handleRange = (r: DateRange) => startTransition(() => setRange(r));
+      const course = item as Partial<AdminCourse>;
+      const idServicio = String(course.idServicio ?? "").trim();
+      const nombre = String(course.nombre ?? "").trim();
+      if (!idServicio || !nombre) return null;
 
-  const filteredSales = useMemo(
-    () => data.sales.filter((s) => inRange(saleDate(s), range.from, range.to)),
-    [data.sales, range]
-  );
-
-  const totalVentas = filteredSales.reduce((s, r) => s + r.totalVenta, 0);
-  const totalAbonado = filteredSales.reduce((s, r) => s + r.totalAbonado, 0);
-  const saldoPendiente = filteredSales.reduce((s, r) => s + r.montoRestante, 0);
-
-  const timeStats = useMemo(() => {
-    const today = toDateInput(new Date());
-    const yesterday = addDaysInput(-1);
-    const tomorrow = addDaysInput(1);
-    const currentWeek = weekKey(today);
-    const month = today.slice(0, 7);
-    const year = today.slice(0, 4);
-
-    const summarize = (label: string, predicate: (date: string) => boolean) => {
-      const sales = data.sales.filter((sale) => predicate(saleDate(sale)));
       return {
-        label,
-        ventas: sales.length,
-        total: sales.reduce((sum, sale) => sum + sale.totalVenta, 0),
+        idServicio,
+        nombre,
+        tipo: String(course.tipo ?? "Curso"),
+        precioTotal: Number(course.precioTotal) || 0,
+        montoAnticipo: Number(course.montoAnticipo) || 1000,
+        cuposTotales: Number(course.cuposTotales) || 12,
       };
-    };
+    })
+    .filter((course): course is AdminCourse => Boolean(course));
+}
 
-    return [
-      summarize("Ventas de Ayer", (date) => date === yesterday),
-      summarize("Ventas de Hoy", (date) => date === today),
-      summarize("Mañana", (date) => date === tomorrow),
-      summarize("Semana", (date) => weekKey(date) === currentWeek),
-      summarize("Mes", (date) => date.startsWith(month)),
-      summarize("Año", (date) => date.startsWith(year)),
-    ];
-  }, [data.sales]);
+function readDemoCourses() {
+  if (typeof window === "undefined") return [];
 
-  // Group by promotor for summary
-  const promotores = useMemo(() => {
-    const map = new Map<
-      string,
-      { ventas: number; totalVenta: number; saldo: number; sales: CapilarSale[] }
-    >();
-    for (const s of filteredSales) {
-      const k = s.promotor || "Sin promotor";
-      const cur = map.get(k) ?? { ventas: 0, totalVenta: 0, saldo: 0, sales: [] };
-      cur.ventas += 1;
-      cur.totalVenta += s.totalVenta;
-      cur.saldo += s.montoRestante;
-      cur.sales.push(s);
-      map.set(k, cur);
-    }
-    return Array.from(map.entries()).sort(([, a], [, b]) => b.totalVenta - a.totalVenta);
-  }, [filteredSales]);
+  try {
+    return normalizeStoredCourses(
+      JSON.parse(window.localStorage.getItem(DEMO_COURSES_STORAGE_KEY) || "[]")
+    );
+  } catch {
+    return [];
+  }
+}
 
-  const drillSales = drillPromotor
-    ? data.sales.filter((s) => s.promotor === drillPromotor)
-    : [];
+function writeDemoCourses(courses: AdminCourse[]) {
+  if (typeof window === "undefined") return;
+
+  window.localStorage.setItem(
+    DEMO_COURSES_STORAGE_KEY,
+    JSON.stringify(courses)
+  );
+  window.dispatchEvent(new Event("suvoga-demo-courses-updated"));
+}
+
+function mergeCourses(baseCourses: AdminCourse[], demoCourses: AdminCourse[]) {
+  const byId = new Map<string, AdminCourse>();
+
+  [...baseCourses, ...demoCourses].forEach((course) => {
+    byId.set(course.idServicio, course);
+  });
+
+  return Array.from(byId.values());
+}
+
+function StatusPill({ status }: { status: string }) {
+  const pending = isPending(status);
 
   return (
-    <div className="space-y-5">
-      {/* Header */}
-      <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-        <PageHeader
-          title="Admin — Modo Dios"
-          subtitle="Vista granular con drill-down por promotor. Haz clic en un promotor para el desglose."
-        />
-        <DateRangePicker value={range} onChange={handleRange} />
-      </div>
+    <span
+      className={
+        pending
+          ? "inline-flex rounded-full border border-[#D4AF37]/30 bg-[#D4AF37]/10 px-3 py-1 text-xs font-semibold text-[#8D7530]"
+          : "inline-flex rounded-full border border-[#0D3B22]/15 bg-[#0D3B22]/10 px-3 py-1 text-xs font-semibold text-[#0D3B22]"
+      }
+    >
+      {status || "Anticipo pendiente"}
+    </span>
+  );
+}
 
-      <div className="overflow-x-auto pb-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
-        <div className="grid min-w-[760px] grid-cols-6 gap-3 sm:min-w-0">
-          {timeStats.map((stat) => (
-            <div
-              key={stat.label}
-              className="min-w-0 rounded-xl border border-crm-line bg-crm-surface p-3"
-            >
-              <p className="whitespace-nowrap text-xs font-medium uppercase tracking-wide text-crm-faint">
-                {stat.label}
-              </p>
-              <p className="mt-1 text-xl font-black text-crm-text">
-                {stat.ventas}
-              </p>
-              <p className="truncate text-xs text-crm-muted">
-                {formatDop(stat.total)}
+function ContactButton({ row }: { row: AdminInscriptionRow }) {
+  const { href, phone } = whatsappLink(row);
+
+  return (
+    <a
+      href={href || undefined}
+      target="_blank"
+      rel="noreferrer"
+      aria-disabled={!phone}
+      className="inline-flex h-10 items-center justify-center gap-2 rounded-2xl bg-[#0D3B22] px-4 text-sm font-semibold text-[#FDFBF7] shadow-sm shadow-[#0D3B22]/10 transition-colors hover:bg-[#145332] aria-disabled:pointer-events-none aria-disabled:opacity-45"
+    >
+      <MessageCircle className="h-4 w-4" />
+      Contactar
+    </a>
+  );
+}
+
+function CourseChip({ event }: { event: AdminScheduledCourse }) {
+  return (
+    <div
+      className="rounded-xl bg-[#0D3B22] px-2.5 py-2 text-[#FDFBF7] shadow-sm shadow-[#0D3B22]/10"
+      title={`${event.courseName} - ${event.time}`}
+    >
+      <p className="truncate text-[11px] font-semibold leading-tight">
+        {event.courseName}
+      </p>
+      <p className="mt-1 flex items-center gap-1 text-[10px] font-semibold text-[#D4AF37]">
+        <Clock className="h-3 w-3" />
+        {event.time} - {event.remaining}/{event.capacity}
+      </p>
+    </div>
+  );
+}
+
+export function AdminClient({
+  rows,
+  courses,
+  scheduledCourses,
+  source,
+}: AdminClientProps) {
+  const [activeTab, setActiveTab] = useState<AdminTab>("calendario");
+  const [query, setQuery] = useState("");
+  const [currentMonth, setCurrentMonth] = useState(() => new Date());
+  const [events, setEvents] = useState<AdminScheduledCourse[]>(scheduledCourses);
+  const [catalogCourses, setCatalogCourses] = useState<AdminCourse[]>(courses);
+  const [courseId, setCourseId] = useState(courses[0]?.idServicio ?? "");
+  const [selectedDate, setSelectedDate] = useState("");
+  const [selectedTime, setSelectedTime] = useState("09:00");
+  const [capacity, setCapacity] = useState("12");
+  const [formError, setFormError] = useState("");
+  const [isCourseModalOpen, setIsCourseModalOpen] = useState(false);
+  const [courseForm, setCourseForm] =
+    useState<CourseFormState>(initialCourseForm);
+  const [courseFormError, setCourseFormError] = useState("");
+
+  const pendingCount = rows.filter((row) => isPending(row.estadoAnticipo)).length;
+  const selectedCourse = catalogCourses.find(
+    (course) => course.idServicio === courseId
+  );
+  const dayGrid = getDayGrid(currentMonth);
+
+  const filteredRows = useMemo(() => {
+    const needle = query.trim().toLowerCase();
+    if (!needle) return rows;
+
+    return rows.filter((row) =>
+      [
+        row.nombreCompleto,
+        row.cursoNombre,
+        row.cedula,
+        row.provincia,
+        row.estadoAnticipo,
+      ]
+        .join(" ")
+        .toLowerCase()
+        .includes(needle)
+    );
+  }, [query, rows]);
+
+  const eventsByDate = useMemo(() => {
+    return events.reduce<Record<string, AdminScheduledCourse[]>>((acc, event) => {
+      acc[event.date] = [...(acc[event.date] ?? []), event];
+      return acc;
+    }, {});
+  }, [events]);
+
+  useEffect(() => {
+    const mergedCourses = mergeCourses(courses, readDemoCourses());
+    setCatalogCourses(mergedCourses);
+    setCourseId((current) => current || mergedCourses[0]?.idServicio || "");
+  }, [courses]);
+
+  function handleScheduleCourse(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    setFormError("");
+
+    const seats = Number.parseInt(capacity, 10);
+    const validDate = /^\d{4}-\d{2}-\d{2}$/.test(selectedDate);
+    const validTime = /^\d{2}:\d{2}$/.test(selectedTime);
+
+    if (!selectedCourse || !validDate || !validTime || !Number.isFinite(seats) || seats < 1) {
+      setFormError("Completa curso, fecha, hora y cupos con formato valido.");
+      return;
+    }
+
+    setEvents((current) => [
+      ...current,
+      {
+        id: `local-${selectedCourse.idServicio}-${selectedDate}-${selectedTime}`,
+        courseId: selectedCourse.idServicio,
+        courseName: selectedCourse.nombre,
+        date: selectedDate,
+        time: selectedTime,
+        capacity: seats,
+        remaining: seats,
+      },
+    ]);
+    setCurrentMonth(new Date(`${selectedDate}T12:00:00`));
+    setSelectedDate("");
+    setSelectedTime("09:00");
+    setCapacity(String(selectedCourse.cuposTotales || 12));
+  }
+
+  function updateCourseForm(field: keyof CourseFormState, value: string) {
+    setCourseForm((current) => ({ ...current, [field]: value }));
+    setCourseFormError("");
+  }
+
+  function closeCourseModal() {
+    setIsCourseModalOpen(false);
+    setCourseForm(initialCourseForm);
+    setCourseFormError("");
+  }
+
+  function handleCreateCourse(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    setCourseFormError("");
+
+    const nombre = courseForm.nombre.trim();
+    const precioTotal = parsePositiveNumber(courseForm.precio);
+    const montoAnticipo = parsePositiveNumber(courseForm.anticipo);
+    const cuposTotales = Math.floor(parsePositiveNumber(courseForm.cupos));
+
+    if (!nombre) {
+      setCourseFormError("Escribe el nombre del curso.");
+      return;
+    }
+
+    if (
+      Number.isNaN(precioTotal) ||
+      Number.isNaN(montoAnticipo) ||
+      Number.isNaN(cuposTotales) ||
+      cuposTotales < 1
+    ) {
+      setCourseFormError("Precio, anticipo y cupos deben ser numeros validos.");
+      return;
+    }
+
+    const newCourse: AdminCourse = {
+      idServicio: `DEMO-${Date.now()}`,
+      nombre,
+      tipo: "Curso",
+      precioTotal,
+      montoAnticipo,
+      cuposTotales,
+    };
+    const demoCourses = [...readDemoCourses(), newCourse];
+
+    writeDemoCourses(demoCourses);
+    setCatalogCourses((current) => mergeCourses(current, [newCourse]));
+    setCourseId(newCourse.idServicio);
+    setCapacity(String(newCourse.cuposTotales));
+    closeCourseModal();
+  }
+
+  function tabClass(tab: AdminTab) {
+    return activeTab === tab
+      ? "bg-[#0D3B22] text-[#FDFBF7] shadow-sm"
+      : "bg-transparent text-[#4E6658] hover:bg-[#FDFBF7]";
+  }
+
+  return (
+    <main className="min-h-[calc(100vh-5rem)] bg-[#FDFBF7] px-4 py-8 text-[#0D3B22] sm:px-6 lg:px-8">
+      <div className="mx-auto max-w-7xl space-y-6">
+        <section className="rounded-3xl border border-[#D4AF37]/30 bg-white p-5 shadow-sm shadow-[#0D3B22]/5 sm:p-6">
+          <div className="flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
+            <div>
+              <div className="inline-flex items-center gap-2 rounded-full border border-[#D4AF37]/30 bg-[#D4AF37]/10 px-3 py-1 text-xs font-semibold uppercase tracking-[0.16em] text-[#8D7530]">
+                <ShieldCheck className="h-3.5 w-3.5" />
+                Admin SuVoGa
+              </div>
+              <h1 className="suvoga-serif mt-4 text-4xl font-semibold leading-none text-[#0D3B22] sm:text-5xl">
+                Centro academico y calendario
+              </h1>
+              <p className="mt-3 max-w-2xl text-sm leading-6 text-[#4E6658]">
+                Gestiona inscripciones, cupos y fechas de cursos desde un
+                espacio sereno, claro y preparado para operacion diaria.
               </p>
             </div>
-          ))}
-        </div>
-      </div>
 
-      {/* KPI row */}
-      <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
-        {[
-          { label: "Ventas Período", value: formatDop(totalVentas), color: "text-crm-text" },
-          { label: "Total Abonado", value: formatDop(totalAbonado), color: "text-crm-green" },
-          { label: "Saldo Pendiente", value: formatDop(saldoPendiente), color: "text-crm-gold" },
-        ].map((k) => (
-          <div key={k.label} className="rounded-xl border border-crm-line bg-crm-surface p-5">
-            <p className="text-xs font-medium uppercase tracking-wide text-crm-faint">{k.label}</p>
-            <p className={`mt-1 text-2xl font-black ${k.color}`}>{k.value}</p>
+            <div className="grid gap-3 sm:grid-cols-4 lg:min-w-[640px]">
+              <div className="rounded-2xl border border-[#D4AF37]/20 bg-[#FDFBF7] p-4">
+                <p className="text-xs font-semibold uppercase tracking-[0.14em] text-[#8A7D69]">
+                  Pendientes
+                </p>
+                <p className="mt-2 text-3xl font-semibold text-[#0D3B22]">
+                  {pendingCount}
+                </p>
+              </div>
+              <div className="rounded-2xl border border-[#D4AF37]/20 bg-[#FDFBF7] p-4">
+                <p className="text-xs font-semibold uppercase tracking-[0.14em] text-[#8A7D69]">
+                  Fechas
+                </p>
+                <p className="mt-2 text-3xl font-semibold text-[#0D3B22]">
+                  {events.length}
+                </p>
+              </div>
+              <div className="rounded-2xl border border-[#D4AF37]/20 bg-[#FDFBF7] p-4">
+                <p className="text-xs font-semibold uppercase tracking-[0.14em] text-[#8A7D69]">
+                  Cursos
+                </p>
+                <p className="mt-2 text-3xl font-semibold text-[#0D3B22]">
+                  {catalogCourses.length}
+                </p>
+              </div>
+              <div className="rounded-2xl border border-[#D4AF37]/20 bg-[#FDFBF7] p-4">
+                <p className="text-xs font-semibold uppercase tracking-[0.14em] text-[#8A7D69]">
+                  Fuente
+                </p>
+                <p className="mt-2 text-sm font-semibold capitalize text-[#0D3B22]">
+                  {source.replace("-", " ")}
+                </p>
+              </div>
+            </div>
           </div>
-        ))}
-      </div>
+        </section>
 
-      {/* Promotor summary table (desktop-first) */}
-      <div>
-        <p className="mb-3 text-xs font-semibold uppercase tracking-wide text-crm-faint">
-          Promotores — Haz clic para Drill-Down
-        </p>
-        <div className="overflow-hidden rounded-xl border border-crm-line bg-crm-surface">
-          <div className="overflow-x-auto">
-            <table className="w-full text-left text-sm">
-              <thead className="border-b border-crm-line bg-crm-surface2 text-xs uppercase text-crm-muted">
-                <tr>
-                  <th className="px-4 py-3 font-medium">Promotor</th>
-                  <th className="px-4 py-3 text-right font-medium">Ventas</th>
-                  <th className="px-4 py-3 text-right font-medium">Total Venta</th>
-                  <th className="px-4 py-3 text-right font-medium">Saldo</th>
-                  <th className="px-4 py-3 text-right font-medium">Comisión</th>
-                  <th className="px-4 py-3" />
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-crm-line">
-                {promotores.map(([name, stats]) => {
-                  const comision =
-                    stats.ventas * data.config.comisionBasePorLinea +
-                    calculateMetaBonus(
-                      stats.sales,
-                      data.config.metaSemanalLineas,
-                      data.config.bonoMetaSemanal
-                    );
+        <div className="inline-flex rounded-2xl border border-[#D4AF37]/30 bg-white p-1 shadow-sm shadow-[#0D3B22]/5">
+          <button
+            type="button"
+            onClick={() => setActiveTab("calendario")}
+            className={`inline-flex h-11 items-center gap-2 rounded-xl px-4 text-sm font-semibold transition-colors ${tabClass(
+              "calendario"
+            )}`}
+          >
+            <CalendarDays className="h-4 w-4" />
+            Calendario
+          </button>
+          <button
+            type="button"
+            onClick={() => setActiveTab("cursos")}
+            className={`inline-flex h-11 items-center gap-2 rounded-xl px-4 text-sm font-semibold transition-colors ${tabClass(
+              "cursos"
+            )}`}
+          >
+            <BookOpen className="h-4 w-4" />
+            Mis Cursos
+          </button>
+          <button
+            type="button"
+            onClick={() => setActiveTab("inscripciones")}
+            className={`inline-flex h-11 items-center gap-2 rounded-xl px-4 text-sm font-semibold transition-colors ${tabClass(
+              "inscripciones"
+            )}`}
+          >
+            <Users className="h-4 w-4" />
+            Inscripciones
+          </button>
+        </div>
+
+        {activeTab === "calendario" ? (
+          <section className="grid gap-5 xl:grid-cols-[minmax(0,1fr)_380px]">
+            <div className="rounded-3xl border border-[#D4AF37]/30 bg-white p-4 shadow-sm shadow-[#0D3B22]/5 sm:p-5">
+              <div className="mb-5 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+                <div>
+                  <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[#C5A028]">
+                    Gestor de calendario
+                  </p>
+                  <h2 className="suvoga-serif mt-2 text-3xl font-semibold capitalize text-[#0D3B22]">
+                    {monthTitle(currentMonth)}
+                  </h2>
+                </div>
+                <div className="flex items-center gap-2">
+                  <button
+                    type="button"
+                    aria-label="Mes anterior"
+                    onClick={() =>
+                      setCurrentMonth(
+                        new Date(
+                          currentMonth.getFullYear(),
+                          currentMonth.getMonth() - 1,
+                          1
+                        )
+                      )
+                    }
+                    className="inline-flex h-10 w-10 items-center justify-center rounded-2xl border border-[#D4AF37]/30 bg-[#FDFBF7] text-[#0D3B22] transition-colors hover:bg-[#F7F1E7]"
+                  >
+                    <ChevronLeft className="h-4 w-4" />
+                  </button>
+                  <button
+                    type="button"
+                    aria-label="Mes siguiente"
+                    onClick={() =>
+                      setCurrentMonth(
+                        new Date(
+                          currentMonth.getFullYear(),
+                          currentMonth.getMonth() + 1,
+                          1
+                        )
+                      )
+                    }
+                    className="inline-flex h-10 w-10 items-center justify-center rounded-2xl border border-[#D4AF37]/30 bg-[#FDFBF7] text-[#0D3B22] transition-colors hover:bg-[#F7F1E7]"
+                  >
+                    <ChevronRight className="h-4 w-4" />
+                  </button>
+                </div>
+              </div>
+
+              <div className="grid grid-cols-7 gap-2 text-center text-xs font-semibold uppercase tracking-[0.14em] text-[#8A7D69]">
+                {weekdays.map((day) => (
+                  <div key={day} className="py-2">
+                    {day}
+                  </div>
+                ))}
+              </div>
+
+              <div className="mt-2 grid grid-cols-7 gap-2">
+                {dayGrid.map((cell, index) => {
+                  const dayEvents = cell.date ? eventsByDate[cell.date] ?? [] : [];
+
                   return (
-                    <tr
-                      key={name}
-                      className="cursor-pointer transition-colors hover:bg-crm-bg2"
-                      onClick={() => setDrillPromotor(name)}
+                    <div
+                      key={`${cell.day}-${index}`}
+                      className={
+                        cell.currentMonth
+                          ? "min-h-[128px] rounded-2xl border border-[#D4AF37]/20 bg-[#FDFBF7] p-2 shadow-sm"
+                          : "min-h-[128px] rounded-2xl border border-[#E7DAC2]/70 bg-white p-2 opacity-55"
+                      }
                     >
-                      <td className="px-4 py-3 font-semibold text-crm-text">{name}</td>
-                      <td className="px-4 py-3 text-right text-crm-muted">{stats.ventas}</td>
-                      <td className="px-4 py-3 text-right font-semibold text-crm-gold">
-                        {formatDop(stats.totalVenta)}
-                      </td>
-                      <td className={`px-4 py-3 text-right font-semibold ${stats.saldo > 0 ? "text-crm-amber" : "text-crm-green"}`}>
-                        {formatDop(stats.saldo)}
-                      </td>
-                      <td className="px-4 py-3 text-right text-crm-green">
-                        {formatDop(comision)}
-                      </td>
-                      <td className="px-4 py-3 text-right">
-                        <ChevronRight className="ml-auto h-4 w-4 text-crm-faint" />
-                      </td>
-                    </tr>
+                      <div className="flex items-center justify-between gap-2">
+                        <span
+                          className={
+                            cell.currentMonth
+                              ? "inline-flex h-7 w-7 items-center justify-center rounded-full bg-white text-sm font-semibold text-[#0D3B22]"
+                              : "text-sm font-semibold text-[#8A7D69]"
+                          }
+                        >
+                          {cell.day}
+                        </span>
+                      </div>
+                      <div className="mt-2 space-y-1.5">
+                        {dayEvents.slice(0, 2).map((event) => (
+                          <CourseChip key={event.id} event={event} />
+                        ))}
+                        {dayEvents.length > 2 ? (
+                          <p className="rounded-full border border-[#D4AF37]/25 bg-white px-2 py-1 text-center text-[10px] font-semibold text-[#8D7530]">
+                            +{dayEvents.length - 2} mas
+                          </p>
+                        ) : null}
+                      </div>
+                    </div>
                   );
                 })}
-              </tbody>
-            </table>
-          </div>
-        </div>
-      </div>
+              </div>
+            </div>
 
-      {/* Master sales table */}
-      <div>
-        <p className="mb-3 text-xs font-semibold uppercase tracking-wide text-crm-faint">
-          Todas las Ventas ({filteredSales.length})
-        </p>
-        <div className="overflow-hidden rounded-xl border border-crm-line bg-crm-surface">
-          <div className="overflow-x-auto">
-            <table className="w-full text-left text-sm">
-              <thead className="border-b border-crm-line bg-crm-surface2 text-xs uppercase text-crm-muted">
-                <tr>
-                  <th className="px-4 py-3 font-medium">Venta</th>
-                  <th className="px-4 py-3 font-medium">Cliente</th>
-                  <th className="px-4 py-3 font-medium">Línea</th>
-                  <th className="px-4 py-3 text-right font-medium">Precio</th>
-                  <th className="px-4 py-3 text-right font-medium">Saldo</th>
-                  <th className="px-4 py-3 font-medium">Promotor</th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-crm-line">
-                {filteredSales.map((sale) => (
-                  <tr
-                    key={sale.ventaId}
-                    className="cursor-pointer hover:bg-crm-bg2"
-                    onClick={() => setDrillPromotor(sale.promotor)}
-                  >
-                    <td className="px-4 py-3 text-crm-faint">
-                      {sale.ventaId}
-                      <div className="text-xs">{saleDate(sale)}</div>
-                    </td>
-                    <td className="px-4 py-3 text-crm-text">
-                      {sale.nombreCliente}
-                      <div className="text-xs text-crm-faint">{sale.whatsapp}</div>
-                    </td>
-                    <td className="px-4 py-3 text-crm-muted">
-                      {sale.familiaProducto}
-                      <div className="text-xs text-crm-faint">{sale.provincia}</div>
-                    </td>
-                    <td className="px-4 py-3 text-right font-semibold text-crm-gold">
-                      {formatDop(sale.totalVenta)}
-                    </td>
-                    <td className="px-4 py-3 text-right">
-                      <span className={`inline-flex rounded-full px-2 py-0.5 text-xs font-semibold ${
-                        sale.montoRestante <= 0
-                          ? "bg-crm-green/15 text-crm-green"
-                          : "bg-crm-amber/15 text-crm-amber"
-                      }`}>
-                        {formatDop(sale.montoRestante)}
-                      </span>
-                    </td>
-                    <td className="px-4 py-3 text-crm-muted">{sale.promotor}</td>
+            <aside className="rounded-3xl border border-[#D4AF37]/30 bg-white p-5 shadow-sm shadow-[#0D3B22]/5">
+              <div className="flex items-start gap-3">
+                <span className="inline-flex h-11 w-11 items-center justify-center rounded-2xl border border-[#D4AF37]/30 bg-[#FDFBF7] text-[#0D3B22]">
+                  <Plus className="h-5 w-5" />
+                </span>
+                <div>
+                  <h3 className="suvoga-serif text-2xl font-semibold text-[#0D3B22]">
+                    Programar curso
+                  </h3>
+                  <p className="mt-1 text-sm leading-6 text-[#4E6658]">
+                    Crea una fecha y revisa el chip del curso en el calendario.
+                  </p>
+                </div>
+              </div>
+
+              <form className="mt-6 space-y-5" onSubmit={handleScheduleCourse}>
+                <div>
+                  <p className="text-xs font-semibold uppercase tracking-[0.16em] text-[#6B6048]">
+                    Curso
+                  </p>
+                  <div className="mt-3 max-h-64 space-y-2 overflow-y-auto pr-1">
+                    {catalogCourses.map((course) => {
+                      const selected = course.idServicio === courseId;
+
+                      return (
+                        <button
+                          key={course.idServicio}
+                          type="button"
+                          onClick={() => {
+                            setCourseId(course.idServicio);
+                            setCapacity(String(course.cuposTotales || 12));
+                          }}
+                          className={
+                            selected
+                              ? "flex w-full items-center gap-3 rounded-2xl border border-[#0D3B22]/20 bg-[#0D3B22] p-3 text-left text-[#FDFBF7] shadow-sm"
+                              : "flex w-full items-center gap-3 rounded-2xl border border-[#D4AF37]/25 bg-[#FDFBF7] p-3 text-left text-[#0D3B22] transition-colors hover:bg-[#F7F1E7]"
+                          }
+                        >
+                          <GraduationCap className="h-4 w-4 shrink-0" />
+                          <span className="min-w-0 flex-1 truncate text-sm font-semibold">
+                            {course.nombre}
+                          </span>
+                        </button>
+                      );
+                    })}
+                  </div>
+                </div>
+
+                <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-1">
+                  <label className="block">
+                    <span className="text-xs font-semibold uppercase tracking-[0.16em] text-[#6B6048]">
+                      Fecha
+                    </span>
+                    <input
+                      value={selectedDate}
+                      onChange={(event) => setSelectedDate(event.target.value)}
+                      inputMode="numeric"
+                      placeholder="2026-05-18"
+                      className="mt-2 h-11 w-full rounded-2xl border border-[#D4AF37]/30 bg-[#FDFBF7] px-3 text-sm font-medium text-[#0D3B22] outline-none transition-colors placeholder:text-[#8A7D69] focus:border-[#0D3B22]"
+                    />
+                  </label>
+                  <label className="block">
+                    <span className="text-xs font-semibold uppercase tracking-[0.16em] text-[#6B6048]">
+                      Hora
+                    </span>
+                    <input
+                      value={selectedTime}
+                      onChange={(event) => setSelectedTime(event.target.value)}
+                      inputMode="numeric"
+                      placeholder="09:00"
+                      className="mt-2 h-11 w-full rounded-2xl border border-[#D4AF37]/30 bg-[#FDFBF7] px-3 text-sm font-medium text-[#0D3B22] outline-none transition-colors placeholder:text-[#8A7D69] focus:border-[#0D3B22]"
+                    />
+                  </label>
+                </div>
+
+                <label className="block">
+                  <span className="text-xs font-semibold uppercase tracking-[0.16em] text-[#6B6048]">
+                    Cupos
+                  </span>
+                  <input
+                    value={capacity}
+                    onChange={(event) => setCapacity(event.target.value)}
+                    inputMode="numeric"
+                    placeholder="12"
+                    className="mt-2 h-11 w-full rounded-2xl border border-[#D4AF37]/30 bg-[#FDFBF7] px-3 text-sm font-medium text-[#0D3B22] outline-none transition-colors placeholder:text-[#8A7D69] focus:border-[#0D3B22]"
+                  />
+                </label>
+
+                {formError ? (
+                  <p className="rounded-2xl border border-[#D4AF37]/30 bg-[#D4AF37]/10 px-3 py-2 text-sm font-medium text-[#8D7530]">
+                    {formError}
+                  </p>
+                ) : null}
+
+                <button
+                  type="submit"
+                  className="inline-flex h-12 w-full items-center justify-center gap-2 rounded-2xl bg-[#0D3B22] px-5 text-sm font-semibold text-[#FDFBF7] shadow-sm shadow-[#0D3B22]/10 transition-colors hover:bg-[#145332]"
+                >
+                  <Leaf className="h-4 w-4" />
+                  Crear Course Chip
+                </button>
+              </form>
+            </aside>
+          </section>
+        ) : null}
+
+        {activeTab === "cursos" ? (
+          <section className="space-y-5 rounded-3xl border border-[#D4AF37]/30 bg-white p-5 shadow-sm shadow-[#0D3B22]/5 sm:p-6">
+            <div className="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
+              <div>
+                <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[#C5A028]">
+                  Catalogo vivo
+                </p>
+                <h2 className="suvoga-serif mt-2 text-3xl font-semibold text-[#0D3B22]">
+                  Mis Cursos
+                </h2>
+                <p className="mt-2 max-w-2xl text-sm leading-6 text-[#4E6658]">
+                  Agrega programas durante la presentacion y usalos al instante
+                  en el calendario o en el catalogo publico de demo.
+                </p>
+              </div>
+              <button
+                type="button"
+                onClick={() => setIsCourseModalOpen(true)}
+                className="inline-flex h-12 items-center justify-center gap-2 rounded-2xl border border-[#D4AF37]/50 bg-[#D4AF37] px-5 text-sm font-bold text-[#0D3B22] shadow-xl shadow-[#D4AF37]/20 transition-all duration-300 hover:-translate-y-0.5 hover:bg-[#C5A028] hover:shadow-2xl hover:shadow-[#D4AF37]/25"
+              >
+                <Plus className="h-4 w-4" />
+                Crear Nuevo Curso
+              </button>
+            </div>
+
+            <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
+              {catalogCourses.map((course) => (
+                <article
+                  key={course.idServicio}
+                  className="rounded-3xl border border-[#D4AF37]/25 bg-[#FDFBF7] p-5 shadow-sm shadow-[#0D3B22]/5 transition-all duration-300 hover:-translate-y-1 hover:border-[#D4AF37]/60 hover:bg-white hover:shadow-xl hover:shadow-[#D4AF37]/15"
+                >
+                  <div className="flex items-start justify-between gap-4">
+                    <span className="inline-flex h-11 w-11 items-center justify-center rounded-2xl border border-[#D4AF37]/30 bg-white text-[#0D3B22]">
+                      <GraduationCap className="h-5 w-5" />
+                    </span>
+                    <span className="rounded-full border border-[#D4AF37]/30 bg-white px-3 py-1 text-xs font-semibold uppercase tracking-[0.14em] text-[#C5A028]">
+                      {course.idServicio.startsWith("DEMO-") ? "Demo" : "Curso"}
+                    </span>
+                  </div>
+                  <h3 className="suvoga-serif mt-5 text-2xl font-semibold leading-tight text-[#0D3B22]">
+                    {course.nombre}
+                  </h3>
+                  <div className="mt-5 grid grid-cols-3 gap-2 text-sm">
+                    <div className="rounded-2xl border border-[#0D3B22]/10 bg-white p-3">
+                      <p className="text-[10px] font-semibold uppercase tracking-[0.12em] text-[#6B6048]">
+                        Precio
+                      </p>
+                      <p className="mt-1 font-semibold text-[#0D3B22]">
+                        {course.precioTotal > 0
+                          ? formatDop(course.precioTotal)
+                          : "A consultar"}
+                      </p>
+                    </div>
+                    <div className="rounded-2xl border border-[#D4AF37]/25 bg-white p-3">
+                      <p className="text-[10px] font-semibold uppercase tracking-[0.12em] text-[#6B6048]">
+                        Anticipo
+                      </p>
+                      <p className="mt-1 font-semibold text-[#0D3B22]">
+                        {formatDop(course.montoAnticipo || 1000)}
+                      </p>
+                    </div>
+                    <div className="rounded-2xl border border-[#0D3B22]/10 bg-white p-3">
+                      <p className="text-[10px] font-semibold uppercase tracking-[0.12em] text-[#6B6048]">
+                        Cupos
+                      </p>
+                      <p className="mt-1 font-semibold text-[#0D3B22]">
+                        {course.cuposTotales || 12}
+                      </p>
+                    </div>
+                  </div>
+                </article>
+              ))}
+            </div>
+          </section>
+        ) : null}
+
+        {activeTab === "inscripciones" ? (
+          <section className="rounded-3xl border border-[#D4AF37]/30 bg-white p-4 shadow-sm shadow-[#0D3B22]/5 sm:p-5">
+            <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+              <div>
+                <p className="suvoga-serif text-2xl font-semibold text-[#0D3B22]">
+                  Inscripciones
+                </p>
+                <p className="text-sm text-[#6B6048]">
+                  {filteredRows.length} registros visibles
+                </p>
+              </div>
+              <label className="relative block sm:w-80">
+                <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-[#8A7D69]" />
+                <input
+                  value={query}
+                  onChange={(event) => setQuery(event.target.value)}
+                  placeholder="Buscar estudiante, curso o provincia"
+                  className="h-11 w-full rounded-2xl border border-[#D4AF37]/30 bg-[#FDFBF7] pl-9 pr-3 text-sm text-[#0D3B22] outline-none transition-colors placeholder:text-[#8A7D69] focus:border-[#0D3B22]"
+                />
+              </label>
+            </div>
+
+            <div className="mt-5 hidden overflow-hidden rounded-3xl border border-[#E7DAC2] md:block">
+              <table className="w-full text-left text-sm">
+                <thead className="bg-[#F7F1E7] text-xs uppercase tracking-[0.12em] text-[#6B6048]">
+                  <tr>
+                    <th className="px-4 py-4 font-semibold">Estudiante</th>
+                    <th className="px-4 py-4 font-semibold">Curso</th>
+                    <th className="px-4 py-4 font-semibold">Cedula</th>
+                    <th className="px-4 py-4 font-semibold">Provincia</th>
+                    <th className="px-4 py-4 font-semibold">Anticipo</th>
+                    <th className="px-4 py-4 text-right font-semibold">Contacto</th>
                   </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        </div>
-      </div>
+                </thead>
+                <tbody className="divide-y divide-[#E7DAC2] bg-white">
+                  {filteredRows.map((row) => (
+                    <tr
+                      key={row.idInscripcion}
+                      className="transition-colors hover:bg-[#FDFBF7]"
+                    >
+                      <td className="px-4 py-4 font-semibold text-[#0D3B22]">
+                        {row.nombreCompleto}
+                        <div className="mt-1 text-xs font-normal text-[#8A7D69]">
+                          {row.whatsapp || "Sin WhatsApp"}
+                        </div>
+                      </td>
+                      <td className="max-w-[300px] px-4 py-4 text-[#4E6658]">
+                        {row.cursoNombre}
+                      </td>
+                      <td className="px-4 py-4 text-[#4E6658]">{row.cedula}</td>
+                      <td className="px-4 py-4 text-[#4E6658]">{row.provincia}</td>
+                      <td className="px-4 py-4">
+                        <StatusPill status={row.estadoAnticipo} />
+                      </td>
+                      <td className="px-4 py-4 text-right">
+                        <ContactButton row={row} />
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
 
-      {/* Drill-down overlay */}
-      {drillPromotor && (
-        <>
+            <div className="mt-5 space-y-3 md:hidden">
+              {filteredRows.map((row) => (
+                <article
+                  key={row.idInscripcion}
+                  className="rounded-3xl border border-[#E7DAC2] bg-[#FDFBF7] p-4 shadow-sm"
+                >
+                  <div className="flex items-start justify-between gap-3">
+                    <div>
+                      <p className="font-semibold text-[#0D3B22]">
+                        {row.nombreCompleto}
+                      </p>
+                      <p className="mt-1 text-xs text-[#8A7D69]">
+                        {row.whatsapp || "Sin WhatsApp"}
+                      </p>
+                    </div>
+                    <StatusPill status={row.estadoAnticipo} />
+                  </div>
+                  <div className="mt-4 rounded-2xl border border-[#D4AF37]/20 bg-white p-3 text-sm">
+                    <p className="text-xs uppercase tracking-[0.14em] text-[#8A7D69]">
+                      Curso
+                    </p>
+                    <p className="mt-1 font-medium text-[#0D3B22]">
+                      {row.cursoNombre}
+                    </p>
+                  </div>
+                  <div className="mt-4">
+                    <ContactButton row={row} />
+                  </div>
+                </article>
+              ))}
+            </div>
+
+            {filteredRows.length === 0 ? (
+              <div className="mt-5 rounded-3xl border border-dashed border-[#D4AF37]/35 bg-[#FDFBF7] p-8 text-center">
+                <Sparkles className="mx-auto h-8 w-8 text-[#D4AF37]" />
+                <p className="suvoga-serif mt-3 text-2xl font-semibold text-[#0D3B22]">
+                  Sin inscripciones visibles
+                </p>
+                <p className="mt-2 text-sm text-[#6B6048]">
+                  Los registros apareceran aqui cuando se guarden en SuVoGa OS.
+                </p>
+              </div>
+            ) : null}
+          </section>
+        ) : null}
+
+        {isCourseModalOpen ? (
           <div
-            className="fixed inset-0 z-40 bg-black/50 backdrop-blur-sm"
-            onClick={() => setDrillPromotor(null)}
-            aria-hidden="true"
-          />
-          <DrillDown
-            promotor={drillPromotor}
-            sales={drillSales}
-            config={data.config}
-            range={range}
-            onClose={() => setDrillPromotor(null)}
-          />
-        </>
-      )}
-    </div>
+            aria-modal="true"
+            role="dialog"
+            className="fixed inset-0 z-[80] flex items-center justify-center bg-[#0D3B22]/45 p-4 backdrop-blur-sm"
+          >
+            <button
+              type="button"
+              aria-label="Cerrar formulario de curso"
+              className="absolute inset-0 cursor-default"
+              onClick={closeCourseModal}
+            />
+            <div className="relative w-full max-w-2xl overflow-hidden rounded-3xl border border-[#D4AF37]/30 bg-white text-[#0D3B22] shadow-2xl shadow-[#0D3B22]/25">
+              <div className="flex items-start justify-between gap-5 border-b border-[#D4AF37]/20 bg-[#FDFBF7] px-6 py-5">
+                <div>
+                  <p className="text-xs font-semibold uppercase tracking-[0.2em] text-[#C5A028]">
+                    Nuevo programa premium
+                  </p>
+                  <h3 className="suvoga-serif mt-2 text-3xl font-semibold leading-tight text-[#0D3B22]">
+                    Crear Nuevo Curso
+                  </h3>
+                </div>
+                <button
+                  type="button"
+                  aria-label="Cerrar"
+                  onClick={closeCourseModal}
+                  className="inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-2xl border border-[#D4AF37]/30 bg-white text-[#0D3B22] transition-colors hover:bg-[#F7F1E7]"
+                >
+                  <X className="h-4 w-4" />
+                </button>
+              </div>
+
+              <form className="space-y-5 px-6 py-6" onSubmit={handleCreateCourse}>
+                <label className="block">
+                  <span className="text-xs font-semibold uppercase tracking-[0.16em] text-[#6B6048]">
+                    Nombre del Curso
+                  </span>
+                  <input
+                    value={courseForm.nombre}
+                    onChange={(event) =>
+                      updateCourseForm("nombre", event.target.value)
+                    }
+                    placeholder="Ej. Diplomado de Spa Facial Premium"
+                    className="mt-2 h-12 w-full rounded-2xl border border-[#D4AF37]/30 bg-[#FDFBF7] px-4 text-sm font-medium text-[#0D3B22] outline-none transition-colors placeholder:text-[#8A7D69] focus:border-[#0D3B22]"
+                    autoFocus
+                  />
+                </label>
+
+                <div className="grid gap-4 sm:grid-cols-3">
+                  <label className="block">
+                    <span className="text-xs font-semibold uppercase tracking-[0.16em] text-[#6B6048]">
+                      Precio
+                    </span>
+                    <div className="relative mt-2">
+                      <DollarSign className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-[#C5A028]" />
+                      <input
+                        value={courseForm.precio}
+                        onChange={(event) =>
+                          updateCourseForm("precio", event.target.value)
+                        }
+                        inputMode="decimal"
+                        placeholder="15000"
+                        className="h-12 w-full rounded-2xl border border-[#D4AF37]/30 bg-[#FDFBF7] pl-9 pr-3 text-sm font-medium text-[#0D3B22] outline-none transition-colors placeholder:text-[#8A7D69] focus:border-[#0D3B22]"
+                      />
+                    </div>
+                  </label>
+
+                  <label className="block">
+                    <span className="text-xs font-semibold uppercase tracking-[0.16em] text-[#6B6048]">
+                      Anticipo
+                    </span>
+                    <div className="relative mt-2">
+                      <DollarSign className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-[#C5A028]" />
+                      <input
+                        value={courseForm.anticipo}
+                        onChange={(event) =>
+                          updateCourseForm("anticipo", event.target.value)
+                        }
+                        inputMode="decimal"
+                        placeholder="1000"
+                        className="h-12 w-full rounded-2xl border border-[#D4AF37]/30 bg-[#FDFBF7] pl-9 pr-3 text-sm font-medium text-[#0D3B22] outline-none transition-colors placeholder:text-[#8A7D69] focus:border-[#0D3B22]"
+                      />
+                    </div>
+                  </label>
+
+                  <label className="block">
+                    <span className="text-xs font-semibold uppercase tracking-[0.16em] text-[#6B6048]">
+                      Cupos Totales
+                    </span>
+                    <input
+                      value={courseForm.cupos}
+                      onChange={(event) =>
+                        updateCourseForm("cupos", event.target.value)
+                      }
+                      inputMode="numeric"
+                      placeholder="12"
+                      className="mt-2 h-12 w-full rounded-2xl border border-[#D4AF37]/30 bg-[#FDFBF7] px-4 text-sm font-medium text-[#0D3B22] outline-none transition-colors placeholder:text-[#8A7D69] focus:border-[#0D3B22]"
+                    />
+                  </label>
+                </div>
+
+                {courseFormError ? (
+                  <p className="rounded-2xl border border-[#D4AF37]/30 bg-[#D4AF37]/10 px-3 py-2 text-sm font-medium text-[#8D7530]">
+                    {courseFormError}
+                  </p>
+                ) : null}
+
+                <div className="flex flex-col-reverse gap-3 border-t border-[#D4AF37]/20 pt-5 sm:flex-row sm:justify-end">
+                  <button
+                    type="button"
+                    onClick={closeCourseModal}
+                    className="inline-flex h-12 items-center justify-center rounded-2xl border border-[#D4AF37]/30 bg-white px-5 text-sm font-semibold text-[#0D3B22] transition-colors hover:bg-[#F7F1E7]"
+                  >
+                    Cancelar
+                  </button>
+                  <button
+                    type="submit"
+                    className="inline-flex h-12 items-center justify-center gap-2 rounded-2xl bg-[#0D3B22] px-5 text-sm font-semibold text-[#FDFBF7] shadow-sm shadow-[#0D3B22]/10 transition-colors hover:bg-[#145332]"
+                  >
+                    <Save className="h-4 w-4" />
+                    Guardar Curso
+                  </button>
+                </div>
+              </form>
+            </div>
+          </div>
+        ) : null}
+      </div>
+    </main>
   );
 }

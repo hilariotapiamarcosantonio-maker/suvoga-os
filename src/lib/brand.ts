@@ -1,9 +1,9 @@
 export const brand = {
-  productName: "Luma Route OS",
-  parentBrand: "Luma Premium",
-  workspaceName: "DB Capilar",
+  productName: "SuVoGa OS",
+  parentBrand: "SuVoGa",
+  workspaceName: "DB Cursos y Spa",
   tagline:
-    "Sistema comercial para rutas capilares, lineas, promotores y cobros.",
+    "Sistema operativo para cursos, servicios spa, pacientes e inscripciones.",
   description:
-    "Infraestructura operativa para organizar ventas por linea, entregas, saldos pendientes y promotores.",
+    "Infraestructura operativa para organizar catalogo, pacientes, inscripciones y anticipos.",
 };

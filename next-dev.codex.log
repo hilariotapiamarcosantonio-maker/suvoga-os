@@ -1,0 +1,26 @@
+
+> crm-admin@0.1.0 dev
+> next dev -p 3000
+
+  ▲ Next.js 14.2.15
+  - Local:        http://localhost:3000
+  - Environments: .env.local
+
+ ✓ Starting...
+ ✓ Ready in 2.3s
+ ✓ Compiled /src/middleware in 165ms (72 modules)
+ ○ Compiling /admin ...
+ ✓ Compiled /admin in 5s (1703 modules)
+ ✓ Compiled in 1697ms (290 modules)
+ GET /admin 200 in 7140ms
+ ○ Compiling / ...
+ ✓ Compiled / in 1618ms (1394 modules)
+ GET / 200 in 1872ms
+ GET / 200 in 89ms
+ ✓ Compiled /favicon.ico in 396ms (740 modules)
+ GET /favicon.ico 200 in 487ms
+ ○ Compiling /curso/[id] ...
+ ✓ Compiled /curso/[id] in 865ms (1455 modules)
+ ✓ Compiled /admin in 318ms (1880 modules)
+ GET / 200 in 209ms
+ GET /favicon.ico 200 in 43ms

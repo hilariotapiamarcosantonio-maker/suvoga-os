@@ -4,33 +4,33 @@
 
 @layer base {
   :root {
-    --background: 210 28% 4%; /* #080B0E */
-    --foreground: 195 24% 96%; /* #F4F7F8 */
+    --background: 40 60% 98%; /* #FDFBF7 */
+    --foreground: 145 64% 14%; /* #0D3B22 */
 
-    --card: 212 31% 10%; /* #111820 */
-    --card-foreground: 195 24% 96%;
+    --card: 0 0% 100%;
+    --card-foreground: 145 64% 14%;
 
-    --popover: 212 31% 10%;
-    --popover-foreground: 195 24% 96%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 145 64% 14%;
 
-    --primary: 41 49% 57%; /* #C7A45A Gold */
-    --primary-foreground: 210 28% 4%;
+    --primary: 145 64% 14%; /* #0D3B22 */
+    --primary-foreground: 40 60% 98%;
 
-    --secondary: 212 28% 12%; /* #151D26 */
-    --secondary-foreground: 210 16% 71%; /* #AAB4BF */
+    --secondary: 38 56% 94%; /* #F7F1E7 */
+    --secondary-foreground: 145 64% 14%;
 
-    --muted: 212 28% 12%;
-    --muted-foreground: 210 16% 71%;
+    --muted: 38 56% 94%;
+    --muted-foreground: 143 13% 35%;
 
-    --accent: 212 28% 12%;
-    --accent-foreground: 195 24% 96%;
+    --accent: 45 64% 52%; /* #D4AF37 */
+    --accent-foreground: 145 64% 14%;
 
     --destructive: 0 51% 32%; /* #7A2828 */
-    --destructive-foreground: 195 24% 96%;
+    --destructive-foreground: 40 60% 98%;
 
-    --border: 212 22% 21%; /* #2A3542 */
-    --input: 212 22% 21%;
-    --ring: 41 49% 57%;
+    --border: 37 41% 83%; /* #E7DAC2 */
+    --input: 37 41% 83%;
+    --ring: 45 64% 52%;
 
     --radius: 0.5rem;
 
@@ -40,29 +40,6 @@
     --chart-4: 212 49% 38%; /* Blue */
     --chart-5: 262 31% 41%; /* Violet */
   }
-
-  /* Force Dark Mode essentially */
-  .dark {
-    --background: 210 28% 4%;
-    --foreground: 195 24% 96%;
-    --card: 212 31% 10%;
-    --card-foreground: 195 24% 96%;
-    --popover: 212 31% 10%;
-    --popover-foreground: 195 24% 96%;
-    --primary: 41 49% 57%;
-    --primary-foreground: 210 28% 4%;
-    --secondary: 212 28% 12%;
-    --secondary-foreground: 210 16% 71%;
-    --muted: 212 28% 12%;
-    --muted-foreground: 210 16% 71%;
-    --accent: 212 28% 12%;
-    --accent-foreground: 195 24% 96%;
-    --destructive: 0 51% 32%;
-    --destructive-foreground: 195 24% 96%;
-    --border: 212 22% 21%;
-    --input: 212 22% 21%;
-    --ring: 41 49% 57%;
-  }
 }
 
 @layer base {
@@ -71,5 +48,22 @@
   }
   body {
     @apply bg-background text-foreground antialiased;
+  }
+
+  .suvoga-serif {
+    font-family: var(--font-serif), Georgia, serif;
+  }
+
+  .suvoga-sans {
+    font-family: var(--font-sans), Arial, sans-serif;
+  }
+}
+
+@layer utilities {
+  .line-clamp-3 {
+    display: -webkit-box;
+    overflow: hidden;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 3;
   }
 }

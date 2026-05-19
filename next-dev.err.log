@@ -1,0 +1,57 @@
+No se pudo leer Programacion_Cursos desde Google Sheets (400); usando fallback local.
+ ⨯ Error: ENOENT: no such file or directory, open 'G:\suvoga-os\CRM En Sheets - copia\crm-admin\data\suvoga_os\Programacion_Cursos.csv'
+    at async readLocalSheet (./src/lib/crm-data/get-suvoga-data.ts:234:18)
+    at async readTable (./src/lib/crm-data/get-suvoga-data.ts:262:15)
+    at async Promise.all (index 4)
+    at async getSuvogaData (./src/lib/crm-data/get-suvoga-data.ts:399:106)
+    at async AdminPage (./src/app/admin/page.tsx:17:18)
+digest: "390238596"
+ ⨯ Error: ENOENT: no such file or directory, open 'G:\suvoga-os\CRM En Sheets - copia\crm-admin\data\suvoga_os\Programacion_Cursos.csv'
+    at async readLocalSheet (./src/lib/crm-data/get-suvoga-data.ts:234:18)
+    at async readTable (./src/lib/crm-data/get-suvoga-data.ts:262:15)
+    at async Promise.all (index 4)
+    at async getSuvogaData (./src/lib/crm-data/get-suvoga-data.ts:399:106)
+    at async AdminPage (./src/app/admin/page.tsx:17:18)
+digest: "390238596"
+No se pudo leer Programacion_Cursos desde Google Sheets (400); usando fallback local.
+ ⨯ Error: ENOENT: no such file or directory, open 'G:\suvoga-os\CRM En Sheets - copia\crm-admin\data\suvoga_os\Programacion_Cursos.csv'
+    at async readLocalSheet (./src/lib/crm-data/get-suvoga-data.ts:234:18)
+    at async readTable (./src/lib/crm-data/get-suvoga-data.ts:262:15)
+    at async Promise.all (index 4)
+    at async getSuvogaData (./src/lib/crm-data/get-suvoga-data.ts:399:106)
+    at async AdminPage (./src/app/admin/page.tsx:17:18)
+digest: "390238596"
+ ⨯ Error: ENOENT: no such file or directory, open 'G:\suvoga-os\CRM En Sheets - copia\crm-admin\data\suvoga_os\Programacion_Cursos.csv'
+    at async readLocalSheet (./src/lib/crm-data/get-suvoga-data.ts:234:18)
+    at async readTable (./src/lib/crm-data/get-suvoga-data.ts:262:15)
+    at async Promise.all (index 4)
+    at async getSuvogaData (./src/lib/crm-data/get-suvoga-data.ts:399:106)
+    at async AdminPage (./src/app/admin/page.tsx:17:18)
+digest: "390238596"
+No se pudo leer Programacion_Cursos desde Google Sheets (400); usando fallback local.
+ ⨯ Error: ENOENT: no such file or directory, open 'G:\suvoga-os\CRM En Sheets - copia\crm-admin\data\suvoga_os\Programacion_Cursos.csv'
+    at async readLocalSheet (./src/lib/crm-data/get-suvoga-data.ts:234:18)
+    at async readTable (./src/lib/crm-data/get-suvoga-data.ts:262:15)
+    at async Promise.all (index 4)
+    at async getSuvogaData (./src/lib/crm-data/get-suvoga-data.ts:399:106)
+    at async AdminPage (./src/app/admin/page.tsx:17:18)
+digest: "390238596"
+ ⨯ Error: ENOENT: no such file or directory, open 'G:\suvoga-os\CRM En Sheets - copia\crm-admin\data\suvoga_os\Programacion_Cursos.csv'
+    at async readLocalSheet (./src/lib/crm-data/get-suvoga-data.ts:234:18)
+    at async readTable (./src/lib/crm-data/get-suvoga-data.ts:262:15)
+    at async Promise.all (index 4)
+    at async getSuvogaData (./src/lib/crm-data/get-suvoga-data.ts:399:106)
+    at async AdminPage (./src/app/admin/page.tsx:17:18)
+digest: "390238596"
+<w> [webpack.cache.PackFileCacheStrategy/webpack.FileSystemInfo] Resolving '../../../../.next/server/app/api/suvoga/inscriptions/route' in G:\suvoga-os\CRM En Sheets - copia\crm-admin\node_modules\next\dist\server for build dependencies doesn't lead to expected result 'G:\suvoga-os\CRM En Sheets - copia\crm-admin\.next\server\app\api\suvoga\inscriptions\route.js', but to 'Error: Can't resolve '../../../../.next/server/app/api/suvoga/inscriptions/route' in 'G:\suvoga-os\CRM En Sheets - copia\crm-admin\node_modules\next\dist\server'' instead. Resolving dependencies are ignored for this path.
+<w>  at resolve commonjs file ../../../../.next/server/app/api/suvoga/inscriptions/route (expected G:\suvoga-os\CRM En Sheets - copia\crm-admin\.next\server\app\api\suvoga\inscriptions\route.js)
+<w>  at file dependencies G:\suvoga-os\CRM En Sheets - copia\crm-admin\node_modules\next\dist\server\require.js
+<w>  at file G:\suvoga-os\CRM En Sheets - copia\crm-admin\node_modules\next\dist\server\require.js
+<w>  at file dependencies G:\suvoga-os\CRM En Sheets - copia\crm-admin\node_modules\next\dist\server\load-components.js
+<w>  at file G:\suvoga-os\CRM En Sheets - copia\crm-admin\node_modules\next\dist\server\load-components.js
+<w>  at file dependencies G:\suvoga-os\CRM En Sheets - copia\crm-admin\node_modules\next\dist\build\utils.js
+<w>  at file G:\suvoga-os\CRM En Sheets - copia\crm-admin\node_modules\next\dist\build\utils.js
+<w>  at file dependencies G:\suvoga-os\CRM En Sheets - copia\crm-admin\node_modules\next\dist\build\webpack\loaders\next-route-loader\index.js
+<w>  at file G:\suvoga-os\CRM En Sheets - copia\crm-admin\node_modules\next\dist\build\webpack\loaders\next-route-loader\index.js
+<w>  at resolve commonjs G:\suvoga-os\CRM En Sheets - copia\crm-admin\node_modules\next\dist\build\webpack\loaders\next-route-loader\index.js
+<w> [webpack.cache.PackFileCacheStrategy] Caching failed for pack: Error: ENOENT: no such file or directory, lstat 'G:\suvoga-os\CRM En Sheets - copia\crm-admin\.next\server\app\api'

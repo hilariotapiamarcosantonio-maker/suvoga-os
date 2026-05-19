@@ -1,0 +1,26 @@
+ID_Servicio,Nombre,Tipo (Curso o Spa),Precio_Total,Monto_Anticipo,Cupos_Totales
+CUR-001,Master en Drenaje Linfático,Curso,0,1000,12
+CUR-002,Taller de Drenaje Linfático,Curso,0,1000,12
+CUR-003,Diplomado de Masaje Corporal,Curso,0,1000,12
+CUR-004,Masaje Corporal Avanzado,Curso,0,1000,12
+CUR-005,Taller de Aparatología 9 en 1,Curso,0,1000,12
+CUR-006,Taller de Ondas de Choques,Curso,0,1000,12
+CUR-007,Taller de Radiofrecuencia Indiba,Curso,0,1000,12
+CUR-008,Maderoterapia,Curso,0,1000,12
+CUR-009,Madeoterapia,Curso,0,1000,12
+CUR-010,Taller de Vacummterapia,Curso,0,1000,12
+CUR-011,Curso de Masaje Terapéutico,Curso,0,1000,12
+CUR-012,Curso Taller de Limpieza Facial Básica y Profunda,Curso,0,1000,12
+CUR-013,"Taller de Terapias Alternativas (Vino, chocolate, barro, café)",Curso,0,1000,12
+CUR-014,Taller de Kinesiotape,Curso,0,1000,12
+CUR-015,Taller Elaboración de Productos de Spa,Curso,0,1000,12
+CUR-016,Taller de Velas de Masajes y Aromaterapia,Curso,0,1000,12
+CUR-017,Taller de Desintoxicación Iónica,Curso,0,1000,12
+CUR-018,Taller de Manejo de Máquina G5,Curso,0,1000,12
+CUR-019,Taller de Drenaje Brasileño,Curso,0,1000,12
+CUR-020,Taller Manejo de Complicaciones Post Quirúrgicas,Curso,0,1000,12
+CUR-021,Taller de Terapia de Alineación Estructura Ósea,Curso,0,1000,12
+CUR-022,Taller de Drenaje Linfático Facial,Curso,0,1000,12
+CUR-023,Taller de Masaje Desestructurante,Curso,0,1000,12
+CUR-024,Taller de Depilación con Cera,Curso,0,1000,12
+CUR-025,Curso Reflexología Podal,Curso,0,1000,12

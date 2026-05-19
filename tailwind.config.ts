@@ -1,7 +1,6 @@
 import type { Config } from "tailwindcss";
 
 const config: Config = {
-  darkMode: ["class"],
   content: [
     "./src/pages/**/*.{js,ts,jsx,tsx,mdx}",
     "./src/components/**/*.{js,ts,jsx,tsx,mdx}",
@@ -11,23 +10,23 @@ const config: Config = {
     extend: {
       colors: {
         crm: {
-          bg: "#080B0E",
-          bg2: "#0C1116",
-          surface: "#111820",
-          surface2: "#151D26",
-          surface3: "#1B2530",
-          line: "#2A3542",
-          lineSoft: "#1F2A34",
-          text: "#F4F7F8",
-          muted: "#AAB4BF",
-          faint: "#6F7A86",
-          gold: "#C7A45A",
+          bg: "#FDFBF7",
+          bg2: "#FAFAFA",
+          surface: "#FFFFFF",
+          surface2: "#F7F1E7",
+          surface3: "#EFE5D2",
+          line: "#E7DAC2",
+          lineSoft: "#F0E7D6",
+          text: "#0D3B22",
+          muted: "#4E6658",
+          faint: "#8A7D69",
+          gold: "#D4AF37",
           teal: "#2BAE9E",
-          blue: "#315D91",
-          amber: "#B8860B",
+          blue: "#2F6550",
+          amber: "#D4AF37",
           violet: "#61498A",
           cyan: "#2A8C95",
-          green: "#2F7D52",
+          green: "#0D3B22",
           red: "#7A2828",
         },
         background: "var(--background)",
