@@ -92,7 +92,9 @@ export default function CoursePage({ params }: CoursePageProps) {
 
   const heroStyle = bgImageRelativePath
     ? {
-        backgroundImage: `linear-gradient(rgba(13, 59, 34, 0.88), rgba(13, 59, 34, 0.96)), url(${bgImageRelativePath})`,
+        backgroundImage: `linear-gradient(120deg, rgba(13, 59, 34, 0.66), rgba(13, 59, 34, 0.38), rgba(13, 59, 34, 0.78)), url(${bgImageRelativePath})`,
+        backgroundSize: "cover",
+        backgroundPosition: "center",
       }
     : {
         backgroundImage: `linear-gradient(120deg, rgba(13, 59, 34, 0.95), rgba(13, 59, 34, 0.85))`,
@@ -107,11 +109,11 @@ export default function CoursePage({ params }: CoursePageProps) {
     <main className="min-h-screen bg-[#FDFBF7] text-[#0D3B22]">
       {/* Premium Hero Section */}
       <section
-        className="relative bg-[#0D3B22] text-[#FDFBF7] overflow-hidden bg-cover bg-center"
+        className="relative bg-[#0D3B22] text-[#FDFBF7] overflow-hidden bg-cover bg-center min-h-[480px] lg:min-h-[520px] flex items-center"
         style={heroStyle}
       >
         <div className="absolute inset-0 bg-gradient-to-b from-transparent via-[#0D3B22]/60 to-[#0D3B22]/95 pointer-events-none" />
-        <div className="relative z-10 mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8 lg:py-24">
+        <div className="relative z-10 mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8 lg:py-24 w-full">
           <Link
             href="/"
             className="inline-flex items-center gap-2 text-sm font-semibold text-[#EAE2D0] transition-colors hover:text-[#D4AF37] focus:outline-none focus:ring-2 focus:ring-[#D4AF37]/50 rounded-lg px-2 py-1"
@@ -143,17 +145,26 @@ export default function CoursePage({ params }: CoursePageProps) {
               </div>
 
               {/* Title */}
-              <h1 className="suvoga-serif text-4xl font-bold leading-tight text-white sm:text-5xl lg:text-7.5xl">
+              <h1 
+                className="suvoga-serif text-4xl font-bold leading-tight text-white sm:text-5xl lg:text-7.5xl"
+                style={{ textShadow: "0 2px 10px rgba(12, 35, 25, 0.9)" }}
+              >
                 {course.nombre}
               </h1>
 
               {/* Subtitle */}
               {course.subtitulo_premium ? (
-                <p className="max-w-3xl text-lg leading-relaxed text-[#EAE2D0] font-sans font-light">
+                <p 
+                  className="max-w-3xl text-lg leading-relaxed text-[#EAE2D0] font-sans font-light"
+                  style={{ textShadow: "0 2px 8px rgba(12, 35, 25, 0.8)" }}
+                >
                   {course.subtitulo_premium}
                 </p>
               ) : (
-                <p className="max-w-3xl text-lg leading-relaxed text-[#EAE2D0] font-sans font-light">
+                <p 
+                  className="max-w-3xl text-lg leading-relaxed text-[#EAE2D0] font-sans font-light"
+                  style={{ textShadow: "0 2px 8px rgba(12, 35, 25, 0.8)" }}
+                >
                   {course.description}
                 </p>
               )}

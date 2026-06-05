@@ -133,83 +133,108 @@ export function CourseCatalogClient() {
       >
         {courses.map((course) => {
           const Icon = typeIcon(course.tipo);
+          const courseIdNum = parseInt(course.idServicio.replace("CUR-", ""), 10);
+          const ext = (!isNaN(courseIdNum) && courseIdNum >= 18 && courseIdNum <= 25) ? "svg" : "png";
+          const cardImageUrl = course.imagen_url || `/images/courses/${course.idServicio.toLowerCase()}.${ext}`;
 
           return (
             <motion.article
               key={course.idServicio}
               variants={cardVariants}
               whileHover={{ y: -8 }}
-              className="group flex min-h-[330px] flex-col rounded-3xl border border-[#D4AF37]/30 bg-white p-5 text-[#0D3B22] shadow-sm shadow-[#0D3B22]/5 transition-all duration-300 hover:-translate-y-2 hover:border-[#D4AF37]/70 hover:shadow-xl hover:shadow-[#D4AF37]/20"
+              className="group flex h-full flex-col overflow-hidden rounded-3xl border border-[#D4AF37]/30 bg-white text-[#0D3B22] shadow-sm shadow-[#0D3B22]/5 transition-all duration-300 hover:border-[#D4AF37]/70 hover:shadow-xl hover:shadow-[#D4AF37]/20"
             >
-              <div className="flex items-start justify-between gap-4">
-                <Link
-                  href={`/curso/${course.idServicio}`}
-                  aria-label={`Ver detalles de ${course.nombre}`}
-                  className="inline-flex h-11 w-11 items-center justify-center rounded-2xl border border-[#D4AF37]/30 bg-[#FDFBF7] text-[#0D3B22] transition-colors duration-300 hover:border-[#D4AF37]/60 hover:bg-[#D4AF37]/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#D4AF37]/70 focus-visible:ring-offset-2 focus-visible:ring-offset-white"
-                >
-                  <Icon className="h-5 w-5" />
-                </Link>
-                <span className="rounded-full border border-[#D4AF37]/25 px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.18em] text-[#0D3B22]/55 transition-colors duration-300 group-hover:border-[#D4AF37]/60 group-hover:bg-[#D4AF37]/10 group-hover:text-[#8D7530]">
-                  {course.category || "General"}
-                </span>
+              {/* Image Header */}
+              <div className="relative w-full overflow-hidden h-[160px] sm:h-[180px] md:h-[200px] shrink-0">
+                <img
+                  src={cardImageUrl}
+                  alt={course.nombre}
+                  className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+                />
+                <div
+                  className="absolute inset-0"
+                  style={{
+                    backgroundImage: "linear-gradient(rgba(13, 59, 34, 0.12), rgba(13, 59, 34, 0.42))",
+                  }}
+                />
+                
+                {/* Badge Overlay */}
+                <div className="absolute top-4 left-4 flex gap-2">
+                  <span className="rounded-full bg-[#0D3B22]/85 backdrop-blur-sm border border-[#D4AF37]/30 px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.16em] text-white">
+                    {course.category || "General"}
+                  </span>
+                </div>
+                
+                {/* Icon Overlay */}
+                <div className="absolute top-4 right-4">
+                  <div className="inline-flex h-8 w-8 items-center justify-center rounded-xl border border-white/20 bg-white/10 text-white backdrop-blur-sm shadow-sm">
+                    <Icon className="h-4 w-4" />
+                  </div>
+                </div>
               </div>
 
-              <Link
-                href={`/curso/${course.idServicio}`}
-                className="mt-5 block rounded-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#D4AF37]/70 focus-visible:ring-offset-4 focus-visible:ring-offset-white"
-              >
-                <h3 className="suvoga-serif text-2xl font-semibold leading-tight text-[#0D3B22] transition-colors hover:text-[#145332]">
-                {course.nombre}
-                </h3>
-              </Link>
-              <p className="mt-3 line-clamp-3 overflow-hidden [display:-webkit-box] [-webkit-box-orient:vertical] [-webkit-line-clamp:3] font-sans text-sm leading-6 text-[#0D3B22]/70">
-                {course.description}
-              </p>
-
-              <div className="mt-auto space-y-3 pt-6">
-                <div className="grid grid-cols-2 gap-3 text-sm">
-                  <div className="rounded-2xl border border-[#0D3B22]/10 bg-[#0D3B22]/[0.03] p-3">
-                    <p className="text-[11px] font-semibold uppercase tracking-[0.14em] text-[#6B6048]">
-                      Precio
-                    </p>
-                    <p className="mt-1 font-semibold text-[#0D3B22]">
-                      {priceLabel(course.precioTotal)}
-                    </p>
-                  </div>
-                  <div className="rounded-2xl border border-[#D4AF37]/25 bg-[#FDFBF7] p-3">
-                    <p className="text-[11px] font-semibold uppercase tracking-[0.14em] text-[#8D7530]">
-                      Anticipo
-                    </p>
-                    <p className="mt-1 font-semibold text-[#0D3B22]">
-                      {formatDop(course.montoAnticipo || 1000)}
-                    </p>
-                  </div>
-                </div>
-
-                <div className="flex items-center justify-between gap-3 border-t border-[#D4AF37]/20 pt-4 text-sm text-[#4E6658]">
-                  <span className="inline-flex items-center gap-2">
-                    <Users className="h-4 w-4 text-[#0D3B22]" />
-                    {course.cuposTotales || 12} cupos
-                  </span>
-                  <span className="inline-flex items-center gap-2">
-                    <CalendarDays className="h-4 w-4 text-[#0D3B22]" />
-                    Abierto
-                  </span>
-                </div>
-
-                <button
-                  type="button"
-                  onClick={() => setSelectedCourse(course)}
-                  className="inline-flex h-11 w-full items-center justify-center rounded-2xl bg-[#0D3B22] px-4 text-sm font-semibold text-[#FDFBF7] shadow-sm shadow-[#0D3B22]/10 transition-colors hover:bg-[#145332] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#D4AF37]/70 focus-visible:ring-offset-2 focus-visible:ring-offset-[#FDFBF7]"
-                >
-                  Inscribirse hoy
-                </button>
+              {/* Card Body */}
+              <div className="flex flex-col flex-grow p-5">
                 <Link
                   href={`/curso/${course.idServicio}`}
-                  className="inline-flex h-11 w-full items-center justify-center rounded-2xl border border-[#D4AF37]/40 bg-white px-4 text-sm font-semibold text-[#0D3B22] transition-colors hover:border-[#D4AF37]/70 hover:bg-[#FDFBF7] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#D4AF37]/70 focus-visible:ring-offset-2 focus-visible:ring-offset-[#FDFBF7]"
+                  className="block rounded-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#D4AF37]/70 focus-visible:ring-offset-2 focus-visible:ring-offset-white"
                 >
-                  Ver Detalles
+                  <h3 className="suvoga-serif text-xl font-semibold leading-snug text-[#0D3B22] transition-colors hover:text-[#145332]">
+                    {course.nombre}
+                  </h3>
                 </Link>
+
+                <p className="mt-3 line-clamp-3 overflow-hidden font-sans text-xs leading-relaxed text-[#4E6658] flex-grow">
+                  {course.description}
+                </p>
+
+                <div className="mt-5 space-y-4">
+                  <div className="grid grid-cols-2 gap-3 text-xs">
+                    <div className="rounded-2xl border border-[#0D3B22]/10 bg-[#0D3B22]/[0.03] p-3">
+                      <p className="text-[10px] font-semibold uppercase tracking-[0.14em] text-[#6B6048]">
+                        Precio
+                      </p>
+                      <p className="mt-1 font-semibold text-[#0D3B22]">
+                        {priceLabel(course.precioTotal)}
+                      </p>
+                    </div>
+                    <div className="rounded-2xl border border-[#D4AF37]/25 bg-[#FDFBF7] p-3">
+                      <p className="text-[10px] font-semibold uppercase tracking-[0.14em] text-[#8D7530]">
+                        Anticipo
+                      </p>
+                      <p className="mt-1 font-semibold text-[#0D3B22]">
+                        {formatDop(course.montoAnticipo || 1000)}
+                      </p>
+                    </div>
+                  </div>
+
+                  <div className="flex items-center justify-between gap-3 border-t border-[#D4AF37]/20 pt-4 text-xs text-[#4E6658]">
+                    <span className="inline-flex items-center gap-1.5">
+                      <Users className="h-4 w-4 text-[#0D3B22]" />
+                      {course.cuposTotales || 12} cupos
+                    </span>
+                    <span className="inline-flex items-center gap-1.5">
+                      <CalendarDays className="h-4 w-4 text-[#0D3B22]" />
+                      Abierto
+                    </span>
+                  </div>
+
+                  <div className="flex flex-col gap-2 pt-2">
+                    <button
+                      type="button"
+                      onClick={() => setSelectedCourse(course)}
+                      className="inline-flex h-11 w-full items-center justify-center rounded-2xl bg-[#0D3B22] px-4 text-sm font-semibold text-[#FDFBF7] shadow-sm shadow-[#0D3B22]/10 transition-colors hover:bg-[#145332] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#D4AF37]/70 focus-visible:ring-offset-2 focus-visible:ring-offset-[#FDFBF7]"
+                    >
+                      Inscribirse hoy
+                    </button>
+                    <Link
+                      href={`/curso/${course.idServicio}`}
+                      className="inline-flex h-11 w-full items-center justify-center rounded-2xl border border-[#D4AF37]/40 bg-white px-4 text-sm font-semibold text-[#0D3B22] transition-colors hover:border-[#D4AF37]/70 hover:bg-[#FDFBF7] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#D4AF37]/70 focus-visible:ring-offset-2 focus-visible:ring-offset-[#FDFBF7]"
+                    >
+                      Ver Detalles
+                    </Link>
+                  </div>
+                </div>
               </div>
             </motion.article>
           );
