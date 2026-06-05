@@ -1,3 +1,5 @@
+import fs from "node:fs";
+import path from "node:path";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import {
@@ -80,9 +82,22 @@ export default function CoursePage({ params }: CoursePageProps) {
 
   const duration = durationLabel(course.description);
 
+  const bgImageRelativePath = `/images/courses/${course.idServicio.toLowerCase()}.png`;
+  const bgImagePath = path.join(process.cwd(), "public", bgImageRelativePath);
+  const hasBgImage = fs.existsSync(bgImagePath);
+
   return (
     <main className="min-h-screen bg-[#FDFBF7] text-[#0D3B22]">
-      <section className="bg-[#0D3B22] text-[#FDFBF7]">
+      <section
+        className="relative bg-[#0D3B22] text-[#FDFBF7] overflow-hidden bg-cover bg-center"
+        style={
+          hasBgImage
+            ? {
+                backgroundImage: `linear-gradient(rgba(13, 59, 34, 0.88), rgba(13, 59, 34, 0.96)), url(${bgImageRelativePath})`,
+              }
+            : undefined
+        }
+      >
         <div className="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8 lg:py-20">
           <Link
             href="/"

@@ -23,7 +23,8 @@ const courseCatalog = [
   {
     nombre: "Masaje Corporal Avanzado",
     category: "General",
-    description: genericCourseDescription,
+    description:
+      "Especialización técnica avanzada en masaje corporal. Incluye protocolos estructurados de Deep Tissue, biomecánica y alineación corporal del terapeuta, y rituales de experiencia de cliente de lujo en cabina.",
   },
   {
     nombre: "Taller de Aparatología 9 en 1",
@@ -84,10 +85,10 @@ const courseCatalog = [
     description: genericCourseDescription,
   },
   {
-    nombre: "Taller Elaboración de Productos de Spa",
+    nombre: "Jabones Artesanales & Productos de Spa",
     category: "Emprendimiento",
     description:
-      "Química cosmética básica para productos de spa",
+      "Formación práctica en saponificación en frío y caliente, técnicas avanzadas de pigmentación natural con arcillas y extractos botánicos, empaque orgánico de diseño y métricas de optimización de costos locales para emprendimientos de spa exitosos.",
   },
   {
     nombre: "Taller de Velas de Masajes y Aromaterapia",
@@ -144,6 +145,12 @@ const courseCatalog = [
     category: "Especialidades",
     description:
       "Técnica de masaje en puntos específicos de los pies para mejorar la salud general. 6 clases",
+  },
+  {
+    nombre: "Velas Aromáticas Premium",
+    category: "Emprendimiento",
+    description:
+      "Aprende la física de fusión de la cera de soja, cálculo termodinámico de carga de fragancia y aceites esenciales, y el diseño estético de contenedores premium para crear velas decorativas y de masaje de alta gama.",
   },
 ] as const;
 
