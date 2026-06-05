@@ -20,6 +20,9 @@ import { CourseLandingSignup } from "@/components/suvoga/CourseLandingSignup";
 import { CourseHeroCTA } from "@/components/suvoga/CourseHeroCTA";
 import { studentTestimonials } from "@/data/testimonials";
 import { graduatesList } from "@/data/graduates";
+import { contactInfo } from "@/data/contact";
+import { MessageCircle } from "lucide-react";
+import { Instagram } from "@/components/suvoga/BrandIcons";
 
 
 type CoursePageProps = {
@@ -89,6 +92,7 @@ export default function CoursePage({ params }: CoursePageProps) {
   }
 
   const duration = durationLabel(course.description);
+  const isRealVideo = course.youtube_url && !course.youtube_url.includes("dQw4w9WgXcQ");
 
   // Resolving image paths
   const courseIdNum = parseInt(course.idServicio.replace("CUR-", ""), 10);
@@ -224,7 +228,7 @@ export default function CoursePage({ params }: CoursePageProps) {
         <div className="grid gap-6 md:grid-cols-2">
           {/* Left Column: YouTube Video Embed */}
           <div className="h-full">
-            {course.youtube_url ? (
+            {isRealVideo ? (
               <div className="h-full flex flex-col justify-between rounded-3xl border border-[#D4AF37]/20 bg-white p-6 shadow-sm shadow-[#0D3B22]/5">
                 <div className="flex items-center gap-3 mb-4">
                   <div className="inline-flex h-9 w-9 items-center justify-center rounded-xl border border-[#D4AF37]/30 bg-[#FDFBF7] text-[#0D3B22]">
@@ -248,10 +252,10 @@ export default function CoursePage({ params }: CoursePageProps) {
               <div className="h-full flex flex-col items-center justify-center text-center p-8 rounded-3xl border border-dashed border-[#D4AF37]/30 bg-[#FDFBF7]/50 min-h-[240px]">
                 <Video className="h-8 w-8 text-[#C5A028]/40 mb-3" />
                 <h3 className="suvoga-serif text-lg font-semibold text-[#0D3B22]/80">
-                  Video de Presentación
+                  Video de presentación próximamente
                 </h3>
-                <p className="text-xs text-[#6B6048] mt-1 max-w-xs leading-relaxed">
-                  El video de presentación de esta técnica está en proceso de edición y estará disponible próximamente.
+                <p className="text-xs text-[#6B6048] mt-2 max-w-xs leading-relaxed">
+                  Aquí se colocará una explicación de 3–5 minutos sobre el curso, requisitos e inscripción.
                 </p>
               </div>
             )}
@@ -454,6 +458,59 @@ export default function CoursePage({ params }: CoursePageProps) {
                   </div>
                 )}
               </div>
+            </div>
+          </article>
+
+          {/* Contacto Directo Section */}
+          <article className="rounded-3xl border border-[#D4AF37]/25 bg-white p-6 shadow-sm shadow-[#0D3B22]/5 sm:p-8 space-y-4">
+            <div>
+              <span className="text-xs font-semibold uppercase tracking-[0.2em] text-[#C5A028]">
+                ¿Tienes dudas sobre la inscripción o la academia?
+              </span>
+              <h2 className="suvoga-serif mt-2 text-2xl font-semibold text-[#0D3B22]">
+                Ponte en contacto directo
+              </h2>
+              <p className="text-xs text-[#6B6048] mt-1 leading-relaxed">
+                Estamos disponibles para ayudarte a elegir el mejor programa y resolver tus preguntas sobre horarios, pagos y certificación.
+              </p>
+            </div>
+            
+            <div className="grid gap-4 sm:grid-cols-2 pt-2">
+              <div className="flex items-start gap-3 p-3 rounded-2xl bg-[#0D3B22]/[0.02] border border-[#0D3B22]/5">
+                <div className="h-2 w-2 rounded-full bg-[#D4AF37] mt-2 shrink-0" />
+                <div className="text-xs">
+                  <span className="font-semibold text-[#0D3B22] block">Horario de Atención</span>
+                  <span className="text-[#6B6048]">{contactInfo.horario}</span>
+                </div>
+              </div>
+              <div className="flex items-start gap-3 p-3 rounded-2xl bg-[#0D3B22]/[0.02] border border-[#0D3B22]/5">
+                <div className="h-2 w-2 rounded-full bg-[#D4AF37] mt-2 shrink-0" />
+                <div className="text-xs text-[#6B6048]">
+                  <span className="font-semibold text-[#0D3B22] block text-xs">Ubicación y Zona</span>
+                  <span>{contactInfo.ubicacion}</span>
+                </div>
+              </div>
+            </div>
+
+            <div className="flex flex-wrap gap-3 pt-2">
+              <a
+                href={contactInfo.whatsapp.link}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-[#0D3B22] hover:text-[#C5A028] bg-[#FDFBF7] border border-[#D4AF37]/30 hover:bg-[#F7F1E7] rounded-xl px-4 py-2.5 transition-all shadow-sm"
+              >
+                <MessageCircle className="h-4 w-4 text-[#C5A028]" />
+                Hablar por WhatsApp
+              </a>
+              <a
+                href={contactInfo.instagram.link}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-[#0D3B22] hover:text-[#C5A028] bg-[#FDFBF7] border border-[#D4AF37]/30 hover:bg-[#F7F1E7] rounded-xl px-4 py-2.5 transition-all shadow-sm"
+              >
+                <Instagram className="h-4 w-4 text-[#C5A028]" />
+                Ver Instagram
+              </a>
             </div>
           </article>
 

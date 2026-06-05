@@ -61,7 +61,7 @@ export function SocialProofSection() {
               {testimonial.esDemo && (
                 <div className="absolute top-4 right-4">
                   <span className="text-[9px] font-semibold uppercase tracking-wider text-[#C5A028] bg-[#FDFBF7] border border-[#D4AF37]/30 px-2 py-0.5 rounded-full">
-                    Referencia
+                    Estructura preparada para testimonios reales
                   </span>
                 </div>
               )}
@@ -169,7 +169,7 @@ export function SocialProofSection() {
           {/* Explicitly labeled demo placeholder */}
           <div className="relative z-10 mt-6 flex items-center justify-center text-center">
             <span className="text-[10px] font-medium text-[#8D7530] bg-[#D4AF37]/10 border border-[#D4AF37]/20 rounded-md px-3 py-1">
-              Vista demo — Estructura lista para sincronizar con Google Business Profile
+              Estructura preparada para reseñas reales de Google Business Profile
             </span>
           </div>
         </div>
@@ -258,7 +258,7 @@ export function SocialProofSection() {
         {/* Gallery reference warning label */}
         <div className="mt-8 text-center">
           <p className="text-[10px] text-[#8D7530] font-medium italic">
-            * Galería de referencia académica — los perfiles son ejemplos de egreso técnico.
+            * Galería preparada para alumnas graduadas
           </p>
         </div>
       </section>
@@ -284,21 +284,21 @@ export function SocialProofSection() {
             <div className="mb-4">
               <span className="inline-flex items-center gap-1.5 text-xs font-semibold text-[#8D7530] uppercase tracking-wider">
                 <Video className="h-4 w-4 text-[#C5A028]" />
-                Video de referencia de clase
+                Video de referencia
               </span>
               <h3 className="suvoga-serif text-xl font-semibold text-[#0D3B22] mt-2">
                 Clase Práctica: Biomecánica y Ritmo en Camilla
               </h3>
             </div>
             
-            <div className="relative aspect-video w-full overflow-hidden rounded-2xl border border-[#D4AF37]/10 shadow-md">
-              <iframe
-                src="https://www.youtube.com/embed/jZIdS56ZcE4"
-                title="Clase práctica de spa de referencia"
-                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                allowFullScreen
-                className="absolute inset-0 h-full w-full border-0"
-              />
+            <div className="relative aspect-video w-full overflow-hidden rounded-2xl border border-dashed border-[#D4AF37]/30 bg-[#FDFBF7]/50 flex flex-col items-center justify-center text-center p-6 min-h-[240px]">
+              <Video className="h-8 w-8 text-[#C5A028]/40 mb-3 animate-pulse" />
+              <h3 className="suvoga-serif text-lg font-semibold text-[#0D3B22]/80">
+                Video de presentación próximamente
+              </h3>
+              <p className="text-xs text-[#6B6048] mt-2 max-w-sm leading-relaxed">
+                Aquí se colocará una explicación de 3–5 minutos sobre el curso, requisitos e inscripción.
+              </p>
             </div>
           </div>
 
@@ -316,7 +316,7 @@ export function SocialProofSection() {
               </p>
               <div className="rounded-2xl border border-white/10 bg-white/5 p-4 space-y-3">
                 <h4 className="text-xs font-semibold text-[#D4AF37] uppercase tracking-wider">
-                  Material de referencia visual
+                  Video de referencia
                 </h4>
                 <p className="text-[11px] text-[#EAE2D0]/90 leading-relaxed">
                   Para fines ilustrativos de producción, los videos mostrados demuestran el estándar del nicho (biomecánica, ambientación de spa y técnicas profesionales de cabina).
@@ -326,7 +326,7 @@ export function SocialProofSection() {
             
             <div className="mt-6 border-t border-white/10 pt-4 flex items-center justify-center text-center">
               <span className="text-[10px] font-semibold uppercase tracking-wider text-[#D4AF37] bg-white/10 px-3 py-1 rounded-md">
-                Demo visual de clases
+                Contenido visual de muestra
               </span>
             </div>
           </div>

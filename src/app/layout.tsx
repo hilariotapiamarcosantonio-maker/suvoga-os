@@ -4,6 +4,7 @@ import Link from "next/link";
 import { Leaf, ShieldCheck } from "lucide-react";
 import "./globals.css";
 import { brand } from "@/lib/brand";
+import { Footer } from "@/components/suvoga/Footer";
 
 const inter = Inter({ subsets: ["latin"], variable: "--font-sans" });
 const cormorant = Cormorant_Garamond({
@@ -59,6 +60,7 @@ export default function RootLayout({
           </header>
 
           {children}
+          <Footer />
         </div>
       </body>
     </html>
