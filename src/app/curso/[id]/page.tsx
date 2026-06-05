@@ -218,16 +218,13 @@ export default function CoursePage({ params }: CoursePageProps) {
               </div>
             </article>
           ) : (
-            // Show "próximamente" for MVP courses if video is not yet set
-            (course.idServicio === "CUR-004" || course.idServicio === "CUR-015" || course.idServicio === "CUR-016") && (
-              <article className="rounded-3xl border border-[#D4AF37]/10 bg-white/50 p-6 shadow-sm sm:p-8 flex flex-col items-center justify-center text-center space-y-4 border-dashed">
-                <Video className="h-10 w-10 text-[#C5A028]/50" />
-                <div>
-                  <h4 className="suvoga-serif text-lg font-semibold text-[#0D3B22]/80">Video de Presentación</h4>
-                  <p className="text-sm text-[#6B6048] mt-1">El video de presentación está en proceso de edición y estará disponible próximamente.</p>
-                </div>
-              </article>
-            )
+            <article className="rounded-3xl border border-[#D4AF37]/10 bg-white/50 p-6 shadow-sm sm:p-8 flex flex-col items-center justify-center text-center space-y-4 border-dashed">
+              <Video className="h-10 w-10 text-[#C5A028]/50" />
+              <div>
+                <h4 className="suvoga-serif text-lg font-semibold text-[#0D3B22]/80">Video de Presentación</h4>
+                <p className="text-sm text-[#6B6048] mt-1">El video de presentación está en proceso de edición y estará disponible próximamente.</p>
+              </div>
+            </article>
           )}
 
           {/* Syllabus Download Block */}
@@ -248,22 +245,19 @@ export default function CoursePage({ params }: CoursePageProps) {
               </Link>
             </article>
           ) : (
-            // Show disabled / próximamente download CTA for MVP courses
-            (course.idServicio === "CUR-004" || course.idServicio === "CUR-015" || course.idServicio === "CUR-016") && (
-              <article className="rounded-3xl border border-[#D4AF37]/15 bg-[#F5F0E5] p-6 shadow-sm sm:p-8 flex flex-col sm:flex-row items-center justify-between gap-6">
-                <div className="space-y-1 text-center sm:text-left">
-                  <h3 className="suvoga-serif text-xl font-semibold text-[#0D3B22]">Dossier Informativo</h3>
-                  <p className="text-sm text-[#6B6048]">El plan de estudios detallado en formato PDF estará disponible próximamente.</p>
-                </div>
-                <button
-                  disabled
-                  className="inline-flex h-12 shrink-0 items-center gap-2 rounded-2xl bg-[#0D3B22]/10 px-6 text-sm font-semibold text-[#0D3B22]/50 border border-[#0D3B22]/10 cursor-not-allowed"
-                >
-                  <Download className="h-4 w-4" />
-                  PDF Disponible Pronto
-                </button>
-              </article>
-            )
+            <article className="rounded-3xl border border-[#D4AF37]/15 bg-[#F5F0E5] p-6 shadow-sm sm:p-8 flex flex-col sm:flex-row items-center justify-between gap-6">
+              <div className="space-y-1 text-center sm:text-left">
+                <h3 className="suvoga-serif text-xl font-semibold text-[#0D3B22]">Dossier Informativo</h3>
+                <p className="text-sm text-[#6B6048]">El plan de estudios detallado en formato PDF estará disponible próximamente.</p>
+              </div>
+              <button
+                disabled
+                className="inline-flex h-12 shrink-0 items-center gap-2 rounded-2xl bg-[#0D3B22]/10 px-6 text-sm font-semibold text-[#0D3B22]/50 border border-[#0D3B22]/10 cursor-not-allowed"
+              >
+                <Download className="h-4 w-4" />
+                PDF Disponible Pronto
+              </button>
+            </article>
           )}
 
           {/* Description Section */}

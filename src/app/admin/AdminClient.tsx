@@ -2,6 +2,7 @@
 
 import { FormEvent, useEffect, useMemo, useState } from "react";
 import {
+  BarChart3,
   BookOpen,
   CalendarDays,
   ChevronLeft,
@@ -16,6 +17,7 @@ import {
   Search,
   ShieldCheck,
   Sparkles,
+  TrendingUp,
   Users,
   X,
 } from "lucide-react";
@@ -56,7 +58,7 @@ type AdminClientProps = {
   source: string;
 };
 
-type AdminTab = "inscripciones" | "calendario" | "cursos";
+type AdminTab = "dashboard" | "inscripciones" | "calendario" | "cursos";
 
 type CourseFormState = {
   nombre: string;
@@ -278,7 +280,7 @@ export function AdminClient({
   scheduledCourses,
   source,
 }: AdminClientProps) {
-  const [activeTab, setActiveTab] = useState<AdminTab>("calendario");
+  const [activeTab, setActiveTab] = useState<AdminTab>("dashboard");
   const [query, setQuery] = useState("");
   const [currentMonth, setCurrentMonth] = useState(() => new Date());
   const [events, setEvents] = useState<AdminScheduledCourse[]>(scheduledCourses);
@@ -294,10 +296,38 @@ export function AdminClient({
   const [courseFormError, setCourseFormError] = useState("");
 
   const pendingCount = rows.filter((row) => isPending(row.estadoAnticipo)).length;
+  const paidCount = rows.filter((row) => !isPending(row.estadoAnticipo)).length;
   const selectedCourse = catalogCourses.find(
     (course) => course.idServicio === courseId
   );
   const dayGrid = getDayGrid(currentMonth);
+
+  // Dashboard KPIs
+  const topCourses = useMemo(() => {
+    const counts: Record<string, { nombre: string; count: number }> = {};
+    for (const row of rows) {
+      const key = row.cursoNombre;
+      if (!counts[key]) counts[key] = { nombre: key, count: 0 };
+      counts[key].count += 1;
+    }
+    return Object.values(counts)
+      .sort((a, b) => b.count - a.count)
+      .slice(0, 5);
+  }, [rows]);
+
+  const topProvincias = useMemo(() => {
+    const counts: Record<string, number> = {};
+    for (const row of rows) {
+      const prov = row.provincia || "Sin provincia";
+      counts[prov] = (counts[prov] || 0) + 1;
+    }
+    return Object.entries(counts)
+      .sort((a, b) => b[1] - a[1])
+      .slice(0, 6);
+  }, [rows]);
+
+  const maxCourseCount = topCourses[0]?.count || 1;
+  const maxProvCount = topProvincias[0]?.[1] || 1;
 
   const filteredRows = useMemo(() => {
     const needle = query.trim().toLowerCase();
@@ -475,7 +505,17 @@ export function AdminClient({
           </div>
         </section>
 
-        <div className="inline-flex rounded-2xl border border-[#D4AF37]/30 bg-white p-1 shadow-sm shadow-[#0D3B22]/5">
+        <div className="inline-flex rounded-2xl border border-[#D4AF37]/30 bg-white p-1 shadow-sm shadow-[#0D3B22]/5 flex-wrap gap-1">
+          <button
+            type="button"
+            onClick={() => setActiveTab("dashboard")}
+            className={`inline-flex h-11 items-center gap-2 rounded-xl px-4 text-sm font-semibold transition-colors ${tabClass(
+              "dashboard"
+            )}`}
+          >
+            <BarChart3 className="h-4 w-4" />
+            Dashboard
+          </button>
           <button
             type="button"
             onClick={() => setActiveTab("calendario")}
@@ -507,6 +547,171 @@ export function AdminClient({
             Inscripciones
           </button>
         </div>
+
+        {activeTab === "dashboard" ? (
+          <section className="space-y-6">
+            {/* KPI Cards */}
+            <div className="grid grid-cols-2 gap-4 sm:grid-cols-4">
+              <div className="rounded-3xl border border-[#D4AF37]/30 bg-white p-5 shadow-sm shadow-[#0D3B22]/5">
+                <div className="flex items-center gap-3">
+                  <span className="inline-flex h-10 w-10 items-center justify-center rounded-2xl border border-[#D4AF37]/30 bg-[#FDFBF7]">
+                    <Users className="h-5 w-5 text-[#C5A028]" />
+                  </span>
+                  <span className="text-xs font-semibold uppercase tracking-[0.16em] text-[#8A7D69]">Inscripciones</span>
+                </div>
+                <p className="mt-4 text-4xl font-bold text-[#0D3B22]">{rows.length}</p>
+                <p className="mt-1 text-xs text-[#6B6048]">Total registradas</p>
+              </div>
+
+              <div className="rounded-3xl border border-[#D4AF37]/30 bg-white p-5 shadow-sm shadow-[#0D3B22]/5">
+                <div className="flex items-center gap-3">
+                  <span className="inline-flex h-10 w-10 items-center justify-center rounded-2xl border border-[#0D3B22]/15 bg-[#0D3B22]/5">
+                    <TrendingUp className="h-5 w-5 text-[#0D3B22]" />
+                  </span>
+                  <span className="text-xs font-semibold uppercase tracking-[0.16em] text-[#8A7D69]">Pagadas</span>
+                </div>
+                <p className="mt-4 text-4xl font-bold text-[#0D3B22]">{paidCount}</p>
+                <p className="mt-1 text-xs text-[#6B6048]">Anticipo confirmado</p>
+              </div>
+
+              <div className="rounded-3xl border border-[#D4AF37]/30 bg-white p-5 shadow-sm shadow-[#0D3B22]/5">
+                <div className="flex items-center gap-3">
+                  <span className="inline-flex h-10 w-10 items-center justify-center rounded-2xl border border-[#D4AF37]/30 bg-[#D4AF37]/10">
+                    <DollarSign className="h-5 w-5 text-[#C5A028]" />
+                  </span>
+                  <span className="text-xs font-semibold uppercase tracking-[0.16em] text-[#8A7D69]">Pendientes</span>
+                </div>
+                <p className="mt-4 text-4xl font-bold text-[#8D7530]">{pendingCount}</p>
+                <p className="mt-1 text-xs text-[#6B6048]">Requieren seguimiento</p>
+              </div>
+
+              <div className="rounded-3xl border border-[#D4AF37]/30 bg-white p-5 shadow-sm shadow-[#0D3B22]/5">
+                <div className="flex items-center gap-3">
+                  <span className="inline-flex h-10 w-10 items-center justify-center rounded-2xl border border-[#D4AF37]/30 bg-[#FDFBF7]">
+                    <GraduationCap className="h-5 w-5 text-[#C5A028]" />
+                  </span>
+                  <span className="text-xs font-semibold uppercase tracking-[0.16em] text-[#8A7D69]">Cursos</span>
+                </div>
+                <p className="mt-4 text-4xl font-bold text-[#0D3B22]">{catalogCourses.length}</p>
+                <p className="mt-1 text-xs text-[#6B6048]">En catálogo activo</p>
+              </div>
+            </div>
+
+            {/* Charts Row */}
+            <div className="grid gap-6 lg:grid-cols-2">
+              {/* Top Courses Bar Chart */}
+              <div className="rounded-3xl border border-[#D4AF37]/30 bg-white p-6 shadow-sm shadow-[#0D3B22]/5">
+                <div className="flex items-center gap-3 mb-6">
+                  <span className="inline-flex h-10 w-10 items-center justify-center rounded-xl border border-[#D4AF37]/30 bg-[#FDFBF7]">
+                    <BarChart3 className="h-5 w-5 text-[#C5A028]" />
+                  </span>
+                  <div>
+                    <h3 className="suvoga-serif text-xl font-semibold text-[#0D3B22]">Top Cursos</h3>
+                    <p className="text-xs text-[#6B6048]">Por número de inscripciones</p>
+                  </div>
+                </div>
+                {topCourses.length > 0 ? (
+                  <div className="space-y-4">
+                    {topCourses.map(({ nombre, count }, index) => (
+                      <div key={nombre}>
+                        <div className="flex items-center justify-between mb-1.5">
+                          <span className="text-sm font-medium text-[#0D3B22] truncate max-w-[70%]" title={nombre}>
+                            <span className="inline-flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-[#0D3B22] text-[#FDFBF7] text-[10px] font-bold mr-2">{index + 1}</span>
+                            {nombre.length > 28 ? nombre.slice(0, 26) + "…" : nombre}
+                          </span>
+                          <span className="text-sm font-bold text-[#0D3B22]">{count}</span>
+                        </div>
+                        <div className="h-2.5 w-full rounded-full bg-[#F0EAD8] overflow-hidden">
+                          <div
+                            className="h-full rounded-full bg-gradient-to-r from-[#0D3B22] to-[#1a5c38] transition-all duration-700"
+                            style={{ width: `${(count / maxCourseCount) * 100}%` }}
+                          />
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                ) : (
+                  <div className="flex flex-col items-center justify-center py-8 text-center">
+                    <Sparkles className="h-8 w-8 text-[#D4AF37]/50" />
+                    <p className="mt-3 text-sm text-[#6B6048]">Sin inscripciones todavía</p>
+                  </div>
+                )}
+              </div>
+
+              {/* Province Distribution */}
+              <div className="rounded-3xl border border-[#D4AF37]/30 bg-white p-6 shadow-sm shadow-[#0D3B22]/5">
+                <div className="flex items-center gap-3 mb-6">
+                  <span className="inline-flex h-10 w-10 items-center justify-center rounded-xl border border-[#D4AF37]/30 bg-[#FDFBF7]">
+                    <Users className="h-5 w-5 text-[#C5A028]" />
+                  </span>
+                  <div>
+                    <h3 className="suvoga-serif text-xl font-semibold text-[#0D3B22]">Por Provincia</h3>
+                    <p className="text-xs text-[#6B6048]">Distribución geográfica de alumnas</p>
+                  </div>
+                </div>
+                {topProvincias.length > 0 ? (
+                  <div className="space-y-3">
+                    {topProvincias.map(([provincia, count]) => (
+                      <div key={provincia}>
+                        <div className="flex items-center justify-between mb-1">
+                          <span className="text-sm font-medium text-[#0D3B22]">{provincia}</span>
+                          <span className="text-sm font-bold text-[#0D3B22]">{count}</span>
+                        </div>
+                        <div className="h-2 w-full rounded-full bg-[#F0EAD8] overflow-hidden">
+                          <div
+                            className="h-full rounded-full bg-gradient-to-r from-[#D4AF37] to-[#C5A028] transition-all duration-700"
+                            style={{ width: `${(count / maxProvCount) * 100}%` }}
+                          />
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                ) : (
+                  <div className="flex flex-col items-center justify-center py-8 text-center">
+                    <Sparkles className="h-8 w-8 text-[#D4AF37]/50" />
+                    <p className="mt-3 text-sm text-[#6B6048]">Sin datos de provincia todavía</p>
+                  </div>
+                )}
+              </div>
+            </div>
+
+            {/* Recent Inscriptions */}
+            <div className="rounded-3xl border border-[#D4AF37]/30 bg-white p-6 shadow-sm shadow-[#0D3B22]/5">
+              <div className="flex items-center gap-3 mb-5">
+                <span className="inline-flex h-10 w-10 items-center justify-center rounded-xl border border-[#D4AF37]/30 bg-[#FDFBF7]">
+                  <TrendingUp className="h-5 w-5 text-[#C5A028]" />
+                </span>
+                <div>
+                  <h3 className="suvoga-serif text-xl font-semibold text-[#0D3B22]">Últimas Inscripciones</h3>
+                  <p className="text-xs text-[#6B6048]">Las 5 más recientes</p>
+                </div>
+              </div>
+              {rows.length > 0 ? (
+                <div className="space-y-3">
+                  {rows.slice(-5).reverse().map((row) => (
+                    <div key={row.idInscripcion} className="flex items-center justify-between gap-4 rounded-2xl border border-[#E7DAC2] bg-[#FDFBF7] px-4 py-3">
+                      <div className="min-w-0">
+                        <p className="truncate text-sm font-semibold text-[#0D3B22]">{row.nombreCompleto}</p>
+                        <p className="truncate text-xs text-[#6B6048]">{row.cursoNombre}</p>
+                      </div>
+                      <span className={isPending(row.estadoAnticipo)
+                        ? "shrink-0 inline-flex rounded-full border border-[#D4AF37]/30 bg-[#D4AF37]/10 px-3 py-1 text-xs font-semibold text-[#8D7530]"
+                        : "shrink-0 inline-flex rounded-full border border-[#0D3B22]/15 bg-[#0D3B22]/10 px-3 py-1 text-xs font-semibold text-[#0D3B22]"
+                      }>
+                        {row.estadoAnticipo || "Pendiente"}
+                      </span>
+                    </div>
+                  ))}
+                </div>
+              ) : (
+                <div className="flex flex-col items-center justify-center py-8 text-center">
+                  <Sparkles className="h-8 w-8 text-[#D4AF37]/50" />
+                  <p className="mt-3 text-sm text-[#6B6048]">Sin inscripciones todavía. Las registradas aparecerán aquí.</p>
+                </div>
+              )}
+            </div>
+          </section>
+        ) : null}
 
         {activeTab === "calendario" ? (
           <section className="grid gap-5 xl:grid-cols-[minmax(0,1fr)_380px]">

@@ -1,0 +1,20 @@
+﻿<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="720" viewBox="0 0 1280 720">
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#1a3a2a;stop-opacity:1" />
+      <stop offset="50%" style="stop-color:#2d5a3d;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#1a2e1f;stop-opacity:1" />
+    </linearGradient>
+    <linearGradient id="leaf" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#c9a96e;stop-opacity:0.3" />
+      <stop offset="100%" style="stop-color:#e8d5a3;stop-opacity:0.1" />
+    </linearGradient>
+  </defs>
+  <rect width="1280" height="720" fill="url(#bg)"/>
+  <circle cx="100" cy="100" r="300" fill="url(#leaf)" opacity="0.2"/>
+  <circle cx="1180" cy="620" r="250" fill="url(#leaf)" opacity="0.15"/>
+  <circle cx="640" cy="360" r="80" fill="none" stroke="#c9a96e" stroke-width="1" opacity="0.4"/>
+  <circle cx="640" cy="360" r="120" fill="none" stroke="#c9a96e" stroke-width="0.5" opacity="0.2"/>
+  <text x="640" y="340" font-family="Georgia, serif" font-size="18" fill="#e8d5a3" text-anchor="middle" opacity="0.8">SuVoGa Academia</text>
+  <text x="640" y="375" font-family="Georgia, serif" font-size="14" fill="#c9a96e" text-anchor="middle" opacity="0.6">Imagen próximamente</text>
+</svg>
