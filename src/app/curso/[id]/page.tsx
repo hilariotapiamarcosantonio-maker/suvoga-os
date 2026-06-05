@@ -1,5 +1,3 @@
-import fs from "node:fs";
-import path from "node:path";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import {
@@ -88,9 +86,17 @@ export default function CoursePage({ params }: CoursePageProps) {
   const duration = durationLabel(course.description);
 
   // Resolving image paths
-  const bgImageRelativePath = course.imagen_url || `/images/courses/${course.idServicio.toLowerCase()}.png`;
-  const bgImagePath = path.join(process.cwd(), "public", bgImageRelativePath);
-  const hasBgImage = fs.existsSync(bgImagePath);
+  const courseIdNum = parseInt(course.idServicio.replace("CUR-", ""), 10);
+  const ext = (courseIdNum >= 18 && courseIdNum <= 25) ? "svg" : "png";
+  const bgImageRelativePath = course.imagen_url || `/images/courses/${course.idServicio.toLowerCase()}.${ext}`;
+
+  const heroStyle = bgImageRelativePath
+    ? {
+        backgroundImage: `linear-gradient(rgba(13, 59, 34, 0.88), rgba(13, 59, 34, 0.96)), url(${bgImageRelativePath})`,
+      }
+    : {
+        backgroundImage: `linear-gradient(120deg, rgba(13, 59, 34, 0.95), rgba(13, 59, 34, 0.85))`,
+      };
 
   // Fallbacks for standard items
   const includesList = course.incluye && course.incluye.length > 0 ? course.incluye : [];
@@ -102,13 +108,7 @@ export default function CoursePage({ params }: CoursePageProps) {
       {/* Premium Hero Section */}
       <section
         className="relative bg-[#0D3B22] text-[#FDFBF7] overflow-hidden bg-cover bg-center"
-        style={
-          hasBgImage
-            ? {
-                backgroundImage: `linear-gradient(rgba(13, 59, 34, 0.88), rgba(13, 59, 34, 0.96)), url(${bgImageRelativePath})`,
-              }
-            : undefined
-        }
+        style={heroStyle}
       >
         <div className="absolute inset-0 bg-gradient-to-b from-transparent via-[#0D3B22]/60 to-[#0D3B22]/95 pointer-events-none" />
         <div className="relative z-10 mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8 lg:py-24">
