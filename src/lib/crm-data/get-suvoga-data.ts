@@ -27,6 +27,23 @@ export type SuvogaServicio = {
   precioTotal: number;
   montoAnticipo: number;
   cuposTotales: number;
+
+  // Premium high-ticket landing fields
+  slug?: string;
+  subtitulo_premium?: string;
+  duracion?: string;
+  modalidad?: string;
+  incluye?: string[];
+  para_quien_es?: string[];
+  que_aprenderas?: string[];
+  imagen_url?: string;
+  imagen_prompt?: string;
+  youtube_url?: string;
+  pdf_drive_url?: string;
+  nivel?: string;
+  certificado_incluido?: boolean;
+  estado_publicacion?: string;
+  orden_destacado?: number;
 };
 
 export type SuvogaProgramacionCurso = {
@@ -402,6 +419,28 @@ function mapServicio(row: Record<string, RawValue>): SuvogaServicio {
     precioTotal: readNumber(row, FIELD_ALIASES.precio_total),
     montoAnticipo: readNumber(row, FIELD_ALIASES.monto_anticipo),
     cuposTotales: readNumber(row, FIELD_ALIASES.cupos_totales),
+
+    // Merge local static premium high-ticket landing fields
+    slug:
+      staticServicio?.slug ||
+      nombre
+        .toLowerCase()
+        .replace(/[^a-z0-9]+/g, "-")
+        .replace(/(^-|-$)/g, ""),
+    subtitulo_premium: staticServicio?.subtitulo_premium || "",
+    duracion: staticServicio?.duracion || "",
+    modalidad: staticServicio?.modalidad || "",
+    incluye: staticServicio?.incluye || [],
+    para_quien_es: staticServicio?.para_quien_es || [],
+    que_aprenderas: staticServicio?.que_aprenderas || [],
+    imagen_url: staticServicio?.imagen_url || "",
+    imagen_prompt: staticServicio?.imagen_prompt || "",
+    youtube_url: staticServicio?.youtube_url || "",
+    pdf_drive_url: staticServicio?.pdf_drive_url || "",
+    nivel: staticServicio?.nivel || "",
+    certificado_incluido: staticServicio?.certificado_incluido ?? true,
+    estado_publicacion: staticServicio?.estado_publicacion || "Publicado",
+    orden_destacado: staticServicio?.orden_destacado || 99,
   };
 }
 
