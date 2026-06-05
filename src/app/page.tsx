@@ -1,5 +1,6 @@
 import { Leaf, Sparkles } from "lucide-react";
 import { CourseCatalogClient } from "@/components/suvoga/CourseCatalogClient";
+import { SocialProofSection } from "@/components/suvoga/SocialProofSection";
 import { suvogaCourses } from "@/data/courses";
 
 const featuredCourses = suvogaCourses.slice(0, 3);
@@ -92,6 +93,9 @@ export default function HomePage() {
 
         <CourseCatalogClient />
       </section>
+
+      {/* Social Proof and trust sections */}
+      <SocialProofSection />
     </main>
   );
 }

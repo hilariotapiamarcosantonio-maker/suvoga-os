@@ -13,10 +13,14 @@ import {
   UserCheck,
   FileText,
   BookOpen,
+  Quote,
 } from "lucide-react";
 import { suvogaCourses } from "@/data/courses";
 import { CourseLandingSignup } from "@/components/suvoga/CourseLandingSignup";
 import { CourseHeroCTA } from "@/components/suvoga/CourseHeroCTA";
+import { studentTestimonials } from "@/data/testimonials";
+import { graduatesList } from "@/data/graduates";
+
 
 type CoursePageProps = {
   params: {
@@ -95,6 +99,14 @@ export default function CoursePage({ params }: CoursePageProps) {
   const includesList = course.incluye && course.incluye.length > 0 ? course.incluye : [];
   const forWhoList = course.para_quien_es && course.para_quien_es.length > 0 ? course.para_quien_es : [];
   const whatYouWillLearnList = course.que_aprenderas && course.que_aprenderas.length > 0 ? course.que_aprenderas : learningItems;
+
+  // Find related testimonials or graduates for trust section
+  const relatedTestimonial = studentTestimonials.find(
+    (t) => t.curso.toLowerCase() === course.nombre.toLowerCase()
+  );
+  const relatedGraduate = graduatesList.find(
+    (g) => g.cursoCompletado.toLowerCase() === course.nombre.toLowerCase()
+  );
 
   return (
     <main className="min-h-screen bg-[#FDFBF7] text-[#0D3B22]">
@@ -346,6 +358,102 @@ export default function CoursePage({ params }: CoursePageProps) {
                   Terapeutas que buscan certificar sus conocimientos.
                 </li>
               </ul>
+            </div>
+          </article>
+
+          {/* Confianza y resultados Section */}
+          <article className="rounded-3xl border border-[#D4AF37]/25 bg-white p-6 shadow-sm shadow-[#0D3B22]/5 sm:p-8 space-y-6">
+            <div>
+              <span className="text-xs font-semibold uppercase tracking-[0.2em] text-[#C5A028]">
+                Seguridad y Calidad
+              </span>
+              <h2 className="suvoga-serif mt-2 text-3xl font-semibold text-[#0D3B22]">
+                Confianza y resultados
+              </h2>
+            </div>
+
+            {/* Trust Points Grid */}
+            <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4 pt-2">
+              <div className="flex items-start gap-2.5 p-3 rounded-2xl bg-[#0D3B22]/[0.02] border border-[#0D3B22]/5">
+                <div className="h-2 w-2 rounded-full bg-[#D4AF37] mt-2 shrink-0" />
+                <div>
+                  <h4 className="font-semibold text-xs text-[#0D3B22]">Cupos Limitados</h4>
+                  <p className="text-[10px] text-[#6B6048] mt-0.5">Máximo 12 estudiantes por cohorte académica.</p>
+                </div>
+              </div>
+              <div className="flex items-start gap-2.5 p-3 rounded-2xl bg-[#0D3B22]/[0.02] border border-[#0D3B22]/5">
+                <div className="h-2 w-2 rounded-full bg-[#D4AF37] mt-2 shrink-0" />
+                <div>
+                  <h4 className="font-semibold text-xs text-[#0D3B22]">Formación Práctica</h4>
+                  <p className="text-[10px] text-[#6B6048] mt-0.5">Prácticas reales en cabina y camillas de spa.</p>
+                </div>
+              </div>
+              <div className="flex items-start gap-2.5 p-3 rounded-2xl bg-[#0D3B22]/[0.02] border border-[#0D3B22]/5">
+                <div className="h-2 w-2 rounded-full bg-[#D4AF37] mt-2 shrink-0" />
+                <div>
+                  <h4 className="font-semibold text-xs text-[#0D3B22]">Certificación Oficial</h4>
+                  <p className="text-[10px] text-[#6B6048] mt-0.5">Diploma oficial avalado por la academia SuVoGa.</p>
+                </div>
+              </div>
+              <div className="flex items-start gap-2.5 p-3 rounded-2xl bg-[#0D3B22]/[0.02] border border-[#0D3B22]/5">
+                <div className="h-2 w-2 rounded-full bg-[#D4AF37] mt-2 shrink-0" />
+                <div>
+                  <h4 className="font-semibold text-xs text-[#0D3B22]">Acompañamiento</h4>
+                  <p className="text-[10px] text-[#6B6048] mt-0.5">Mentoría directa del docente durante el aprendizaje.</p>
+                </div>
+              </div>
+            </div>
+
+            {/* Testimonial / Egresada Grid */}
+            <div className="border-t border-[#0D3B22]/10 pt-6 grid gap-6 md:grid-cols-2">
+              {/* Testimonio */}
+              <div className="space-y-3">
+                <h4 className="text-xs font-semibold uppercase tracking-wider text-[#8D7530]">Experiencia en este programa</h4>
+                {relatedTestimonial ? (
+                  <div className="relative p-4 rounded-2xl bg-[#FDFBF7] border border-[#D4AF37]/20 shadow-sm">
+                    <Quote className="absolute top-2 right-2 h-8 w-8 text-[#D4AF37]/10 pointer-events-none" />
+                    <p className="text-xs italic leading-relaxed text-[#4E6658]">
+                      &ldquo;{relatedTestimonial.comentario}&rdquo;
+                    </p>
+                    <div className="mt-3 flex items-center gap-2 pt-2 border-t border-[#0D3B22]/5">
+                      <img src={relatedTestimonial.imagen_url} alt={relatedTestimonial.nombre} className="h-6 w-6 rounded-full object-cover" />
+                      <div>
+                        <span className="text-xs font-bold text-[#0D3B22] block leading-none">{relatedTestimonial.nombre}</span>
+                        <span className="text-[9px] text-[#8D7530]">{relatedTestimonial.fuente}</span>
+                      </div>
+                    </div>
+                  </div>
+                ) : (
+                  <div className="p-4 rounded-2xl bg-[#FDFBF7]/50 border border-dashed border-[#0D3B22]/10 flex flex-col items-center justify-center text-center min-h-[120px]">
+                    <span className="text-xs text-[#6B6048] italic">
+                      Este espacio estará reservado para testimonios reales de alumnas de este programa.
+                    </span>
+                  </div>
+                )}
+              </div>
+
+              {/* Egresada Destacada */}
+              <div className="space-y-3">
+                <h4 className="text-xs font-semibold uppercase tracking-wider text-[#8D7530]">Egresada destacada</h4>
+                {relatedGraduate ? (
+                  <div className="flex items-center gap-4 p-4 rounded-2xl bg-[#FDFBF7] border border-[#D4AF37]/20 shadow-sm">
+                    <img src={relatedGraduate.imagen_url} alt={relatedGraduate.nombre} className="h-14 w-14 rounded-2xl object-cover border border-[#D4AF37]/30" />
+                    <div>
+                      <h5 className="suvoga-serif text-sm font-bold text-[#0D3B22]">{relatedGraduate.nombre}</h5>
+                      <p className="text-[10px] text-[#8D7530] font-semibold">{relatedGraduate.cohorte}</p>
+                      <span className="inline-flex items-center gap-1 rounded bg-[#0D3B22]/10 border border-[#0D3B22]/20 px-1.5 py-0.5 text-[9px] font-bold text-[#0D3B22] mt-1.5">
+                        {relatedGraduate.estado}
+                      </span>
+                    </div>
+                  </div>
+                ) : (
+                  <div className="p-4 rounded-2xl bg-[#FDFBF7]/50 border border-dashed border-[#0D3B22]/10 flex flex-col items-center justify-center text-center min-h-[120px]">
+                    <span className="text-xs text-[#6B6048] italic">
+                      Próximamente se listarán perfiles destacados de egresadas de esta formación.
+                    </span>
+                  </div>
+                )}
+              </div>
             </div>
           </article>
 
