@@ -1,8 +1,9 @@
 import {
   AdminClient,
   type AdminCourse,
-  type AdminInscriptionRow,
+  type AdminCrmRow,
   type AdminScheduledCourse,
+  type AdminCourseView,
 } from "./AdminClient";
 import { getSuvogaData } from "@/lib/crm-data/get-suvoga-data";
 
@@ -56,31 +57,82 @@ function sampleSchedule(courses: AdminCourse[]): AdminScheduledCourse[] {
   });
 }
 
+/** Derive a CRM status label from payment + attendance data */
+function deriveCrmStatus(
+  estadoAsistencia: string,
+  estadoPago: string,
+  montoPagado: number,
+  balancePendiente: number
+): string {
+  const asist = estadoAsistencia.toLowerCase();
+  const pago = estadoPago.toLowerCase();
+
+  if (asist.includes("asistió") || asist.includes("asistio") || asist.includes("completó") || asist.includes("completo")) {
+    return balancePendiente > 0 ? "Balance pendiente" : "Finalizada";
+  }
+  if (asist.includes("no asistió") || asist.includes("no asistio") || asist.includes("ausente")) {
+    return "No asistió";
+  }
+  if (asist.includes("reprogramar") || asist.includes("canceló") || asist.includes("cancelo")) {
+    return "Reprogramar";
+  }
+  if (pago.includes("pagado") || pago.includes("completo") || pago.includes("completado")) {
+    return balancePendiente <= 0 ? "Inscripción completa" : "Balance pendiente";
+  }
+  if (pago.includes("parcial") || (montoPagado > 0 && balancePendiente > 0)) {
+    return "Anticipo confirmado";
+  }
+  if (montoPagado <= 0) {
+    return "Anticipo pendiente";
+  }
+  return "Nueva inscripción";
+}
+
 export default async function AdminPage() {
   const data = await getSuvogaData();
+
   const pacientesById = new Map(
-    data.pacientes.map((paciente) => [paciente.idPaciente, paciente])
+    data.pacientes.map((p) => [p.idPaciente, p])
   );
   const cursosById = new Map(
-    data.catalogo.map((servicio) => [servicio.idServicio, servicio])
+    data.catalogo.map((s) => [s.idServicio, s])
   );
   const anticiposByInscripcion = new Map(
-    data.anticipos.map((anticipo) => [anticipo.idInscripcion, anticipo])
+    data.anticipos.map((a) => [a.idInscripcion, a])
   );
+  const programacionByCurso = new Map<string, typeof data.programacionCursos[0]>();
+  for (const prog of data.programacionCursos) {
+    if (!programacionByCurso.has(prog.idServicio)) {
+      programacionByCurso.set(prog.idServicio, prog);
+    }
+  }
 
-  const rows: AdminInscriptionRow[] = data.inscripciones.map((inscripcion) => {
+  // Full CRM rows with all available fields
+  const crmRows: AdminCrmRow[] = data.inscripciones.map((inscripcion) => {
     const paciente = pacientesById.get(inscripcion.idPaciente);
     const curso = cursosById.get(inscripcion.idServicio);
     const anticipo = anticiposByInscripcion.get(inscripcion.idInscripcion);
+    const prog = programacionByCurso.get(inscripcion.idServicio);
+
+    const montoPagado = anticipo?.montoPagado ?? 0;
+    const balancePendiente = anticipo?.balancePendiente ?? 0;
+    const estadoAsistencia = inscripcion.estadoAsistencia || "";
+    const estadoPago = anticipo?.estadoPago || "";
 
     return {
       idInscripcion: inscripcion.idInscripcion,
+      idServicio: inscripcion.idServicio,
       nombreCompleto: paciente?.nombreCompleto || "Estudiante sin nombre",
       whatsapp: paciente?.whatsapp || "",
-      cursoNombre: curso?.nombre || "Curso no encontrado",
       cedula: paciente?.cedula || "",
       provincia: paciente?.provincia || "",
-      estadoAnticipo: anticipo?.estadoPago || "Anticipo pendiente",
+      cursoNombre: curso?.nombre || "Curso no encontrado",
+      fechaProgramada: inscripcion.fechaProgramada || prog?.fechaHora || "",
+      estadoAsistencia,
+      estadoPago,
+      montoPagado,
+      balancePendiente,
+      crmStatus: deriveCrmStatus(estadoAsistencia, estadoPago, montoPagado, balancePendiente),
     };
   });
 
@@ -116,13 +168,56 @@ export default async function AdminPage() {
     })
     .filter((event) => event.date);
 
+  // Course View: aggregate per course
+  const courseViewMap = new Map<string, AdminCourseView>();
+
+  for (const curso of courses) {
+    const prog = programacionByCurso.get(curso.idServicio);
+    const scheduledList = data.programacionCursos.filter(
+      (p) => p.idServicio === curso.idServicio
+    );
+    const nextProg = scheduledList.sort((a, b) =>
+      (a.fechaHora || "").localeCompare(b.fechaHora || "")
+    )[0];
+
+    courseViewMap.set(curso.idServicio, {
+      idServicio: curso.idServicio,
+      nombre: curso.nombre,
+      cuposTotales: prog?.cuposTotales || curso.cuposTotales || 12,
+      cuposRestantes: prog?.cuposRestantes || curso.cuposTotales || 12,
+      inscritas: 0,
+      anticiposPendientes: 0,
+      pagosRecibidos: 0,
+      balancePendienteTotal: 0,
+      proximaFecha: nextProg?.fechaHora || "",
+    });
+  }
+
+  for (const row of crmRows) {
+    const view = courseViewMap.get(row.idServicio);
+    if (!view) continue;
+    view.inscritas += 1;
+    if (row.montoPagado > 0) view.pagosRecibidos += row.montoPagado;
+    if (row.balancePendiente > 0) view.balancePendienteTotal += row.balancePendiente;
+    const isPend =
+      !row.estadoPago ||
+      row.estadoPago.toLowerCase().includes("pendiente") ||
+      row.estadoPago.toLowerCase().includes("parcial");
+    if (isPend) view.anticiposPendientes += 1;
+  }
+
+  const courseViews = Array.from(courseViewMap.values()).sort(
+    (a, b) => b.inscritas - a.inscritas
+  );
+
   return (
     <AdminClient
-      rows={rows}
+      crmRows={crmRows}
       courses={courses}
       scheduledCourses={
         scheduledCourses.length > 0 ? scheduledCourses : sampleSchedule(courses)
       }
+      courseViews={courseViews}
       source={data.source}
     />
   );

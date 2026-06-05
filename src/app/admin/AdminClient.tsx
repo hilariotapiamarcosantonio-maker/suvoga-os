@@ -9,6 +9,7 @@ import {
   ChevronRight,
   Clock,
   DollarSign,
+  ExternalLink,
   GraduationCap,
   Leaf,
   MessageCircle,
@@ -22,6 +23,25 @@ import {
   X,
 } from "lucide-react";
 
+// ─── Types ──────────────────────────────────────────────────────────────────
+
+export type AdminCrmRow = {
+  idInscripcion: string;
+  idServicio: string;
+  nombreCompleto: string;
+  whatsapp: string;
+  cedula: string;
+  provincia: string;
+  cursoNombre: string;
+  fechaProgramada: string;
+  estadoAsistencia: string;
+  estadoPago: string;
+  montoPagado: number;
+  balancePendiente: number;
+  crmStatus: string;
+};
+
+/** Legacy alias kept so other imports don't break */
 export type AdminInscriptionRow = {
   idInscripcion: string;
   nombreCompleto: string;
@@ -51,14 +71,27 @@ export type AdminScheduledCourse = {
   remaining: number;
 };
 
+export type AdminCourseView = {
+  idServicio: string;
+  nombre: string;
+  cuposTotales: number;
+  cuposRestantes: number;
+  inscritas: number;
+  anticiposPendientes: number;
+  pagosRecibidos: number;
+  balancePendienteTotal: number;
+  proximaFecha: string;
+};
+
 type AdminClientProps = {
-  rows: AdminInscriptionRow[];
+  crmRows: AdminCrmRow[];
   courses: AdminCourse[];
   scheduledCourses: AdminScheduledCourse[];
+  courseViews: AdminCourseView[];
   source: string;
 };
 
-type AdminTab = "dashboard" | "inscripciones" | "calendario" | "cursos";
+type AdminTab = "dashboard" | "crm" | "cursos_vista" | "calendario" | "cursos";
 
 type CourseFormState = {
   nombre: string;
@@ -73,6 +106,8 @@ type CalendarCell = {
   currentMonth: boolean;
 };
 
+// ─── Constants ──────────────────────────────────────────────────────────────
+
 const weekdays = ["Dom", "Lun", "Mar", "Mie", "Jue", "Vie", "Sab"];
 const DEMO_COURSES_STORAGE_KEY = "suvoga_demo_courses";
 const initialCourseForm: CourseFormState = {
@@ -82,27 +117,40 @@ const initialCourseForm: CourseFormState = {
   cupos: "12",
 };
 
+const CRM_STATUS_COLORS: Record<string, string> = {
+  "Nueva inscripción":    "border-blue-200 bg-blue-50 text-blue-700",
+  "Contactar por WhatsApp": "border-orange-200 bg-orange-50 text-orange-700",
+  "Anticipo pendiente":   "border-[#D4AF37]/30 bg-[#D4AF37]/10 text-[#8D7530]",
+  "Anticipo confirmado":  "border-[#0D3B22]/15 bg-[#0D3B22]/10 text-[#0D3B22]",
+  "Balance pendiente":    "border-orange-300 bg-orange-50 text-orange-800",
+  "Inscripción completa": "border-emerald-200 bg-emerald-50 text-emerald-700",
+  "Recordatorio enviado": "border-purple-200 bg-purple-50 text-purple-700",
+  "Asistió":              "border-emerald-200 bg-emerald-50 text-emerald-700",
+  "No asistió":           "border-red-200 bg-red-50 text-red-700",
+  "Reprogramar":          "border-orange-200 bg-orange-50 text-orange-700",
+  "Finalizada":           "border-gray-200 bg-gray-50 text-gray-600",
+};
+
+function statusColor(status: string) {
+  return CRM_STATUS_COLORS[status] ?? "border-gray-200 bg-gray-50 text-gray-600";
+}
+
+// ─── Helpers ────────────────────────────────────────────────────────────────
+
 function cleanPhoneForWhatsapp(phone: string) {
   return phone.replace(/\D/g, "");
 }
 
-function whatsappLink(row: AdminInscriptionRow) {
-  const phone = cleanPhoneForWhatsapp(row.whatsapp);
-  const message = `Hola ${row.nombreCompleto}. Te escribimos de SuVoGa Escuela de Masajes para confirmar tu solicitud para ${row.cursoNombre}.`;
-
-  return {
-    phone,
-    href: phone ? `https://wa.me/${phone}?text=${encodeURIComponent(message)}` : "",
-  };
+function whatsappHref(phone: string, name: string, curso: string) {
+  const cleaned = cleanPhoneForWhatsapp(phone);
+  if (!cleaned) return "";
+  const msg = `Hola ${name}. Te escribimos de SuVoGa Escuela de Masajes para confirmar tu solicitud para ${curso}.`;
+  return `https://wa.me/${cleaned}?text=${encodeURIComponent(msg)}`;
 }
 
 function isPending(status: string) {
-  const normalized = status.toLowerCase();
-  return (
-    !normalized ||
-    normalized.includes("pendiente") ||
-    normalized.includes("parcial")
-  );
+  const n = status.toLowerCase();
+  return !n || n.includes("pendiente") || n.includes("parcial") || n.includes("nueva");
 }
 
 function monthTitle(date: Date) {
@@ -113,10 +161,7 @@ function monthTitle(date: Date) {
 }
 
 function toIsoDate(year: number, monthIndex: number, day: number) {
-  return `${year}-${String(monthIndex + 1).padStart(2, "0")}-${String(day).padStart(
-    2,
-    "0"
-  )}`;
+  return `${year}-${String(monthIndex + 1).padStart(2, "0")}-${String(day).padStart(2, "0")}`;
 }
 
 function getDayGrid(date: Date): CalendarCell[] {
@@ -128,29 +173,14 @@ function getDayGrid(date: Date): CalendarCell[] {
   const grid: CalendarCell[] = [];
 
   for (let index = firstDay - 1; index >= 0; index -= 1) {
-    grid.push({
-      day: previousMonthDays - index,
-      date: "",
-      currentMonth: false,
-    });
+    grid.push({ day: previousMonthDays - index, date: "", currentMonth: false });
   }
-
   for (let day = 1; day <= daysInMonth; day += 1) {
-    grid.push({
-      day,
-      date: toIsoDate(year, month, day),
-      currentMonth: true,
-    });
+    grid.push({ day, date: toIsoDate(year, month, day), currentMonth: true });
   }
-
   while (grid.length < 42) {
-    grid.push({
-      day: grid.length - firstDay - daysInMonth + 1,
-      date: "",
-      currentMonth: false,
-    });
+    grid.push({ day: grid.length - firstDay - daysInMonth + 1, date: "", currentMonth: false });
   }
-
   return grid;
 }
 
@@ -168,18 +198,22 @@ function formatDop(value: number) {
   }).format(value);
 }
 
+function formatDate(dateStr: string) {
+  if (!dateStr) return "—";
+  const d = new Date(dateStr);
+  if (Number.isNaN(d.getTime())) return dateStr;
+  return d.toLocaleDateString("es-DO", { day: "2-digit", month: "short", year: "numeric" });
+}
+
 function normalizeStoredCourses(value: unknown): AdminCourse[] {
   if (!Array.isArray(value)) return [];
-
   return value
     .map((item) => {
       if (!item || typeof item !== "object") return null;
-
       const course = item as Partial<AdminCourse>;
       const idServicio = String(course.idServicio ?? "").trim();
       const nombre = String(course.nombre ?? "").trim();
       if (!idServicio || !nombre) return null;
-
       return {
         idServicio,
         nombre,
@@ -194,7 +228,6 @@ function normalizeStoredCourses(value: unknown): AdminCourse[] {
 
 function readDemoCourses() {
   if (typeof window === "undefined") return [];
-
   try {
     return normalizeStoredCourses(
       JSON.parse(window.localStorage.getItem(DEMO_COURSES_STORAGE_KEY) || "[]")
@@ -206,54 +239,23 @@ function readDemoCourses() {
 
 function writeDemoCourses(courses: AdminCourse[]) {
   if (typeof window === "undefined") return;
-
-  window.localStorage.setItem(
-    DEMO_COURSES_STORAGE_KEY,
-    JSON.stringify(courses)
-  );
+  window.localStorage.setItem(DEMO_COURSES_STORAGE_KEY, JSON.stringify(courses));
   window.dispatchEvent(new Event("suvoga-demo-courses-updated"));
 }
 
 function mergeCourses(baseCourses: AdminCourse[], demoCourses: AdminCourse[]) {
   const byId = new Map<string, AdminCourse>();
-
-  [...baseCourses, ...demoCourses].forEach((course) => {
-    byId.set(course.idServicio, course);
-  });
-
+  [...baseCourses, ...demoCourses].forEach((c) => byId.set(c.idServicio, c));
   return Array.from(byId.values());
 }
 
+// ─── Sub-components ──────────────────────────────────────────────────────────
+
 function StatusPill({ status }: { status: string }) {
-  const pending = isPending(status);
-
   return (
-    <span
-      className={
-        pending
-          ? "inline-flex rounded-full border border-[#D4AF37]/30 bg-[#D4AF37]/10 px-3 py-1 text-xs font-semibold text-[#8D7530]"
-          : "inline-flex rounded-full border border-[#0D3B22]/15 bg-[#0D3B22]/10 px-3 py-1 text-xs font-semibold text-[#0D3B22]"
-      }
-    >
-      {status || "Anticipo pendiente"}
+    <span className={`inline-flex rounded-full border px-2.5 py-0.5 text-[11px] font-semibold whitespace-nowrap ${statusColor(status)}`}>
+      {status || "Sin estado"}
     </span>
-  );
-}
-
-function ContactButton({ row }: { row: AdminInscriptionRow }) {
-  const { href, phone } = whatsappLink(row);
-
-  return (
-    <a
-      href={href || undefined}
-      target="_blank"
-      rel="noreferrer"
-      aria-disabled={!phone}
-      className="inline-flex h-10 items-center justify-center gap-2 rounded-2xl bg-[#0D3B22] px-4 text-sm font-semibold text-[#FDFBF7] shadow-sm shadow-[#0D3B22]/10 transition-colors hover:bg-[#145332] aria-disabled:pointer-events-none aria-disabled:opacity-45"
-    >
-      <MessageCircle className="h-4 w-4" />
-      Contactar
-    </a>
   );
 }
 
@@ -263,9 +265,7 @@ function CourseChip({ event }: { event: AdminScheduledCourse }) {
       className="rounded-xl bg-[#0D3B22] px-2.5 py-2 text-[#FDFBF7] shadow-sm shadow-[#0D3B22]/10"
       title={`${event.courseName} - ${event.time}`}
     >
-      <p className="truncate text-[11px] font-semibold leading-tight">
-        {event.courseName}
-      </p>
+      <p className="truncate text-[11px] font-semibold leading-tight">{event.courseName}</p>
       <p className="mt-1 flex items-center gap-1 text-[10px] font-semibold text-[#D4AF37]">
         <Clock className="h-3 w-3" />
         {event.time} - {event.remaining}/{event.capacity}
@@ -274,14 +274,18 @@ function CourseChip({ event }: { event: AdminScheduledCourse }) {
   );
 }
 
+// ─── Main Component ──────────────────────────────────────────────────────────
+
 export function AdminClient({
-  rows,
+  crmRows,
   courses,
   scheduledCourses,
+  courseViews,
   source,
 }: AdminClientProps) {
   const [activeTab, setActiveTab] = useState<AdminTab>("dashboard");
-  const [query, setQuery] = useState("");
+  const [crmQuery, setCrmQuery] = useState("");
+  const [crmFilter, setCrmFilter] = useState<string>("Todos");
   const [currentMonth, setCurrentMonth] = useState(() => new Date());
   const [events, setEvents] = useState<AdminScheduledCourse[]>(scheduledCourses);
   const [catalogCourses, setCatalogCourses] = useState<AdminCourse[]>(courses);
@@ -291,61 +295,58 @@ export function AdminClient({
   const [capacity, setCapacity] = useState("12");
   const [formError, setFormError] = useState("");
   const [isCourseModalOpen, setIsCourseModalOpen] = useState(false);
-  const [courseForm, setCourseForm] =
-    useState<CourseFormState>(initialCourseForm);
+  const [courseForm, setCourseForm] = useState<CourseFormState>(initialCourseForm);
   const [courseFormError, setCourseFormError] = useState("");
+  const [localCrmStatus, setLocalCrmStatus] = useState<Record<string, string>>({});
+  const [expandedRow, setExpandedRow] = useState<string | null>(null);
 
-  const pendingCount = rows.filter((row) => isPending(row.estadoAnticipo)).length;
-  const paidCount = rows.filter((row) => !isPending(row.estadoAnticipo)).length;
-  const selectedCourse = catalogCourses.find(
-    (course) => course.idServicio === courseId
-  );
+  const pendingCount = crmRows.filter((r) => isPending(r.crmStatus)).length;
+  const paidCount = crmRows.filter((r) => !isPending(r.crmStatus)).length;
+  const selectedCourse = catalogCourses.find((c) => c.idServicio === courseId);
   const dayGrid = getDayGrid(currentMonth);
 
   // Dashboard KPIs
   const topCourses = useMemo(() => {
     const counts: Record<string, { nombre: string; count: number }> = {};
-    for (const row of rows) {
+    for (const row of crmRows) {
       const key = row.cursoNombre;
       if (!counts[key]) counts[key] = { nombre: key, count: 0 };
       counts[key].count += 1;
     }
-    return Object.values(counts)
-      .sort((a, b) => b.count - a.count)
-      .slice(0, 5);
-  }, [rows]);
+    return Object.values(counts).sort((a, b) => b.count - a.count).slice(0, 5);
+  }, [crmRows]);
 
   const topProvincias = useMemo(() => {
     const counts: Record<string, number> = {};
-    for (const row of rows) {
+    for (const row of crmRows) {
       const prov = row.provincia || "Sin provincia";
       counts[prov] = (counts[prov] || 0) + 1;
     }
-    return Object.entries(counts)
-      .sort((a, b) => b[1] - a[1])
-      .slice(0, 6);
-  }, [rows]);
+    return Object.entries(counts).sort((a, b) => b[1] - a[1]).slice(0, 6);
+  }, [crmRows]);
 
   const maxCourseCount = topCourses[0]?.count || 1;
   const maxProvCount = topProvincias[0]?.[1] || 1;
 
-  const filteredRows = useMemo(() => {
-    const needle = query.trim().toLowerCase();
-    if (!needle) return rows;
+  // CRM filtered rows
+  const crmStatuses = useMemo(() => {
+    const set = new Set(crmRows.map((r) => localCrmStatus[r.idInscripcion] || r.crmStatus));
+    return ["Todos", ...Array.from(set)];
+  }, [crmRows, localCrmStatus]);
 
-    return rows.filter((row) =>
-      [
-        row.nombreCompleto,
-        row.cursoNombre,
-        row.cedula,
-        row.provincia,
-        row.estadoAnticipo,
-      ]
+  const filteredCrmRows = useMemo(() => {
+    const needle = crmQuery.trim().toLowerCase();
+    return crmRows.filter((row) => {
+      const effectiveStatus = localCrmStatus[row.idInscripcion] || row.crmStatus;
+      const matchFilter = crmFilter === "Todos" || effectiveStatus === crmFilter;
+      if (!matchFilter) return false;
+      if (!needle) return true;
+      return [row.nombreCompleto, row.cursoNombre, row.provincia, row.cedula, effectiveStatus]
         .join(" ")
         .toLowerCase()
-        .includes(needle)
-    );
-  }, [query, rows]);
+        .includes(needle);
+    });
+  }, [crmQuery, crmFilter, crmRows, localCrmStatus]);
 
   const eventsByDate = useMemo(() => {
     return events.reduce<Record<string, AdminScheduledCourse[]>>((acc, event) => {
@@ -363,16 +364,13 @@ export function AdminClient({
   function handleScheduleCourse(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     setFormError("");
-
     const seats = Number.parseInt(capacity, 10);
     const validDate = /^\d{4}-\d{2}-\d{2}$/.test(selectedDate);
     const validTime = /^\d{2}:\d{2}$/.test(selectedTime);
-
     if (!selectedCourse || !validDate || !validTime || !Number.isFinite(seats) || seats < 1) {
       setFormError("Completa curso, fecha, hora y cupos con formato valido.");
       return;
     }
-
     setEvents((current) => [
       ...current,
       {
@@ -405,27 +403,15 @@ export function AdminClient({
   function handleCreateCourse(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     setCourseFormError("");
-
     const nombre = courseForm.nombre.trim();
     const precioTotal = parsePositiveNumber(courseForm.precio);
     const montoAnticipo = parsePositiveNumber(courseForm.anticipo);
     const cuposTotales = Math.floor(parsePositiveNumber(courseForm.cupos));
 
-    if (!nombre) {
-      setCourseFormError("Escribe el nombre del curso.");
-      return;
+    if (!nombre) { setCourseFormError("Escribe el nombre del curso."); return; }
+    if (Number.isNaN(precioTotal) || Number.isNaN(montoAnticipo) || Number.isNaN(cuposTotales) || cuposTotales < 1) {
+      setCourseFormError("Precio, anticipo y cupos deben ser numeros validos."); return;
     }
-
-    if (
-      Number.isNaN(precioTotal) ||
-      Number.isNaN(montoAnticipo) ||
-      Number.isNaN(cuposTotales) ||
-      cuposTotales < 1
-    ) {
-      setCourseFormError("Precio, anticipo y cupos deben ser numeros validos.");
-      return;
-    }
-
     const newCourse: AdminCourse = {
       idServicio: `DEMO-${Date.now()}`,
       nombre,
@@ -435,7 +421,6 @@ export function AdminClient({
       cuposTotales,
     };
     const demoCourses = [...readDemoCourses(), newCourse];
-
     writeDemoCourses(demoCourses);
     setCatalogCourses((current) => mergeCourses(current, [newCourse]));
     setCourseId(newCourse.idServicio);
@@ -449,9 +434,29 @@ export function AdminClient({
       : "bg-transparent text-[#4E6658] hover:bg-[#FDFBF7]";
   }
 
+  function updateLocalStatus(id: string, status: string) {
+    setLocalCrmStatus((prev) => ({ ...prev, [id]: status }));
+  }
+
+  const ALL_CRM_STATUSES = [
+    "Nueva inscripción",
+    "Contactar por WhatsApp",
+    "Anticipo pendiente",
+    "Anticipo confirmado",
+    "Balance pendiente",
+    "Inscripción completa",
+    "Recordatorio enviado",
+    "Asistió",
+    "No asistió",
+    "Reprogramar",
+    "Finalizada",
+  ];
+
   return (
     <main className="min-h-[calc(100vh-5rem)] bg-[#FDFBF7] px-4 py-8 text-[#0D3B22] sm:px-6 lg:px-8">
       <div className="mx-auto max-w-7xl space-y-6">
+
+        {/* Header */}
         <section className="rounded-3xl border border-[#D4AF37]/30 bg-white p-5 shadow-sm shadow-[#0D3B22]/5 sm:p-6">
           <div className="flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
             <div>
@@ -460,146 +465,77 @@ export function AdminClient({
                 Admin SuVoGa
               </div>
               <h1 className="suvoga-serif mt-4 text-4xl font-semibold leading-none text-[#0D3B22] sm:text-5xl">
-                Centro academico y calendario
+                Academia & CRM Académico
               </h1>
               <p className="mt-3 max-w-2xl text-sm leading-6 text-[#4E6658]">
-                Gestiona inscripciones, cupos y fechas de cursos desde un
-                espacio sereno, claro y preparado para operacion diaria.
+                Gestión centralizada de inscripciones, seguimiento de alumnas, cupos y calendario operativo.
               </p>
             </div>
 
-            <div className="grid gap-3 sm:grid-cols-4 lg:min-w-[640px]">
+            <div className="grid grid-cols-2 gap-3 sm:grid-cols-4 lg:min-w-[640px]">
               <div className="rounded-2xl border border-[#D4AF37]/20 bg-[#FDFBF7] p-4">
-                <p className="text-xs font-semibold uppercase tracking-[0.14em] text-[#8A7D69]">
-                  Pendientes
-                </p>
-                <p className="mt-2 text-3xl font-semibold text-[#0D3B22]">
-                  {pendingCount}
-                </p>
+                <p className="text-xs font-semibold uppercase tracking-[0.14em] text-[#8A7D69]">Inscritas</p>
+                <p className="mt-2 text-3xl font-semibold text-[#0D3B22]">{crmRows.length}</p>
               </div>
               <div className="rounded-2xl border border-[#D4AF37]/20 bg-[#FDFBF7] p-4">
-                <p className="text-xs font-semibold uppercase tracking-[0.14em] text-[#8A7D69]">
-                  Fechas
-                </p>
-                <p className="mt-2 text-3xl font-semibold text-[#0D3B22]">
-                  {events.length}
-                </p>
+                <p className="text-xs font-semibold uppercase tracking-[0.14em] text-[#8A7D69]">Pendientes</p>
+                <p className="mt-2 text-3xl font-semibold text-[#8D7530]">{pendingCount}</p>
               </div>
               <div className="rounded-2xl border border-[#D4AF37]/20 bg-[#FDFBF7] p-4">
-                <p className="text-xs font-semibold uppercase tracking-[0.14em] text-[#8A7D69]">
-                  Cursos
-                </p>
-                <p className="mt-2 text-3xl font-semibold text-[#0D3B22]">
-                  {catalogCourses.length}
-                </p>
+                <p className="text-xs font-semibold uppercase tracking-[0.14em] text-[#8A7D69]">Confirmadas</p>
+                <p className="mt-2 text-3xl font-semibold text-[#0D3B22]">{paidCount}</p>
               </div>
               <div className="rounded-2xl border border-[#D4AF37]/20 bg-[#FDFBF7] p-4">
-                <p className="text-xs font-semibold uppercase tracking-[0.14em] text-[#8A7D69]">
-                  Fuente
-                </p>
-                <p className="mt-2 text-sm font-semibold capitalize text-[#0D3B22]">
-                  {source.replace("-", " ")}
-                </p>
+                <p className="text-xs font-semibold uppercase tracking-[0.14em] text-[#8A7D69]">Fuente</p>
+                <p className="mt-2 text-sm font-semibold capitalize text-[#0D3B22]">{source.replace("-", " ")}</p>
               </div>
             </div>
           </div>
         </section>
 
-        <div className="inline-flex rounded-2xl border border-[#D4AF37]/30 bg-white p-1 shadow-sm shadow-[#0D3B22]/5 flex-wrap gap-1">
-          <button
-            type="button"
-            onClick={() => setActiveTab("dashboard")}
-            className={`inline-flex h-11 items-center gap-2 rounded-xl px-4 text-sm font-semibold transition-colors ${tabClass(
-              "dashboard"
-            )}`}
-          >
-            <BarChart3 className="h-4 w-4" />
-            Dashboard
-          </button>
-          <button
-            type="button"
-            onClick={() => setActiveTab("calendario")}
-            className={`inline-flex h-11 items-center gap-2 rounded-xl px-4 text-sm font-semibold transition-colors ${tabClass(
-              "calendario"
-            )}`}
-          >
-            <CalendarDays className="h-4 w-4" />
-            Calendario
-          </button>
-          <button
-            type="button"
-            onClick={() => setActiveTab("cursos")}
-            className={`inline-flex h-11 items-center gap-2 rounded-xl px-4 text-sm font-semibold transition-colors ${tabClass(
-              "cursos"
-            )}`}
-          >
-            <BookOpen className="h-4 w-4" />
-            Mis Cursos
-          </button>
-          <button
-            type="button"
-            onClick={() => setActiveTab("inscripciones")}
-            className={`inline-flex h-11 items-center gap-2 rounded-xl px-4 text-sm font-semibold transition-colors ${tabClass(
-              "inscripciones"
-            )}`}
-          >
-            <Users className="h-4 w-4" />
-            Inscripciones
-          </button>
+        {/* Tabs */}
+        <div className="flex flex-wrap gap-1 rounded-2xl border border-[#D4AF37]/30 bg-white p-1 shadow-sm shadow-[#0D3B22]/5">
+          {([
+            { id: "dashboard", label: "Dashboard", icon: <BarChart3 className="h-4 w-4" /> },
+            { id: "crm", label: "CRM Académico", icon: <Users className="h-4 w-4" /> },
+            { id: "cursos_vista", label: "Vista por Curso", icon: <TrendingUp className="h-4 w-4" /> },
+            { id: "calendario", label: "Calendario", icon: <CalendarDays className="h-4 w-4" /> },
+            { id: "cursos", label: "Mis Cursos", icon: <BookOpen className="h-4 w-4" /> },
+          ] as { id: AdminTab; label: string; icon: React.ReactNode }[]).map(({ id, label, icon }) => (
+            <button
+              key={id}
+              type="button"
+              onClick={() => setActiveTab(id)}
+              className={`inline-flex h-11 items-center gap-2 rounded-xl px-4 text-sm font-semibold transition-colors ${tabClass(id)}`}
+            >
+              {icon}
+              {label}
+            </button>
+          ))}
         </div>
 
+        {/* ── DASHBOARD ── */}
         {activeTab === "dashboard" ? (
           <section className="space-y-6">
-            {/* KPI Cards */}
             <div className="grid grid-cols-2 gap-4 sm:grid-cols-4">
-              <div className="rounded-3xl border border-[#D4AF37]/30 bg-white p-5 shadow-sm shadow-[#0D3B22]/5">
-                <div className="flex items-center gap-3">
-                  <span className="inline-flex h-10 w-10 items-center justify-center rounded-2xl border border-[#D4AF37]/30 bg-[#FDFBF7]">
-                    <Users className="h-5 w-5 text-[#C5A028]" />
-                  </span>
-                  <span className="text-xs font-semibold uppercase tracking-[0.16em] text-[#8A7D69]">Inscripciones</span>
+              {[
+                { label: "Total Inscripciones", value: crmRows.length, icon: <Users className="h-5 w-5 text-[#C5A028]" />, color: "border-[#D4AF37]/30" },
+                { label: "Confirmadas", value: paidCount, icon: <TrendingUp className="h-5 w-5 text-[#0D3B22]" />, color: "border-[#0D3B22]/15" },
+                { label: "Anticipo Pendiente", value: pendingCount, icon: <DollarSign className="h-5 w-5 text-[#C5A028]" />, color: "border-[#D4AF37]/30" },
+                { label: "Cursos en Catálogo", value: catalogCourses.length, icon: <GraduationCap className="h-5 w-5 text-[#C5A028]" />, color: "border-[#D4AF37]/30" },
+              ].map(({ label, value, icon, color }) => (
+                <div key={label} className={`rounded-3xl border ${color} bg-white p-5 shadow-sm shadow-[#0D3B22]/5`}>
+                  <div className="flex items-center gap-3">
+                    <span className="inline-flex h-10 w-10 items-center justify-center rounded-2xl border border-[#D4AF37]/20 bg-[#FDFBF7]">{icon}</span>
+                    <span className="text-xs font-semibold uppercase tracking-[0.14em] text-[#8A7D69]">{label}</span>
+                  </div>
+                  <p className="mt-4 text-4xl font-bold text-[#0D3B22]">{value}</p>
                 </div>
-                <p className="mt-4 text-4xl font-bold text-[#0D3B22]">{rows.length}</p>
-                <p className="mt-1 text-xs text-[#6B6048]">Total registradas</p>
-              </div>
-
-              <div className="rounded-3xl border border-[#D4AF37]/30 bg-white p-5 shadow-sm shadow-[#0D3B22]/5">
-                <div className="flex items-center gap-3">
-                  <span className="inline-flex h-10 w-10 items-center justify-center rounded-2xl border border-[#0D3B22]/15 bg-[#0D3B22]/5">
-                    <TrendingUp className="h-5 w-5 text-[#0D3B22]" />
-                  </span>
-                  <span className="text-xs font-semibold uppercase tracking-[0.16em] text-[#8A7D69]">Pagadas</span>
-                </div>
-                <p className="mt-4 text-4xl font-bold text-[#0D3B22]">{paidCount}</p>
-                <p className="mt-1 text-xs text-[#6B6048]">Anticipo confirmado</p>
-              </div>
-
-              <div className="rounded-3xl border border-[#D4AF37]/30 bg-white p-5 shadow-sm shadow-[#0D3B22]/5">
-                <div className="flex items-center gap-3">
-                  <span className="inline-flex h-10 w-10 items-center justify-center rounded-2xl border border-[#D4AF37]/30 bg-[#D4AF37]/10">
-                    <DollarSign className="h-5 w-5 text-[#C5A028]" />
-                  </span>
-                  <span className="text-xs font-semibold uppercase tracking-[0.16em] text-[#8A7D69]">Pendientes</span>
-                </div>
-                <p className="mt-4 text-4xl font-bold text-[#8D7530]">{pendingCount}</p>
-                <p className="mt-1 text-xs text-[#6B6048]">Requieren seguimiento</p>
-              </div>
-
-              <div className="rounded-3xl border border-[#D4AF37]/30 bg-white p-5 shadow-sm shadow-[#0D3B22]/5">
-                <div className="flex items-center gap-3">
-                  <span className="inline-flex h-10 w-10 items-center justify-center rounded-2xl border border-[#D4AF37]/30 bg-[#FDFBF7]">
-                    <GraduationCap className="h-5 w-5 text-[#C5A028]" />
-                  </span>
-                  <span className="text-xs font-semibold uppercase tracking-[0.16em] text-[#8A7D69]">Cursos</span>
-                </div>
-                <p className="mt-4 text-4xl font-bold text-[#0D3B22]">{catalogCourses.length}</p>
-                <p className="mt-1 text-xs text-[#6B6048]">En catálogo activo</p>
-              </div>
+              ))}
             </div>
 
-            {/* Charts Row */}
             <div className="grid gap-6 lg:grid-cols-2">
-              {/* Top Courses Bar Chart */}
+              {/* Top Courses */}
               <div className="rounded-3xl border border-[#D4AF37]/30 bg-white p-6 shadow-sm shadow-[#0D3B22]/5">
                 <div className="flex items-center gap-3 mb-6">
                   <span className="inline-flex h-10 w-10 items-center justify-center rounded-xl border border-[#D4AF37]/30 bg-[#FDFBF7]">
@@ -615,30 +551,27 @@ export function AdminClient({
                     {topCourses.map(({ nombre, count }, index) => (
                       <div key={nombre}>
                         <div className="flex items-center justify-between mb-1.5">
-                          <span className="text-sm font-medium text-[#0D3B22] truncate max-w-[70%]" title={nombre}>
-                            <span className="inline-flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-[#0D3B22] text-[#FDFBF7] text-[10px] font-bold mr-2">{index + 1}</span>
-                            {nombre.length > 28 ? nombre.slice(0, 26) + "…" : nombre}
+                          <span className="flex items-center gap-2 text-sm font-medium text-[#0D3B22] min-w-0">
+                            <span className="inline-flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-[#0D3B22] text-[#FDFBF7] text-[10px] font-bold">{index + 1}</span>
+                            <span className="truncate">{nombre.length > 30 ? nombre.slice(0, 28) + "…" : nombre}</span>
                           </span>
-                          <span className="text-sm font-bold text-[#0D3B22]">{count}</span>
+                          <span className="ml-2 shrink-0 text-sm font-bold text-[#0D3B22]">{count}</span>
                         </div>
                         <div className="h-2.5 w-full rounded-full bg-[#F0EAD8] overflow-hidden">
-                          <div
-                            className="h-full rounded-full bg-gradient-to-r from-[#0D3B22] to-[#1a5c38] transition-all duration-700"
-                            style={{ width: `${(count / maxCourseCount) * 100}%` }}
-                          />
+                          <div className="h-full rounded-full bg-gradient-to-r from-[#0D3B22] to-[#1a5c38] transition-all duration-700" style={{ width: `${(count / maxCourseCount) * 100}%` }} />
                         </div>
                       </div>
                     ))}
                   </div>
                 ) : (
-                  <div className="flex flex-col items-center justify-center py-8 text-center">
+                  <div className="flex flex-col items-center justify-center py-10 text-center">
                     <Sparkles className="h-8 w-8 text-[#D4AF37]/50" />
                     <p className="mt-3 text-sm text-[#6B6048]">Sin inscripciones todavía</p>
                   </div>
                 )}
               </div>
 
-              {/* Province Distribution */}
+              {/* Province */}
               <div className="rounded-3xl border border-[#D4AF37]/30 bg-white p-6 shadow-sm shadow-[#0D3B22]/5">
                 <div className="flex items-center gap-3 mb-6">
                   <span className="inline-flex h-10 w-10 items-center justify-center rounded-xl border border-[#D4AF37]/30 bg-[#FDFBF7]">
@@ -646,7 +579,7 @@ export function AdminClient({
                   </span>
                   <div>
                     <h3 className="suvoga-serif text-xl font-semibold text-[#0D3B22]">Por Provincia</h3>
-                    <p className="text-xs text-[#6B6048]">Distribución geográfica de alumnas</p>
+                    <p className="text-xs text-[#6B6048]">Distribución geográfica</p>
                   </div>
                 </div>
                 {topProvincias.length > 0 ? (
@@ -658,24 +591,21 @@ export function AdminClient({
                           <span className="text-sm font-bold text-[#0D3B22]">{count}</span>
                         </div>
                         <div className="h-2 w-full rounded-full bg-[#F0EAD8] overflow-hidden">
-                          <div
-                            className="h-full rounded-full bg-gradient-to-r from-[#D4AF37] to-[#C5A028] transition-all duration-700"
-                            style={{ width: `${(count / maxProvCount) * 100}%` }}
-                          />
+                          <div className="h-full rounded-full bg-gradient-to-r from-[#D4AF37] to-[#C5A028] transition-all duration-700" style={{ width: `${(count / maxProvCount) * 100}%` }} />
                         </div>
                       </div>
                     ))}
                   </div>
                 ) : (
-                  <div className="flex flex-col items-center justify-center py-8 text-center">
+                  <div className="flex flex-col items-center justify-center py-10 text-center">
                     <Sparkles className="h-8 w-8 text-[#D4AF37]/50" />
-                    <p className="mt-3 text-sm text-[#6B6048]">Sin datos de provincia todavía</p>
+                    <p className="mt-3 text-sm text-[#6B6048]">Sin datos todavía</p>
                   </div>
                 )}
               </div>
             </div>
 
-            {/* Recent Inscriptions */}
+            {/* Recent inscriptions */}
             <div className="rounded-3xl border border-[#D4AF37]/30 bg-white p-6 shadow-sm shadow-[#0D3B22]/5">
               <div className="flex items-center gap-3 mb-5">
                 <span className="inline-flex h-10 w-10 items-center justify-center rounded-xl border border-[#D4AF37]/30 bg-[#FDFBF7]">
@@ -686,58 +616,297 @@ export function AdminClient({
                   <p className="text-xs text-[#6B6048]">Las 5 más recientes</p>
                 </div>
               </div>
-              {rows.length > 0 ? (
+              {crmRows.length > 0 ? (
                 <div className="space-y-3">
-                  {rows.slice(-5).reverse().map((row) => (
+                  {crmRows.slice(-5).reverse().map((row) => (
                     <div key={row.idInscripcion} className="flex items-center justify-between gap-4 rounded-2xl border border-[#E7DAC2] bg-[#FDFBF7] px-4 py-3">
                       <div className="min-w-0">
                         <p className="truncate text-sm font-semibold text-[#0D3B22]">{row.nombreCompleto}</p>
                         <p className="truncate text-xs text-[#6B6048]">{row.cursoNombre}</p>
                       </div>
-                      <span className={isPending(row.estadoAnticipo)
-                        ? "shrink-0 inline-flex rounded-full border border-[#D4AF37]/30 bg-[#D4AF37]/10 px-3 py-1 text-xs font-semibold text-[#8D7530]"
-                        : "shrink-0 inline-flex rounded-full border border-[#0D3B22]/15 bg-[#0D3B22]/10 px-3 py-1 text-xs font-semibold text-[#0D3B22]"
-                      }>
-                        {row.estadoAnticipo || "Pendiente"}
-                      </span>
+                      <StatusPill status={localCrmStatus[row.idInscripcion] || row.crmStatus} />
                     </div>
                   ))}
                 </div>
               ) : (
                 <div className="flex flex-col items-center justify-center py-8 text-center">
                   <Sparkles className="h-8 w-8 text-[#D4AF37]/50" />
-                  <p className="mt-3 text-sm text-[#6B6048]">Sin inscripciones todavía. Las registradas aparecerán aquí.</p>
+                  <p className="mt-3 text-sm text-[#6B6048]">Sin inscripciones todavía.</p>
                 </div>
               )}
             </div>
           </section>
         ) : null}
 
+        {/* ── CRM ACADÉMICO ── */}
+        {activeTab === "crm" ? (
+          <section className="space-y-5">
+            <div className="rounded-3xl border border-[#D4AF37]/30 bg-white p-5 shadow-sm shadow-[#0D3B22]/5 sm:p-6">
+              <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+                <div>
+                  <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[#C5A028]">Seguimiento operativo</p>
+                  <h2 className="suvoga-serif mt-1 text-3xl font-semibold text-[#0D3B22]">CRM Académico</h2>
+                  <p className="mt-1 text-sm text-[#6B6048]">{filteredCrmRows.length} alumnas visibles</p>
+                </div>
+                <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
+                  {/* Status filter */}
+                  <select
+                    value={crmFilter}
+                    onChange={(e) => setCrmFilter(e.target.value)}
+                    className="h-11 rounded-2xl border border-[#D4AF37]/30 bg-[#FDFBF7] px-3 text-sm font-medium text-[#0D3B22] outline-none focus:border-[#0D3B22]"
+                  >
+                    {crmStatuses.map((s) => (
+                      <option key={s} value={s}>{s}</option>
+                    ))}
+                  </select>
+                  {/* Search */}
+                  <label className="relative block sm:w-72">
+                    <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-[#8A7D69]" />
+                    <input
+                      value={crmQuery}
+                      onChange={(e) => setCrmQuery(e.target.value)}
+                      placeholder="Buscar alumna, curso o provincia…"
+                      className="h-11 w-full rounded-2xl border border-[#D4AF37]/30 bg-[#FDFBF7] pl-9 pr-3 text-sm text-[#0D3B22] outline-none transition-colors placeholder:text-[#8A7D69] focus:border-[#0D3B22]"
+                    />
+                  </label>
+                </div>
+              </div>
+
+              {filteredCrmRows.length > 0 ? (
+                <div className="mt-5 space-y-3">
+                  {filteredCrmRows.map((row) => {
+                    const effectiveStatus = localCrmStatus[row.idInscripcion] || row.crmStatus;
+                    const waHref = whatsappHref(row.whatsapp, row.nombreCompleto, row.cursoNombre);
+                    const isExpanded = expandedRow === row.idInscripcion;
+
+                    return (
+                      <div key={row.idInscripcion} className="rounded-2xl border border-[#E7DAC2] bg-[#FDFBF7] overflow-hidden transition-all duration-200">
+                        {/* Row header */}
+                        <div className="flex flex-wrap items-center gap-3 px-4 py-3">
+                          {/* Name & course */}
+                          <div className="flex-1 min-w-0">
+                            <p className="truncate text-sm font-semibold text-[#0D3B22]">{row.nombreCompleto}</p>
+                            <p className="truncate text-xs text-[#6B6048]">{row.cursoNombre} · {row.provincia || "Sin provincia"}</p>
+                          </div>
+
+                          {/* Status pill */}
+                          <StatusPill status={effectiveStatus} />
+
+                          {/* Amounts */}
+                          <div className="hidden sm:flex items-center gap-4 text-xs text-[#6B6048]">
+                            {row.montoPagado > 0 && (
+                              <span className="flex items-center gap-1">
+                                <span className="text-emerald-700 font-semibold">{formatDop(row.montoPagado)}</span> anticipo
+                              </span>
+                            )}
+                            {row.balancePendiente > 0 && (
+                              <span className="flex items-center gap-1">
+                                <span className="text-orange-700 font-semibold">{formatDop(row.balancePendiente)}</span> balance
+                              </span>
+                            )}
+                          </div>
+
+                          {/* Action buttons */}
+                          <div className="flex items-center gap-2 shrink-0">
+                            {waHref && (
+                              <a
+                                href={waHref}
+                                target="_blank"
+                                rel="noreferrer"
+                                className="inline-flex h-9 items-center gap-1.5 rounded-xl bg-[#0D3B22] px-3 text-xs font-semibold text-[#FDFBF7] shadow-sm transition-colors hover:bg-[#145332]"
+                                title="Contactar por WhatsApp"
+                              >
+                                <MessageCircle className="h-3.5 w-3.5" />
+                                <span className="hidden sm:inline">WhatsApp</span>
+                              </a>
+                            )}
+                            <button
+                              type="button"
+                              onClick={() => setExpandedRow(isExpanded ? null : row.idInscripcion)}
+                              className="inline-flex h-9 items-center gap-1.5 rounded-xl border border-[#D4AF37]/30 bg-white px-3 text-xs font-semibold text-[#0D3B22] transition-colors hover:bg-[#F7F1E7]"
+                            >
+                              <ExternalLink className="h-3.5 w-3.5" />
+                              <span className="hidden sm:inline">{isExpanded ? "Cerrar" : "Detalle"}</span>
+                            </button>
+                          </div>
+                        </div>
+
+                        {/* Expanded detail */}
+                        {isExpanded && (
+                          <div className="border-t border-[#E7DAC2] bg-white px-4 py-4 space-y-4">
+                            <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
+                              <div className="rounded-xl border border-[#E7DAC2] bg-[#FDFBF7] p-3">
+                                <p className="text-[10px] font-semibold uppercase tracking-[0.14em] text-[#8A7D69]">WhatsApp</p>
+                                <p className="mt-1 text-sm font-medium text-[#0D3B22]">{row.whatsapp || "—"}</p>
+                              </div>
+                              <div className="rounded-xl border border-[#E7DAC2] bg-[#FDFBF7] p-3">
+                                <p className="text-[10px] font-semibold uppercase tracking-[0.14em] text-[#8A7D69]">Cédula</p>
+                                <p className="mt-1 text-sm font-medium text-[#0D3B22]">{row.cedula || "—"}</p>
+                              </div>
+                              <div className="rounded-xl border border-[#E7DAC2] bg-[#FDFBF7] p-3">
+                                <p className="text-[10px] font-semibold uppercase tracking-[0.14em] text-[#8A7D69]">Fecha Programada</p>
+                                <p className="mt-1 text-sm font-medium text-[#0D3B22]">{formatDate(row.fechaProgramada)}</p>
+                              </div>
+                              <div className="rounded-xl border border-[#E7DAC2] bg-[#FDFBF7] p-3">
+                                <p className="text-[10px] font-semibold uppercase tracking-[0.14em] text-[#8A7D69]">Asistencia</p>
+                                <p className="mt-1 text-sm font-medium text-[#0D3B22]">{row.estadoAsistencia || "Programada"}</p>
+                              </div>
+                              <div className="rounded-xl border border-[#E7DAC2] bg-[#FDFBF7] p-3">
+                                <p className="text-[10px] font-semibold uppercase tracking-[0.14em] text-[#8A7D69]">Anticipo pagado</p>
+                                <p className="mt-1 text-sm font-semibold text-emerald-700">{formatDop(row.montoPagado)}</p>
+                              </div>
+                              <div className="rounded-xl border border-[#E7DAC2] bg-[#FDFBF7] p-3">
+                                <p className="text-[10px] font-semibold uppercase tracking-[0.14em] text-[#8A7D69]">Balance pendiente</p>
+                                <p className="mt-1 text-sm font-semibold text-orange-700">{row.balancePendiente > 0 ? formatDop(row.balancePendiente) : "—"}</p>
+                              </div>
+                              <div className="rounded-xl border border-[#E7DAC2] bg-[#FDFBF7] p-3">
+                                <p className="text-[10px] font-semibold uppercase tracking-[0.14em] text-[#8A7D69]">Estado de pago</p>
+                                <p className="mt-1 text-sm font-medium text-[#0D3B22]">{row.estadoPago || "—"}</p>
+                              </div>
+                              <div className="rounded-xl border border-[#E7DAC2] bg-[#FDFBF7] p-3">
+                                <p className="text-[10px] font-semibold uppercase tracking-[0.14em] text-[#8A7D69]">ID Inscripción</p>
+                                <p className="mt-1 text-xs font-mono text-[#6B6048] break-all">{row.idInscripcion}</p>
+                              </div>
+                            </div>
+
+                            {/* Mark follow-up */}
+                            <div>
+                              <p className="text-xs font-semibold uppercase tracking-[0.16em] text-[#6B6048] mb-2">Marcar seguimiento</p>
+                              <div className="flex flex-wrap gap-2">
+                                {ALL_CRM_STATUSES.map((s) => (
+                                  <button
+                                    key={s}
+                                    type="button"
+                                    onClick={() => updateLocalStatus(row.idInscripcion, s)}
+                                    className={`inline-flex rounded-full border px-3 py-1 text-xs font-semibold transition-all ${
+                                      effectiveStatus === s
+                                        ? "border-[#0D3B22] bg-[#0D3B22] text-[#FDFBF7]"
+                                        : "border-[#D4AF37]/30 bg-white text-[#0D3B22] hover:border-[#0D3B22]/30 hover:bg-[#FDFBF7]"
+                                    }`}
+                                  >
+                                    {s}
+                                  </button>
+                                ))}
+                              </div>
+                              <p className="mt-2 text-[10px] text-[#8A7D69]">El seguimiento es local hasta que se implemente escritura a Google Sheets.</p>
+                            </div>
+                          </div>
+                        )}
+                      </div>
+                    );
+                  })}
+                </div>
+              ) : (
+                <div className="mt-5 rounded-3xl border border-dashed border-[#D4AF37]/35 bg-[#FDFBF7] p-8 text-center">
+                  <Sparkles className="mx-auto h-8 w-8 text-[#D4AF37]" />
+                  <p className="suvoga-serif mt-3 text-2xl font-semibold text-[#0D3B22]">Sin registros visibles</p>
+                  <p className="mt-2 text-sm text-[#6B6048]">Los registros aparecerán aquí cuando se guarden en SuVoGa OS.</p>
+                </div>
+              )}
+            </div>
+          </section>
+        ) : null}
+
+        {/* ── VISTA POR CURSO ── */}
+        {activeTab === "cursos_vista" ? (
+          <section className="space-y-5">
+            <div className="rounded-3xl border border-[#D4AF37]/30 bg-white p-5 shadow-sm shadow-[#0D3B22]/5 sm:p-6">
+              <div className="mb-5">
+                <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[#C5A028]">Análisis comercial</p>
+                <h2 className="suvoga-serif mt-1 text-3xl font-semibold text-[#0D3B22]">Vista por Curso</h2>
+                <p className="mt-1 text-sm text-[#6B6048]">Cupos, inscritas, anticipos y estado comercial de cada programa.</p>
+              </div>
+
+              {courseViews.length > 0 ? (
+                <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
+                  {courseViews.map((cv) => {
+                    const occupancy = cv.cuposTotales > 0 ? Math.min((cv.inscritas / cv.cuposTotales) * 100, 100) : 0;
+                    const commercialStatus =
+                      occupancy >= 90 ? "Lleno" :
+                      occupancy >= 60 ? "Alta demanda" :
+                      occupancy >= 30 ? "En venta" :
+                      cv.inscritas > 0 ? "Inicio lento" : "Sin inscritas";
+                    const statusBadge =
+                      occupancy >= 90 ? "border-red-200 bg-red-50 text-red-700" :
+                      occupancy >= 60 ? "border-emerald-200 bg-emerald-50 text-emerald-700" :
+                      occupancy >= 30 ? "border-[#D4AF37]/30 bg-[#D4AF37]/10 text-[#8D7530]" :
+                      "border-gray-200 bg-gray-50 text-gray-600";
+
+                    return (
+                      <article key={cv.idServicio} className="rounded-3xl border border-[#D4AF37]/25 bg-[#FDFBF7] p-5 shadow-sm shadow-[#0D3B22]/5 hover:-translate-y-0.5 hover:border-[#D4AF37]/60 hover:shadow-xl hover:shadow-[#D4AF37]/10 transition-all duration-300">
+                        <div className="flex items-start justify-between gap-3">
+                          <span className="inline-flex h-11 w-11 items-center justify-center rounded-2xl border border-[#D4AF37]/30 bg-white text-[#0D3B22]">
+                            <GraduationCap className="h-5 w-5" />
+                          </span>
+                          <span className={`rounded-full border px-2.5 py-1 text-[11px] font-semibold ${statusBadge}`}>{commercialStatus}</span>
+                        </div>
+
+                        <h3 className="suvoga-serif mt-4 text-lg font-semibold leading-snug text-[#0D3B22]" title={cv.nombre}>
+                          {cv.nombre.length > 40 ? cv.nombre.slice(0, 38) + "…" : cv.nombre}
+                        </h3>
+                        <p className="text-xs text-[#8A7D69] mt-0.5">{cv.idServicio}</p>
+
+                        {/* Occupancy bar */}
+                        <div className="mt-4">
+                          <div className="flex justify-between text-xs font-medium text-[#6B6048] mb-1.5">
+                            <span>{cv.inscritas} inscritas</span>
+                            <span>{cv.cuposTotales} cupos</span>
+                          </div>
+                          <div className="h-2.5 w-full rounded-full bg-[#F0EAD8] overflow-hidden">
+                            <div
+                              className={`h-full rounded-full transition-all duration-700 ${occupancy >= 90 ? "bg-red-500" : occupancy >= 60 ? "bg-emerald-500" : "bg-[#D4AF37]"}`}
+                              style={{ width: `${occupancy}%` }}
+                            />
+                          </div>
+                        </div>
+
+                        <div className="mt-4 grid grid-cols-2 gap-2 text-xs">
+                          <div className="rounded-xl border border-[#0D3B22]/8 bg-white p-2.5">
+                            <p className="text-[10px] font-semibold uppercase tracking-[0.12em] text-[#8A7D69]">Anticipos pend.</p>
+                            <p className="mt-0.5 font-bold text-orange-600">{cv.anticiposPendientes}</p>
+                          </div>
+                          <div className="rounded-xl border border-[#0D3B22]/8 bg-white p-2.5">
+                            <p className="text-[10px] font-semibold uppercase tracking-[0.12em] text-[#8A7D69]">Cobrado</p>
+                            <p className="mt-0.5 font-bold text-emerald-700">{cv.pagosRecibidos > 0 ? formatDop(cv.pagosRecibidos) : "—"}</p>
+                          </div>
+                          <div className="rounded-xl border border-[#0D3B22]/8 bg-white p-2.5">
+                            <p className="text-[10px] font-semibold uppercase tracking-[0.12em] text-[#8A7D69]">Balance pend.</p>
+                            <p className="mt-0.5 font-bold text-orange-700">{cv.balancePendienteTotal > 0 ? formatDop(cv.balancePendienteTotal) : "—"}</p>
+                          </div>
+                          <div className="rounded-xl border border-[#0D3B22]/8 bg-white p-2.5">
+                            <p className="text-[10px] font-semibold uppercase tracking-[0.12em] text-[#8A7D69]">Próxima fecha</p>
+                            <p className="mt-0.5 font-bold text-[#0D3B22]">{cv.proximaFecha ? formatDate(cv.proximaFecha) : "—"}</p>
+                          </div>
+                        </div>
+                      </article>
+                    );
+                  })}
+                </div>
+              ) : (
+                <div className="flex flex-col items-center justify-center py-12 text-center">
+                  <Sparkles className="h-10 w-10 text-[#D4AF37]/50" />
+                  <p className="suvoga-serif mt-4 text-2xl font-semibold text-[#0D3B22]">Sin datos por curso</p>
+                  <p className="mt-2 text-sm text-[#6B6048]">Los datos aparecerán cuando haya inscripciones en Google Sheets.</p>
+                </div>
+              )}
+            </div>
+          </section>
+        ) : null}
+
+        {/* ── CALENDARIO ── */}
         {activeTab === "calendario" ? (
           <section className="grid gap-5 xl:grid-cols-[minmax(0,1fr)_380px]">
             <div className="rounded-3xl border border-[#D4AF37]/30 bg-white p-4 shadow-sm shadow-[#0D3B22]/5 sm:p-5">
               <div className="mb-5 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
                 <div>
-                  <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[#C5A028]">
-                    Gestor de calendario
-                  </p>
-                  <h2 className="suvoga-serif mt-2 text-3xl font-semibold capitalize text-[#0D3B22]">
-                    {monthTitle(currentMonth)}
-                  </h2>
+                  <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[#C5A028]">Gestor de calendario</p>
+                  <h2 className="suvoga-serif mt-2 text-3xl font-semibold capitalize text-[#0D3B22]">{monthTitle(currentMonth)}</h2>
                 </div>
                 <div className="flex items-center gap-2">
                   <button
                     type="button"
                     aria-label="Mes anterior"
-                    onClick={() =>
-                      setCurrentMonth(
-                        new Date(
-                          currentMonth.getFullYear(),
-                          currentMonth.getMonth() - 1,
-                          1
-                        )
-                      )
-                    }
+                    onClick={() => setCurrentMonth(new Date(currentMonth.getFullYear(), currentMonth.getMonth() - 1, 1))}
                     className="inline-flex h-10 w-10 items-center justify-center rounded-2xl border border-[#D4AF37]/30 bg-[#FDFBF7] text-[#0D3B22] transition-colors hover:bg-[#F7F1E7]"
                   >
                     <ChevronLeft className="h-4 w-4" />
@@ -745,15 +914,7 @@ export function AdminClient({
                   <button
                     type="button"
                     aria-label="Mes siguiente"
-                    onClick={() =>
-                      setCurrentMonth(
-                        new Date(
-                          currentMonth.getFullYear(),
-                          currentMonth.getMonth() + 1,
-                          1
-                        )
-                      )
-                    }
+                    onClick={() => setCurrentMonth(new Date(currentMonth.getFullYear(), currentMonth.getMonth() + 1, 1))}
                     className="inline-flex h-10 w-10 items-center justify-center rounded-2xl border border-[#D4AF37]/30 bg-[#FDFBF7] text-[#0D3B22] transition-colors hover:bg-[#F7F1E7]"
                   >
                     <ChevronRight className="h-4 w-4" />
@@ -762,45 +923,28 @@ export function AdminClient({
               </div>
 
               <div className="grid grid-cols-7 gap-2 text-center text-xs font-semibold uppercase tracking-[0.14em] text-[#8A7D69]">
-                {weekdays.map((day) => (
-                  <div key={day} className="py-2">
-                    {day}
-                  </div>
-                ))}
+                {weekdays.map((day) => <div key={day} className="py-2">{day}</div>)}
               </div>
-
               <div className="mt-2 grid grid-cols-7 gap-2">
                 {dayGrid.map((cell, index) => {
                   const dayEvents = cell.date ? eventsByDate[cell.date] ?? [] : [];
-
                   return (
                     <div
                       key={`${cell.day}-${index}`}
-                      className={
-                        cell.currentMonth
-                          ? "min-h-[128px] rounded-2xl border border-[#D4AF37]/20 bg-[#FDFBF7] p-2 shadow-sm"
-                          : "min-h-[128px] rounded-2xl border border-[#E7DAC2]/70 bg-white p-2 opacity-55"
-                      }
+                      className={cell.currentMonth
+                        ? "min-h-[128px] rounded-2xl border border-[#D4AF37]/20 bg-[#FDFBF7] p-2 shadow-sm"
+                        : "min-h-[128px] rounded-2xl border border-[#E7DAC2]/70 bg-white p-2 opacity-55"}
                     >
                       <div className="flex items-center justify-between gap-2">
-                        <span
-                          className={
-                            cell.currentMonth
-                              ? "inline-flex h-7 w-7 items-center justify-center rounded-full bg-white text-sm font-semibold text-[#0D3B22]"
-                              : "text-sm font-semibold text-[#8A7D69]"
-                          }
-                        >
-                          {cell.day}
-                        </span>
+                        <span className={cell.currentMonth
+                          ? "inline-flex h-7 w-7 items-center justify-center rounded-full bg-white text-sm font-semibold text-[#0D3B22]"
+                          : "text-sm font-semibold text-[#8A7D69]"}
+                        >{cell.day}</span>
                       </div>
                       <div className="mt-2 space-y-1.5">
-                        {dayEvents.slice(0, 2).map((event) => (
-                          <CourseChip key={event.id} event={event} />
-                        ))}
+                        {dayEvents.slice(0, 2).map((event) => <CourseChip key={event.id} event={event} />)}
                         {dayEvents.length > 2 ? (
-                          <p className="rounded-full border border-[#D4AF37]/25 bg-white px-2 py-1 text-center text-[10px] font-semibold text-[#8D7530]">
-                            +{dayEvents.length - 2} mas
-                          </p>
+                          <p className="rounded-full border border-[#D4AF37]/25 bg-white px-2 py-1 text-center text-[10px] font-semibold text-[#8D7530]">+{dayEvents.length - 2} mas</p>
                         ) : null}
                       </div>
                     </div>
@@ -815,42 +959,28 @@ export function AdminClient({
                   <Plus className="h-5 w-5" />
                 </span>
                 <div>
-                  <h3 className="suvoga-serif text-2xl font-semibold text-[#0D3B22]">
-                    Programar curso
-                  </h3>
-                  <p className="mt-1 text-sm leading-6 text-[#4E6658]">
-                    Crea una fecha y revisa el chip del curso en el calendario.
-                  </p>
+                  <h3 className="suvoga-serif text-2xl font-semibold text-[#0D3B22]">Programar curso</h3>
+                  <p className="mt-1 text-sm leading-6 text-[#4E6658]">Crea una fecha y revisa el chip del curso en el calendario.</p>
                 </div>
               </div>
 
               <form className="mt-6 space-y-5" onSubmit={handleScheduleCourse}>
                 <div>
-                  <p className="text-xs font-semibold uppercase tracking-[0.16em] text-[#6B6048]">
-                    Curso
-                  </p>
+                  <p className="text-xs font-semibold uppercase tracking-[0.16em] text-[#6B6048]">Curso</p>
                   <div className="mt-3 max-h-64 space-y-2 overflow-y-auto pr-1">
                     {catalogCourses.map((course) => {
                       const selected = course.idServicio === courseId;
-
                       return (
                         <button
                           key={course.idServicio}
                           type="button"
-                          onClick={() => {
-                            setCourseId(course.idServicio);
-                            setCapacity(String(course.cuposTotales || 12));
-                          }}
-                          className={
-                            selected
-                              ? "flex w-full items-center gap-3 rounded-2xl border border-[#0D3B22]/20 bg-[#0D3B22] p-3 text-left text-[#FDFBF7] shadow-sm"
-                              : "flex w-full items-center gap-3 rounded-2xl border border-[#D4AF37]/25 bg-[#FDFBF7] p-3 text-left text-[#0D3B22] transition-colors hover:bg-[#F7F1E7]"
-                          }
+                          onClick={() => { setCourseId(course.idServicio); setCapacity(String(course.cuposTotales || 12)); }}
+                          className={selected
+                            ? "flex w-full items-center gap-3 rounded-2xl border border-[#0D3B22]/20 bg-[#0D3B22] p-3 text-left text-[#FDFBF7] shadow-sm"
+                            : "flex w-full items-center gap-3 rounded-2xl border border-[#D4AF37]/25 bg-[#FDFBF7] p-3 text-left text-[#0D3B22] transition-colors hover:bg-[#F7F1E7]"}
                         >
                           <GraduationCap className="h-4 w-4 shrink-0" />
-                          <span className="min-w-0 flex-1 truncate text-sm font-semibold">
-                            {course.nombre}
-                          </span>
+                          <span className="min-w-0 flex-1 truncate text-sm font-semibold">{course.nombre}</span>
                         </button>
                       );
                     })}
@@ -859,54 +989,23 @@ export function AdminClient({
 
                 <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-1">
                   <label className="block">
-                    <span className="text-xs font-semibold uppercase tracking-[0.16em] text-[#6B6048]">
-                      Fecha
-                    </span>
-                    <input
-                      value={selectedDate}
-                      onChange={(event) => setSelectedDate(event.target.value)}
-                      inputMode="numeric"
-                      placeholder="2026-05-18"
-                      className="mt-2 h-11 w-full rounded-2xl border border-[#D4AF37]/30 bg-[#FDFBF7] px-3 text-sm font-medium text-[#0D3B22] outline-none transition-colors placeholder:text-[#8A7D69] focus:border-[#0D3B22]"
-                    />
+                    <span className="text-xs font-semibold uppercase tracking-[0.16em] text-[#6B6048]">Fecha</span>
+                    <input value={selectedDate} onChange={(e) => setSelectedDate(e.target.value)} inputMode="numeric" placeholder="2026-05-18" className="mt-2 h-11 w-full rounded-2xl border border-[#D4AF37]/30 bg-[#FDFBF7] px-3 text-sm font-medium text-[#0D3B22] outline-none transition-colors placeholder:text-[#8A7D69] focus:border-[#0D3B22]" />
                   </label>
                   <label className="block">
-                    <span className="text-xs font-semibold uppercase tracking-[0.16em] text-[#6B6048]">
-                      Hora
-                    </span>
-                    <input
-                      value={selectedTime}
-                      onChange={(event) => setSelectedTime(event.target.value)}
-                      inputMode="numeric"
-                      placeholder="09:00"
-                      className="mt-2 h-11 w-full rounded-2xl border border-[#D4AF37]/30 bg-[#FDFBF7] px-3 text-sm font-medium text-[#0D3B22] outline-none transition-colors placeholder:text-[#8A7D69] focus:border-[#0D3B22]"
-                    />
+                    <span className="text-xs font-semibold uppercase tracking-[0.16em] text-[#6B6048]">Hora</span>
+                    <input value={selectedTime} onChange={(e) => setSelectedTime(e.target.value)} inputMode="numeric" placeholder="09:00" className="mt-2 h-11 w-full rounded-2xl border border-[#D4AF37]/30 bg-[#FDFBF7] px-3 text-sm font-medium text-[#0D3B22] outline-none transition-colors placeholder:text-[#8A7D69] focus:border-[#0D3B22]" />
                   </label>
                 </div>
 
                 <label className="block">
-                  <span className="text-xs font-semibold uppercase tracking-[0.16em] text-[#6B6048]">
-                    Cupos
-                  </span>
-                  <input
-                    value={capacity}
-                    onChange={(event) => setCapacity(event.target.value)}
-                    inputMode="numeric"
-                    placeholder="12"
-                    className="mt-2 h-11 w-full rounded-2xl border border-[#D4AF37]/30 bg-[#FDFBF7] px-3 text-sm font-medium text-[#0D3B22] outline-none transition-colors placeholder:text-[#8A7D69] focus:border-[#0D3B22]"
-                  />
+                  <span className="text-xs font-semibold uppercase tracking-[0.16em] text-[#6B6048]">Cupos</span>
+                  <input value={capacity} onChange={(e) => setCapacity(e.target.value)} inputMode="numeric" placeholder="12" className="mt-2 h-11 w-full rounded-2xl border border-[#D4AF37]/30 bg-[#FDFBF7] px-3 text-sm font-medium text-[#0D3B22] outline-none transition-colors placeholder:text-[#8A7D69] focus:border-[#0D3B22]" />
                 </label>
 
-                {formError ? (
-                  <p className="rounded-2xl border border-[#D4AF37]/30 bg-[#D4AF37]/10 px-3 py-2 text-sm font-medium text-[#8D7530]">
-                    {formError}
-                  </p>
-                ) : null}
+                {formError ? <p className="rounded-2xl border border-[#D4AF37]/30 bg-[#D4AF37]/10 px-3 py-2 text-sm font-medium text-[#8D7530]">{formError}</p> : null}
 
-                <button
-                  type="submit"
-                  className="inline-flex h-12 w-full items-center justify-center gap-2 rounded-2xl bg-[#0D3B22] px-5 text-sm font-semibold text-[#FDFBF7] shadow-sm shadow-[#0D3B22]/10 transition-colors hover:bg-[#145332]"
-                >
+                <button type="submit" className="inline-flex h-12 w-full items-center justify-center gap-2 rounded-2xl bg-[#0D3B22] px-5 text-sm font-semibold text-[#FDFBF7] shadow-sm shadow-[#0D3B22]/10 transition-colors hover:bg-[#145332]">
                   <Leaf className="h-4 w-4" />
                   Crear Course Chip
                 </button>
@@ -915,25 +1014,19 @@ export function AdminClient({
           </section>
         ) : null}
 
+        {/* ── MIS CURSOS ── */}
         {activeTab === "cursos" ? (
           <section className="space-y-5 rounded-3xl border border-[#D4AF37]/30 bg-white p-5 shadow-sm shadow-[#0D3B22]/5 sm:p-6">
             <div className="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
               <div>
-                <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[#C5A028]">
-                  Catalogo vivo
-                </p>
-                <h2 className="suvoga-serif mt-2 text-3xl font-semibold text-[#0D3B22]">
-                  Mis Cursos
-                </h2>
-                <p className="mt-2 max-w-2xl text-sm leading-6 text-[#4E6658]">
-                  Agrega programas durante la presentacion y usalos al instante
-                  en el calendario o en el catalogo publico de demo.
-                </p>
+                <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[#C5A028]">Catálogo vivo</p>
+                <h2 className="suvoga-serif mt-2 text-3xl font-semibold text-[#0D3B22]">Mis Cursos</h2>
+                <p className="mt-2 max-w-2xl text-sm leading-6 text-[#4E6658]">Agrega programas durante la presentación y usalos al instante en el calendario o en el catálogo público.</p>
               </div>
               <button
                 type="button"
                 onClick={() => setIsCourseModalOpen(true)}
-                className="inline-flex h-12 items-center justify-center gap-2 rounded-2xl border border-[#D4AF37]/50 bg-[#D4AF37] px-5 text-sm font-bold text-[#0D3B22] shadow-xl shadow-[#D4AF37]/20 transition-all duration-300 hover:-translate-y-0.5 hover:bg-[#C5A028] hover:shadow-2xl hover:shadow-[#D4AF37]/25"
+                className="inline-flex h-12 items-center justify-center gap-2 rounded-2xl border border-[#D4AF37]/50 bg-[#D4AF37] px-5 text-sm font-bold text-[#0D3B22] shadow-xl shadow-[#D4AF37]/20 transition-all duration-300 hover:-translate-y-0.5 hover:bg-[#C5A028]"
               >
                 <Plus className="h-4 w-4" />
                 Crear Nuevo Curso
@@ -954,35 +1047,19 @@ export function AdminClient({
                       {course.idServicio.startsWith("DEMO-") ? "Demo" : "Curso"}
                     </span>
                   </div>
-                  <h3 className="suvoga-serif mt-5 text-2xl font-semibold leading-tight text-[#0D3B22]">
-                    {course.nombre}
-                  </h3>
+                  <h3 className="suvoga-serif mt-5 text-2xl font-semibold leading-tight text-[#0D3B22]">{course.nombre}</h3>
                   <div className="mt-5 grid grid-cols-3 gap-2 text-sm">
                     <div className="rounded-2xl border border-[#0D3B22]/10 bg-white p-3">
-                      <p className="text-[10px] font-semibold uppercase tracking-[0.12em] text-[#6B6048]">
-                        Precio
-                      </p>
-                      <p className="mt-1 font-semibold text-[#0D3B22]">
-                        {course.precioTotal > 0
-                          ? formatDop(course.precioTotal)
-                          : "A consultar"}
-                      </p>
+                      <p className="text-[10px] font-semibold uppercase tracking-[0.12em] text-[#6B6048]">Precio</p>
+                      <p className="mt-1 font-semibold text-[#0D3B22]">{course.precioTotal > 0 ? formatDop(course.precioTotal) : "A consultar"}</p>
                     </div>
                     <div className="rounded-2xl border border-[#D4AF37]/25 bg-white p-3">
-                      <p className="text-[10px] font-semibold uppercase tracking-[0.12em] text-[#6B6048]">
-                        Anticipo
-                      </p>
-                      <p className="mt-1 font-semibold text-[#0D3B22]">
-                        {formatDop(course.montoAnticipo || 1000)}
-                      </p>
+                      <p className="text-[10px] font-semibold uppercase tracking-[0.12em] text-[#6B6048]">Anticipo</p>
+                      <p className="mt-1 font-semibold text-[#0D3B22]">{formatDop(course.montoAnticipo || 1000)}</p>
                     </div>
                     <div className="rounded-2xl border border-[#0D3B22]/10 bg-white p-3">
-                      <p className="text-[10px] font-semibold uppercase tracking-[0.12em] text-[#6B6048]">
-                        Cupos
-                      </p>
-                      <p className="mt-1 font-semibold text-[#0D3B22]">
-                        {course.cuposTotales || 12}
-                      </p>
+                      <p className="text-[10px] font-semibold uppercase tracking-[0.12em] text-[#6B6048]">Cupos</p>
+                      <p className="mt-1 font-semibold text-[#0D3B22]">{course.cuposTotales || 12}</p>
                     </div>
                   </div>
                 </article>
@@ -991,234 +1068,54 @@ export function AdminClient({
           </section>
         ) : null}
 
-        {activeTab === "inscripciones" ? (
-          <section className="rounded-3xl border border-[#D4AF37]/30 bg-white p-4 shadow-sm shadow-[#0D3B22]/5 sm:p-5">
-            <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-              <div>
-                <p className="suvoga-serif text-2xl font-semibold text-[#0D3B22]">
-                  Inscripciones
-                </p>
-                <p className="text-sm text-[#6B6048]">
-                  {filteredRows.length} registros visibles
-                </p>
-              </div>
-              <label className="relative block sm:w-80">
-                <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-[#8A7D69]" />
-                <input
-                  value={query}
-                  onChange={(event) => setQuery(event.target.value)}
-                  placeholder="Buscar estudiante, curso o provincia"
-                  className="h-11 w-full rounded-2xl border border-[#D4AF37]/30 bg-[#FDFBF7] pl-9 pr-3 text-sm text-[#0D3B22] outline-none transition-colors placeholder:text-[#8A7D69] focus:border-[#0D3B22]"
-                />
-              </label>
-            </div>
-
-            <div className="mt-5 hidden overflow-hidden rounded-3xl border border-[#E7DAC2] md:block">
-              <table className="w-full text-left text-sm">
-                <thead className="bg-[#F7F1E7] text-xs uppercase tracking-[0.12em] text-[#6B6048]">
-                  <tr>
-                    <th className="px-4 py-4 font-semibold">Estudiante</th>
-                    <th className="px-4 py-4 font-semibold">Curso</th>
-                    <th className="px-4 py-4 font-semibold">Cedula</th>
-                    <th className="px-4 py-4 font-semibold">Provincia</th>
-                    <th className="px-4 py-4 font-semibold">Anticipo</th>
-                    <th className="px-4 py-4 text-right font-semibold">Contacto</th>
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-[#E7DAC2] bg-white">
-                  {filteredRows.map((row) => (
-                    <tr
-                      key={row.idInscripcion}
-                      className="transition-colors hover:bg-[#FDFBF7]"
-                    >
-                      <td className="px-4 py-4 font-semibold text-[#0D3B22]">
-                        {row.nombreCompleto}
-                        <div className="mt-1 text-xs font-normal text-[#8A7D69]">
-                          {row.whatsapp || "Sin WhatsApp"}
-                        </div>
-                      </td>
-                      <td className="max-w-[300px] px-4 py-4 text-[#4E6658]">
-                        {row.cursoNombre}
-                      </td>
-                      <td className="px-4 py-4 text-[#4E6658]">{row.cedula}</td>
-                      <td className="px-4 py-4 text-[#4E6658]">{row.provincia}</td>
-                      <td className="px-4 py-4">
-                        <StatusPill status={row.estadoAnticipo} />
-                      </td>
-                      <td className="px-4 py-4 text-right">
-                        <ContactButton row={row} />
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-
-            <div className="mt-5 space-y-3 md:hidden">
-              {filteredRows.map((row) => (
-                <article
-                  key={row.idInscripcion}
-                  className="rounded-3xl border border-[#E7DAC2] bg-[#FDFBF7] p-4 shadow-sm"
-                >
-                  <div className="flex items-start justify-between gap-3">
-                    <div>
-                      <p className="font-semibold text-[#0D3B22]">
-                        {row.nombreCompleto}
-                      </p>
-                      <p className="mt-1 text-xs text-[#8A7D69]">
-                        {row.whatsapp || "Sin WhatsApp"}
-                      </p>
-                    </div>
-                    <StatusPill status={row.estadoAnticipo} />
-                  </div>
-                  <div className="mt-4 rounded-2xl border border-[#D4AF37]/20 bg-white p-3 text-sm">
-                    <p className="text-xs uppercase tracking-[0.14em] text-[#8A7D69]">
-                      Curso
-                    </p>
-                    <p className="mt-1 font-medium text-[#0D3B22]">
-                      {row.cursoNombre}
-                    </p>
-                  </div>
-                  <div className="mt-4">
-                    <ContactButton row={row} />
-                  </div>
-                </article>
-              ))}
-            </div>
-
-            {filteredRows.length === 0 ? (
-              <div className="mt-5 rounded-3xl border border-dashed border-[#D4AF37]/35 bg-[#FDFBF7] p-8 text-center">
-                <Sparkles className="mx-auto h-8 w-8 text-[#D4AF37]" />
-                <p className="suvoga-serif mt-3 text-2xl font-semibold text-[#0D3B22]">
-                  Sin inscripciones visibles
-                </p>
-                <p className="mt-2 text-sm text-[#6B6048]">
-                  Los registros apareceran aqui cuando se guarden en SuVoGa OS.
-                </p>
-              </div>
-            ) : null}
-          </section>
-        ) : null}
-
+        {/* ── COURSE MODAL ── */}
         {isCourseModalOpen ? (
           <div
             aria-modal="true"
             role="dialog"
             className="fixed inset-0 z-[80] flex items-center justify-center bg-[#0D3B22]/45 p-4 backdrop-blur-sm"
           >
-            <button
-              type="button"
-              aria-label="Cerrar formulario de curso"
-              className="absolute inset-0 cursor-default"
-              onClick={closeCourseModal}
-            />
+            <button type="button" aria-label="Cerrar formulario de curso" className="absolute inset-0 cursor-default" onClick={closeCourseModal} />
             <div className="relative w-full max-w-2xl overflow-hidden rounded-3xl border border-[#D4AF37]/30 bg-white text-[#0D3B22] shadow-2xl shadow-[#0D3B22]/25">
               <div className="flex items-start justify-between gap-5 border-b border-[#D4AF37]/20 bg-[#FDFBF7] px-6 py-5">
                 <div>
-                  <p className="text-xs font-semibold uppercase tracking-[0.2em] text-[#C5A028]">
-                    Nuevo programa premium
-                  </p>
-                  <h3 className="suvoga-serif mt-2 text-3xl font-semibold leading-tight text-[#0D3B22]">
-                    Crear Nuevo Curso
-                  </h3>
+                  <p className="text-xs font-semibold uppercase tracking-[0.2em] text-[#C5A028]">Nuevo programa premium</p>
+                  <h3 className="suvoga-serif mt-2 text-3xl font-semibold leading-tight text-[#0D3B22]">Crear Nuevo Curso</h3>
                 </div>
-                <button
-                  type="button"
-                  aria-label="Cerrar"
-                  onClick={closeCourseModal}
-                  className="inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-2xl border border-[#D4AF37]/30 bg-white text-[#0D3B22] transition-colors hover:bg-[#F7F1E7]"
-                >
+                <button type="button" aria-label="Cerrar" onClick={closeCourseModal} className="inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-2xl border border-[#D4AF37]/30 bg-white text-[#0D3B22] transition-colors hover:bg-[#F7F1E7]">
                   <X className="h-4 w-4" />
                 </button>
               </div>
 
               <form className="space-y-5 px-6 py-6" onSubmit={handleCreateCourse}>
                 <label className="block">
-                  <span className="text-xs font-semibold uppercase tracking-[0.16em] text-[#6B6048]">
-                    Nombre del Curso
-                  </span>
-                  <input
-                    value={courseForm.nombre}
-                    onChange={(event) =>
-                      updateCourseForm("nombre", event.target.value)
-                    }
-                    placeholder="Ej. Diplomado de Spa Facial Premium"
-                    className="mt-2 h-12 w-full rounded-2xl border border-[#D4AF37]/30 bg-[#FDFBF7] px-4 text-sm font-medium text-[#0D3B22] outline-none transition-colors placeholder:text-[#8A7D69] focus:border-[#0D3B22]"
-                    autoFocus
-                  />
+                  <span className="text-xs font-semibold uppercase tracking-[0.16em] text-[#6B6048]">Nombre del Curso</span>
+                  <input value={courseForm.nombre} onChange={(e) => updateCourseForm("nombre", e.target.value)} placeholder="Ej. Diplomado de Spa Facial Premium" className="mt-2 h-12 w-full rounded-2xl border border-[#D4AF37]/30 bg-[#FDFBF7] px-4 text-sm font-medium text-[#0D3B22] outline-none transition-colors placeholder:text-[#8A7D69] focus:border-[#0D3B22]" autoFocus />
                 </label>
 
                 <div className="grid gap-4 sm:grid-cols-3">
-                  <label className="block">
-                    <span className="text-xs font-semibold uppercase tracking-[0.16em] text-[#6B6048]">
-                      Precio
-                    </span>
-                    <div className="relative mt-2">
-                      <DollarSign className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-[#C5A028]" />
-                      <input
-                        value={courseForm.precio}
-                        onChange={(event) =>
-                          updateCourseForm("precio", event.target.value)
-                        }
-                        inputMode="decimal"
-                        placeholder="15000"
-                        className="h-12 w-full rounded-2xl border border-[#D4AF37]/30 bg-[#FDFBF7] pl-9 pr-3 text-sm font-medium text-[#0D3B22] outline-none transition-colors placeholder:text-[#8A7D69] focus:border-[#0D3B22]"
-                      />
-                    </div>
-                  </label>
-
-                  <label className="block">
-                    <span className="text-xs font-semibold uppercase tracking-[0.16em] text-[#6B6048]">
-                      Anticipo
-                    </span>
-                    <div className="relative mt-2">
-                      <DollarSign className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-[#C5A028]" />
-                      <input
-                        value={courseForm.anticipo}
-                        onChange={(event) =>
-                          updateCourseForm("anticipo", event.target.value)
-                        }
-                        inputMode="decimal"
-                        placeholder="1000"
-                        className="h-12 w-full rounded-2xl border border-[#D4AF37]/30 bg-[#FDFBF7] pl-9 pr-3 text-sm font-medium text-[#0D3B22] outline-none transition-colors placeholder:text-[#8A7D69] focus:border-[#0D3B22]"
-                      />
-                    </div>
-                  </label>
-
-                  <label className="block">
-                    <span className="text-xs font-semibold uppercase tracking-[0.16em] text-[#6B6048]">
-                      Cupos Totales
-                    </span>
-                    <input
-                      value={courseForm.cupos}
-                      onChange={(event) =>
-                        updateCourseForm("cupos", event.target.value)
-                      }
-                      inputMode="numeric"
-                      placeholder="12"
-                      className="mt-2 h-12 w-full rounded-2xl border border-[#D4AF37]/30 bg-[#FDFBF7] px-4 text-sm font-medium text-[#0D3B22] outline-none transition-colors placeholder:text-[#8A7D69] focus:border-[#0D3B22]"
-                    />
-                  </label>
+                  {(["precio", "anticipo", "cupos"] as const).map((field) => (
+                    <label key={field} className="block">
+                      <span className="text-xs font-semibold uppercase tracking-[0.16em] text-[#6B6048]">{field === "precio" ? "Precio" : field === "anticipo" ? "Anticipo" : "Cupos Totales"}</span>
+                      <div className={`relative mt-2 ${field !== "cupos" ? "" : ""}`}>
+                        {field !== "cupos" && <DollarSign className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-[#C5A028]" />}
+                        <input
+                          value={courseForm[field]}
+                          onChange={(e) => updateCourseForm(field, e.target.value)}
+                          inputMode={field === "cupos" ? "numeric" : "decimal"}
+                          placeholder={field === "precio" ? "15000" : field === "anticipo" ? "1000" : "12"}
+                          className={`h-12 w-full rounded-2xl border border-[#D4AF37]/30 bg-[#FDFBF7] ${field !== "cupos" ? "pl-9 pr-3" : "px-4"} text-sm font-medium text-[#0D3B22] outline-none transition-colors placeholder:text-[#8A7D69] focus:border-[#0D3B22]`}
+                        />
+                      </div>
+                    </label>
+                  ))}
                 </div>
 
-                {courseFormError ? (
-                  <p className="rounded-2xl border border-[#D4AF37]/30 bg-[#D4AF37]/10 px-3 py-2 text-sm font-medium text-[#8D7530]">
-                    {courseFormError}
-                  </p>
-                ) : null}
+                {courseFormError ? <p className="rounded-2xl border border-[#D4AF37]/30 bg-[#D4AF37]/10 px-3 py-2 text-sm font-medium text-[#8D7530]">{courseFormError}</p> : null}
 
                 <div className="flex flex-col-reverse gap-3 border-t border-[#D4AF37]/20 pt-5 sm:flex-row sm:justify-end">
-                  <button
-                    type="button"
-                    onClick={closeCourseModal}
-                    className="inline-flex h-12 items-center justify-center rounded-2xl border border-[#D4AF37]/30 bg-white px-5 text-sm font-semibold text-[#0D3B22] transition-colors hover:bg-[#F7F1E7]"
-                  >
-                    Cancelar
-                  </button>
-                  <button
-                    type="submit"
-                    className="inline-flex h-12 items-center justify-center gap-2 rounded-2xl bg-[#0D3B22] px-5 text-sm font-semibold text-[#FDFBF7] shadow-sm shadow-[#0D3B22]/10 transition-colors hover:bg-[#145332]"
-                  >
+                  <button type="button" onClick={closeCourseModal} className="inline-flex h-12 items-center justify-center rounded-2xl border border-[#D4AF37]/30 bg-white px-5 text-sm font-semibold text-[#0D3B22] transition-colors hover:bg-[#F7F1E7]">Cancelar</button>
+                  <button type="submit" className="inline-flex h-12 items-center justify-center gap-2 rounded-2xl bg-[#0D3B22] px-5 text-sm font-semibold text-[#FDFBF7] shadow-sm shadow-[#0D3B22]/10 transition-colors hover:bg-[#145332]">
                     <Save className="h-4 w-4" />
                     Guardar Curso
                   </button>
