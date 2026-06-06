@@ -30,8 +30,9 @@ export default function RootLayout({
       >
         <div className="min-h-screen bg-[#FDFBF7]">
           <Header />
-
-          {children}
+          <main className="pt-16 md:pt-20 max-w-full overflow-x-clip">
+            {children}
+          </main>
           <Footer />
         </div>
       </body>
