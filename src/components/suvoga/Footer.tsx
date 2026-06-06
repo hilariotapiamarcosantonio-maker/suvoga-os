@@ -7,8 +7,8 @@ import { contactInfo } from "@/data/contact";
 
 export function Footer() {
   return (
-    <footer className="border-t border-[#D4AF37]/35 bg-[#0D3B22] text-[#FDFBF7] py-10 md:py-16">
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+    <footer id="footer" className="border-t border-[#D4AF37]/35 bg-[#0D3B22] text-[#FDFBF7] py-10 md:py-16 w-full max-w-full overflow-hidden">
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 w-full max-w-full overflow-hidden">
         <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-4 md:gap-10">
           {/* Column 1: Brand details */}
           <div className="space-y-4">

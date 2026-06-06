@@ -229,7 +229,7 @@ export default function CoursePage({ params }: CoursePageProps) {
       </section>
 
       {/* Supporting Materials Section (Video & PDF Grid) */}
-      <section className="mx-auto max-w-7xl px-4 py-10 sm:px-6 lg:px-8">
+      <section className="mx-auto max-w-7xl px-4 py-10 sm:px-6 lg:px-8 w-full max-w-full overflow-hidden">
         <div className="mb-6">
           <span className="text-xs font-semibold uppercase tracking-[0.2em] text-[#C5A028]">
             Material de apoyo
@@ -239,9 +239,9 @@ export default function CoursePage({ params }: CoursePageProps) {
           </h2>
         </div>
 
-        <div className="grid gap-6 md:grid-cols-2">
+        <div className="grid gap-6 md:grid-cols-2 w-full max-w-full min-w-0 overflow-hidden">
           {/* Left Column: YouTube Video Embed */}
-          <div className="h-full">
+          <div className="h-full w-full max-w-full min-w-0 overflow-hidden">
             {isRealVideo ? (
               <div className="h-full flex flex-col justify-between rounded-3xl border border-[#D4AF37]/20 bg-white p-5 sm:p-6 shadow-sm shadow-[#0D3B22]/5">
                 <div className="flex items-center gap-3 mb-4">
@@ -263,12 +263,12 @@ export default function CoursePage({ params }: CoursePageProps) {
                 </div>
               </div>
             ) : (
-              <div className="h-full flex flex-col items-center justify-center text-center p-6 rounded-3xl border border-dashed border-[#D4AF37]/45 bg-[#0D3B22]/5 min-h-[220px]">
-                <Video className="h-7 w-7 text-[#C5A028] mb-3" />
-                <h3 className="suvoga-serif text-base font-semibold text-[#0D3B22]">
+              <div className="h-full flex flex-col items-center justify-center text-center p-5 sm:p-6 rounded-3xl border border-dashed border-[#D4AF37]/45 bg-[#0D3B22]/5 min-h-[220px] w-full max-w-full min-w-0 overflow-hidden">
+                <Video className="h-7 w-7 text-[#C5A028] mb-3 shrink-0" />
+                <h3 className="suvoga-serif text-base font-semibold text-[#0D3B22] max-w-full break-words text-balance">
                   Video de presentación próximamente
                 </h3>
-                <p className="text-[11px] text-[#6B6048] mt-2 max-w-xs leading-relaxed">
+                <p className="text-[11px] text-[#6B6048] mt-2 max-w-xs leading-relaxed break-words text-balance">
                   El video explicativo sobre la metodología de esta cohorte estará disponible próximamente.
                 </p>
               </div>
@@ -276,17 +276,17 @@ export default function CoursePage({ params }: CoursePageProps) {
           </div>
 
           {/* Right Column: PDF Download / Syllabus Info */}
-          <div className="h-full">
+          <div className="h-full w-full max-w-full min-w-0 overflow-hidden">
             {course.pdf_drive_url ? (
-              <div className="h-full flex flex-col justify-between rounded-3xl border border-[#D4AF37]/20 bg-[#0D3B22] p-5 sm:p-6 shadow-md text-[#FDFBF7] min-h-[220px]">
+              <div className="h-full flex flex-col justify-between rounded-3xl border border-[#D4AF37]/20 bg-[#0D3B22] p-5 sm:p-6 shadow-md text-[#FDFBF7] min-h-[220px] w-full max-w-full min-w-0 overflow-hidden">
                 <div className="space-y-3">
                   <div className="inline-flex h-8 w-8 items-center justify-center rounded-xl border border-white/20 bg-white/5 text-[#FDFBF7]">
                     <FileText className="h-4 w-4 text-[#D4AF37]" />
                   </div>
-                  <h3 className="suvoga-serif text-lg sm:text-xl font-semibold text-white">
+                  <h3 className="suvoga-serif text-lg sm:text-xl font-semibold text-white max-w-full break-words text-balance">
                     Plan de Estudios Completo
                   </h3>
-                  <p className="text-xs text-[#EAE2D0] leading-relaxed">
+                  <p className="text-xs text-[#EAE2D0] leading-relaxed break-words text-balance">
                     Descarga el temario oficial en PDF. Incluye el cronograma de clases, requisitos prácticos, normas de egreso y políticas académicas completas.
                   </p>
                 </div>
@@ -303,12 +303,12 @@ export default function CoursePage({ params }: CoursePageProps) {
                 </div>
               </div>
             ) : (
-              <div className="h-full flex flex-col items-center justify-center text-center p-6 rounded-3xl border border-dashed border-[#D4AF37]/45 bg-[#0D3B22]/5 min-h-[220px]">
-                <Download className="h-7 w-7 text-[#C5A028] mb-3" />
-                <h3 className="suvoga-serif text-base font-semibold text-[#0D3B22]">
+              <div className="h-full flex flex-col items-center justify-center text-center p-5 sm:p-6 rounded-3xl border border-dashed border-[#D4AF37]/45 bg-[#0D3B22]/5 min-h-[220px] w-full max-w-full min-w-0 overflow-hidden">
+                <Download className="h-7 w-7 text-[#C5A028] mb-3 shrink-0" />
+                <h3 className="suvoga-serif text-base font-semibold text-[#0D3B22] max-w-full break-words text-balance">
                   Programa PDF disponible próximamente
                 </h3>
-                <p className="text-[11px] text-[#6B6048] mt-2 max-w-xs leading-relaxed">
+                <p className="text-[11px] text-[#6B6048] mt-2 max-w-xs leading-relaxed break-words text-balance">
                   El dossier informativo y temario detallado de esta formación se encuentra en revisión académica.
                 </p>
               </div>
@@ -318,7 +318,7 @@ export default function CoursePage({ params }: CoursePageProps) {
       </section>
 
       {/* Repeated CTA after supporting materials */}
-      <section className="mx-auto max-w-7xl px-4 pb-10 sm:px-6 lg:px-8">
+      <section className="mx-auto max-w-7xl px-4 pb-10 sm:px-6 lg:px-8 w-full max-w-full overflow-hidden">
         <div className="rounded-3xl border border-[#D4AF37]/35 bg-[#0D3B22] p-6 sm:p-8 text-center text-[#FDFBF7] shadow-xl relative overflow-hidden">
           <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(212,175,55,0.12),transparent_70%)] pointer-events-none" />
           <h3 className="suvoga-serif text-xl sm:text-3xl font-semibold text-white leading-tight">
@@ -342,7 +342,7 @@ export default function CoursePage({ params }: CoursePageProps) {
       </section>
 
       {/* Main Content Details Grid */}
-      <section className="mx-auto grid max-w-7xl gap-8 px-4 py-8 sm:px-6 lg:grid-cols-[1fr_380px] lg:px-8 lg:py-12">
+      <section className="mx-auto grid max-w-7xl gap-8 px-4 py-8 sm:px-6 lg:grid-cols-[1fr_380px] lg:px-8 lg:py-12 w-full max-w-full overflow-hidden">
         {/* Left Column: Academic Content */}
         <div className="space-y-8">
           {/* Resumen del programa Section */}

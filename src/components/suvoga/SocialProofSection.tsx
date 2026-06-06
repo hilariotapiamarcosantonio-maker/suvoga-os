@@ -29,7 +29,7 @@ export function SocialProofSection() {
   return (
     <div id="historias" className="space-y-20 py-16 bg-[#FDFBF7] overflow-hidden">
       {/* 1. Student Testimonials Section */}
-      <section className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+      <section className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 w-full max-w-full overflow-hidden">
         <div className="mb-12 text-center max-w-3xl mx-auto">
           <span className="text-xs font-semibold uppercase tracking-[0.2em] text-[#C5A028] bg-[#D4AF37]/10 px-3 py-1.5 rounded-full border border-[#D4AF37]/20">
             Historias de éxito
@@ -106,7 +106,7 @@ export function SocialProofSection() {
       </section>
 
       {/* 2. Google Business Profile reviews */}
-      <section className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+      <section className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 w-full max-w-full overflow-hidden">
         <div className="rounded-3xl border border-[#D4AF37]/20 bg-[#FDFBF7] p-8 shadow-sm relative overflow-hidden">
           {/* Subtle gold grid background */}
           <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,rgba(212,175,55,0.05),transparent_60%)] pointer-events-none" />
@@ -176,7 +176,7 @@ export function SocialProofSection() {
       </section>
 
       {/* 3. Graduates Library (Biblioteca de Graduadas) */}
-      <section className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+      <section className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 w-full max-w-full overflow-hidden">
         <div className="mb-12 text-center max-w-3xl mx-auto">
           <span className="text-xs font-semibold uppercase tracking-[0.2em] text-[#C5A028] bg-[#D4AF37]/10 px-3 py-1.5 rounded-full border border-[#D4AF37]/20">
             Comunidad académica
@@ -265,7 +265,7 @@ export function SocialProofSection() {
       </section>
 
       {/* 4. Experience & Video References */}
-      <section className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+      <section className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 w-full max-w-full overflow-hidden">
         <div className="mb-12 max-w-3xl">
           <span className="text-xs font-semibold uppercase tracking-[0.2em] text-[#C5A028] bg-[#D4AF37]/10 px-3 py-1.5 rounded-full border border-[#D4AF37]/20">
             Ambiente práctico
@@ -279,54 +279,54 @@ export function SocialProofSection() {
         </div>
 
         {/* Video Grid */}
-        <div className="grid gap-6 lg:grid-cols-12">
+        <div className="grid gap-6 lg:grid-cols-12 w-full max-w-full min-w-0 overflow-hidden">
           {/* Main Video Embed */}
-          <div className="lg:col-span-7 flex flex-col justify-between rounded-3xl border border-[#D4AF37]/25 bg-white p-6 shadow-sm">
+          <div className="lg:col-span-7 flex flex-col justify-between rounded-3xl border border-[#D4AF37]/25 bg-white p-5 sm:p-6 shadow-sm w-full max-w-full min-w-0 overflow-hidden">
             <div className="mb-4">
               <span className="inline-flex items-center gap-1.5 text-xs font-semibold text-[#8D7530] uppercase tracking-wider">
                 <Video className="h-4 w-4 text-[#C5A028]" />
                 Video de referencia
               </span>
-              <h3 className="suvoga-serif text-xl font-semibold text-[#0D3B22] mt-2">
+              <h3 className="suvoga-serif text-lg sm:text-xl font-semibold text-[#0D3B22] mt-2 max-w-full break-words text-balance">
                 Clase Práctica: Biomecánica y Ritmo en Camilla
               </h3>
             </div>
             
-            <div className="relative aspect-video w-full overflow-hidden rounded-2xl border border-dashed border-[#D4AF37]/30 bg-[#FDFBF7]/50 flex flex-col items-center justify-center text-center p-6 min-h-[240px]">
+            <div className="relative aspect-video w-full overflow-hidden rounded-2xl border border-dashed border-[#D4AF37]/30 bg-[#FDFBF7]/50 flex flex-col items-center justify-center text-center p-4 sm:p-6 min-h-[240px] max-w-full min-w-0">
               <Video className="h-8 w-8 text-[#C5A028]/40 mb-3 animate-pulse" />
-              <h3 className="suvoga-serif text-lg font-semibold text-[#0D3B22]/80">
+              <h3 className="suvoga-serif text-base sm:text-lg font-semibold text-[#0D3B22]/80 max-w-full break-words text-balance">
                 Video de presentación próximamente
               </h3>
-              <p className="text-xs text-[#6B6048] mt-2 max-w-sm leading-relaxed">
+              <p className="text-xs text-[#6B6048] mt-2 max-w-xs sm:max-w-sm leading-relaxed break-words text-balance">
                 Aquí se colocará una explicación de 3–5 minutos sobre el curso, requisitos e inscripción.
               </p>
             </div>
           </div>
 
           {/* Right Column: Reference context */}
-          <div className="lg:col-span-5 flex flex-col justify-between rounded-3xl border border-[#D4AF37]/25 bg-[#0D3B22] text-[#FDFBF7] p-6 shadow-md min-h-[300px]">
+          <div className="lg:col-span-5 flex flex-col justify-between rounded-3xl border border-[#D4AF37]/25 bg-[#0D3B22] text-[#FDFBF7] p-5 sm:p-6 shadow-md min-h-[300px] w-full max-w-full min-w-0 overflow-hidden">
             <div className="space-y-4">
               <div className="inline-flex h-9 w-9 items-center justify-center rounded-xl border border-white/20 bg-white/5 text-[#FDFBF7]">
                 <Award className="h-4 w-4 text-[#D4AF37]" />
               </div>
-              <h3 className="suvoga-serif text-2xl font-semibold text-white">
+              <h3 className="suvoga-serif text-xl sm:text-2xl font-semibold text-white max-w-full break-words text-balance">
                 Biblioteca de Video Académica
               </h3>
-              <p className="text-xs text-[#EAE2D0] leading-relaxed">
+              <p className="text-xs text-[#EAE2D0] leading-relaxed break-words text-balance">
                 Este espacio está configurado para almacenar registros reales de clases prácticas, rituales de inicio, técnicas de masaje y testimonios directos grabados por nuestras alumnas.
               </p>
-              <div className="rounded-2xl border border-white/10 bg-white/5 p-4 space-y-3">
+              <div className="rounded-2xl border border-white/10 bg-white/5 p-4 space-y-3 w-full max-w-full min-w-0 overflow-hidden">
                 <h4 className="text-xs font-semibold text-[#D4AF37] uppercase tracking-wider">
                   Video de referencia
                 </h4>
-                <p className="text-[11px] text-[#EAE2D0]/90 leading-relaxed">
+                <p className="text-[11px] text-[#EAE2D0]/90 leading-relaxed break-words text-balance">
                   Para fines ilustrativos de producción, los videos mostrados demuestran el estándar del nicho (biomecánica, ambientación de spa y técnicas profesionales de cabina).
                 </p>
               </div>
             </div>
             
             <div className="mt-6 border-t border-white/10 pt-4 flex items-center justify-center text-center">
-              <span className="text-[10px] font-semibold uppercase tracking-wider text-[#D4AF37] bg-white/10 px-3 py-1 rounded-md">
+              <span className="inline-block whitespace-normal text-center text-[10px] font-semibold uppercase tracking-wider text-[#D4AF37] bg-white/10 px-3 py-1.5 rounded-md max-w-full leading-tight">
                 Contenido visual de muestra
               </span>
             </div>
