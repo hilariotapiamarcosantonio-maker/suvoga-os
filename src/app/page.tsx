@@ -75,7 +75,7 @@ export default function HomePage() {
         </div>
       </section>
 
-      <section className="mx-auto max-w-7xl px-4 py-14 sm:px-6 lg:px-8">
+      <section id="cursos-disponibles" className="mx-auto max-w-7xl px-4 py-14 sm:px-6 lg:px-8 scroll-mt-16 md:scroll-mt-20">
         <div className="mb-8 flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
           <div>
             <p className="text-xs font-semibold uppercase tracking-[0.2em] text-[#C5A028]">

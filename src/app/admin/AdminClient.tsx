@@ -453,7 +453,7 @@ export function AdminClient({
   ];
 
   return (
-    <main className="min-h-[calc(100vh-5rem)] bg-[#FDFBF7] px-4 py-8 text-[#0D3B22] sm:px-6 lg:px-8">
+    <main className="min-h-[calc(100vh-5rem)] bg-[#FDFBF7] px-4 py-8 text-[#0D3B22] sm:px-6 lg:px-8 overflow-hidden max-w-full">
       <div className="mx-auto max-w-7xl space-y-6">
 
         {/* Header */}

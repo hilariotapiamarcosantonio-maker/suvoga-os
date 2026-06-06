@@ -104,3 +104,26 @@
     scroll-behavior: auto !important;
   }
 }
+
+/* Defensive layout rules to prevent horizontal overflow */
+html,
+body {
+  max-width: 100%;
+  overflow-x: hidden;
+  position: relative;
+}
+
+#__next, main {
+  max-width: 100%;
+  overflow-x: clip;
+}
+
+/* Custom scrollbar hiding utilities */
+.scrollbar-none::-webkit-scrollbar {
+  display: none;
+}
+.scrollbar-none {
+  -ms-overflow-style: none; /* IE/Edge */
+  scrollbar-width: none; /* Firefox */
+}
+

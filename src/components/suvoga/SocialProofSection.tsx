@@ -27,7 +27,7 @@ export function SocialProofSection() {
     }
   };
   return (
-    <div className="space-y-20 py-16 bg-[#FDFBF7]">
+    <div id="historias" className="space-y-20 py-16 bg-[#FDFBF7] overflow-hidden">
       {/* 1. Student Testimonials Section */}
       <section className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="mb-12 text-center max-w-3xl mx-auto">
@@ -55,7 +55,7 @@ export function SocialProofSection() {
               variants={activeFadeInUp}
               whileHover={shouldReduceMotion ? {} : { y: -5, transition: { duration: 0.25 } }}
               whileTap={shouldReduceMotion ? { scale: 0.99 } : { scale: 0.97 }}
-              className="snap-start shrink-0 w-[88%] sm:w-[48%] md:w-auto relative flex flex-col justify-between rounded-3xl border border-[#D4AF37]/25 bg-white p-6 shadow-sm shadow-[#0D3B22]/5 transition-shadow hover:shadow-xl hover:shadow-[#D4AF37]/10"
+              className="snap-start shrink-0 w-[82vw] max-w-[320px] sm:w-[48%] md:w-auto relative flex flex-col justify-between rounded-3xl border border-[#D4AF37]/25 bg-white p-6 shadow-sm shadow-[#0D3B22]/5 transition-shadow hover:shadow-xl hover:shadow-[#D4AF37]/10"
             >
               {/* Badge indicating demo context */}
               {testimonial.esDemo && (
@@ -135,7 +135,7 @@ export function SocialProofSection() {
             {googleReviews.map((review) => (
               <div
                 key={review.id}
-                className="snap-start shrink-0 w-[85%] sm:w-[48%] md:w-auto flex flex-col justify-between bg-white border border-[#D4AF37]/15 rounded-2xl p-5 shadow-sm hover:border-[#D4AF37]/45 transition-colors duration-300"
+                className="snap-start shrink-0 w-[82vw] max-w-[320px] sm:w-[48%] md:w-auto flex flex-col justify-between bg-white border border-[#D4AF37]/15 rounded-2xl p-5 shadow-sm hover:border-[#D4AF37]/45 transition-colors duration-300"
               >
                 <div>
                   <div className="flex justify-between items-center mb-3">
@@ -202,7 +202,7 @@ export function SocialProofSection() {
               variants={activeFadeInUp}
               whileHover={shouldReduceMotion ? {} : { y: -4, transition: { duration: 0.2 } }}
               whileTap={shouldReduceMotion ? { scale: 0.99 } : { scale: 0.97 }}
-              className="snap-start shrink-0 w-[78%] sm:w-auto group overflow-hidden rounded-3xl border border-[#D4AF37]/25 bg-white shadow-sm hover:shadow-xl transition-all duration-300"
+              className="snap-start shrink-0 w-[82vw] max-w-[320px] sm:w-auto group overflow-hidden rounded-3xl border border-[#D4AF37]/25 bg-white shadow-sm hover:shadow-xl transition-all duration-300"
             >
               {/* Image Frame with hover-zoom */}
               <div className="relative aspect-[4/5] overflow-hidden bg-[#0D3B22]/5">
