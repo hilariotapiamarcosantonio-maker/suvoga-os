@@ -1,32 +1,31 @@
 "use client";
 
-import { motion } from "framer-motion";
+import { motion, useReducedMotion } from "framer-motion";
 import { Star, GraduationCap, Video, Quote, ArrowUpRight, Award } from "lucide-react";
 import { studentTestimonials, googleReviews } from "@/data/testimonials";
 import { graduatesList } from "@/data/graduates";
-
-// Animation Variants
-const fadeInUp = {
-  hidden: { opacity: 0, y: 30 },
-  visible: {
-    opacity: 1,
-    y: 0,
-    transition: { duration: 0.6, ease: [0.22, 1, 0.36, 1] as const }
-  }
-};
 
 const staggerContainer = {
   hidden: { opacity: 0 },
   visible: {
     opacity: 1,
     transition: {
-      staggerChildren: 0.1,
-      delayChildren: 0.1
+      staggerChildren: 0.08,
+      delayChildren: 0.08
     }
   }
 };
 
 export function SocialProofSection() {
+  const shouldReduceMotion = useReducedMotion();
+  const activeFadeInUp = {
+    hidden: { opacity: 0, y: shouldReduceMotion ? 0 : 25 },
+    visible: {
+      opacity: 1,
+      y: 0,
+      transition: { duration: 0.45, ease: [0.22, 1, 0.36, 1] as const }
+    }
+  };
   return (
     <div className="space-y-20 py-16 bg-[#FDFBF7]">
       {/* 1. Student Testimonials Section */}
@@ -44,7 +43,7 @@ export function SocialProofSection() {
         </div>
 
         <motion.div
-          className="grid gap-6 md:grid-cols-3"
+          className="flex overflow-x-auto snap-x snap-mandatory scrollbar-none gap-6 pb-4 -mx-4 px-4 md:grid md:grid-cols-3 md:mx-0 md:px-0 md:pb-0 md:overflow-visible"
           variants={staggerContainer}
           initial="hidden"
           whileInView="visible"
@@ -53,9 +52,10 @@ export function SocialProofSection() {
           {studentTestimonials.map((testimonial) => (
             <motion.article
               key={testimonial.id}
-              variants={fadeInUp}
-              whileHover={{ y: -6, transition: { duration: 0.25 } }}
-              className="relative flex flex-col justify-between rounded-3xl border border-[#D4AF37]/25 bg-white p-6 shadow-sm shadow-[#0D3B22]/5 transition-shadow hover:shadow-xl hover:shadow-[#D4AF37]/10"
+              variants={activeFadeInUp}
+              whileHover={shouldReduceMotion ? {} : { y: -5, transition: { duration: 0.25 } }}
+              whileTap={shouldReduceMotion ? { scale: 0.99 } : { scale: 0.97 }}
+              className="snap-start shrink-0 w-[88%] sm:w-[48%] md:w-auto relative flex flex-col justify-between rounded-3xl border border-[#D4AF37]/25 bg-white p-6 shadow-sm shadow-[#0D3B22]/5 transition-shadow hover:shadow-xl hover:shadow-[#D4AF37]/10"
             >
               {/* Badge indicating demo context */}
               {testimonial.esDemo && (
@@ -131,11 +131,11 @@ export function SocialProofSection() {
             </div>
           </div>
 
-          <div className="relative z-10 grid gap-6 md:grid-cols-3">
+          <div className="relative z-10 flex overflow-x-auto snap-x snap-mandatory scrollbar-none gap-6 pb-4 -mx-4 px-4 md:grid md:grid-cols-3 md:mx-0 md:px-0 md:pb-0 md:overflow-visible">
             {googleReviews.map((review) => (
               <div
                 key={review.id}
-                className="flex flex-col justify-between bg-white border border-[#D4AF37]/15 rounded-2xl p-5 shadow-sm hover:border-[#D4AF37]/45 transition-colors duration-300"
+                className="snap-start shrink-0 w-[85%] sm:w-[48%] md:w-auto flex flex-col justify-between bg-white border border-[#D4AF37]/15 rounded-2xl p-5 shadow-sm hover:border-[#D4AF37]/45 transition-colors duration-300"
               >
                 <div>
                   <div className="flex justify-between items-center mb-3">
@@ -190,7 +190,7 @@ export function SocialProofSection() {
         </div>
 
         <motion.div
-          className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4"
+          className="flex overflow-x-auto snap-x snap-mandatory scrollbar-none gap-6 pb-4 -mx-4 px-4 sm:grid sm:grid-cols-2 lg:grid-cols-4 sm:mx-0 sm:px-0 sm:pb-0 sm:overflow-visible"
           variants={staggerContainer}
           initial="hidden"
           whileInView="visible"
@@ -199,9 +199,10 @@ export function SocialProofSection() {
           {graduatesList.map((graduate) => (
             <motion.article
               key={graduate.id}
-              variants={fadeInUp}
-              whileHover={{ y: -4, transition: { duration: 0.2 } }}
-              className="group overflow-hidden rounded-3xl border border-[#D4AF37]/25 bg-white shadow-sm hover:shadow-xl transition-all duration-300"
+              variants={activeFadeInUp}
+              whileHover={shouldReduceMotion ? {} : { y: -4, transition: { duration: 0.2 } }}
+              whileTap={shouldReduceMotion ? { scale: 0.99 } : { scale: 0.97 }}
+              className="snap-start shrink-0 w-[78%] sm:w-auto group overflow-hidden rounded-3xl border border-[#D4AF37]/25 bg-white shadow-sm hover:shadow-xl transition-all duration-300"
             >
               {/* Image Frame with hover-zoom */}
               <div className="relative aspect-[4/5] overflow-hidden bg-[#0D3B22]/5">
@@ -330,6 +331,30 @@ export function SocialProofSection() {
               </span>
             </div>
           </div>
+        </div>
+      </section>
+
+      {/* Bottom CTA after Social Proof */}
+      <section className="mx-auto max-w-7xl px-4 pt-4 pb-12 text-center sm:px-6 lg:px-8">
+        <div className="inline-flex flex-col items-center gap-4">
+          <p className="text-xs text-[#6B6048] max-w-md leading-relaxed">
+            Nuestros cupos son estrictamente limitados a 12 participantes por cohorte para garantizar la excelencia académica.
+          </p>
+          <a
+            href="#cursos-disponibles"
+            onClick={(e) => {
+              e.preventDefault();
+              const el = document.getElementById("cursos-disponibles") || document.querySelector("section h2")?.parentElement;
+              if (el) {
+                el.scrollIntoView({ behavior: "smooth" });
+              } else {
+                window.scrollTo({ top: 0, behavior: "smooth" });
+              }
+            }}
+            className="inline-flex h-12 items-center justify-center rounded-2xl bg-[#0D3B22] px-8 text-sm font-semibold text-[#FDFBF7] shadow-sm shadow-[#0D3B22]/10 transition-colors hover:bg-[#145332]"
+          >
+            Explorar cursos disponibles
+          </a>
         </div>
       </section>
     </div>

@@ -473,28 +473,28 @@ export function AdminClient({
             </div>
 
             <div className="grid grid-cols-2 gap-3 sm:grid-cols-4 lg:min-w-[640px]">
-              <div className="rounded-2xl border border-[#D4AF37]/20 bg-[#FDFBF7] p-4">
-                <p className="text-xs font-semibold uppercase tracking-[0.14em] text-[#8A7D69]">Inscritas</p>
-                <p className="mt-2 text-3xl font-semibold text-[#0D3B22]">{crmRows.length}</p>
+              <div className="rounded-2xl border border-[#D4AF37]/20 bg-[#FDFBF7] p-3 sm:p-4">
+                <p className="text-[10px] sm:text-xs font-semibold uppercase tracking-[0.14em] text-[#8A7D69]">Inscritas</p>
+                <p className="mt-1 sm:mt-2 text-2xl sm:text-3xl font-semibold text-[#0D3B22]">{crmRows.length}</p>
               </div>
-              <div className="rounded-2xl border border-[#D4AF37]/20 bg-[#FDFBF7] p-4">
-                <p className="text-xs font-semibold uppercase tracking-[0.14em] text-[#8A7D69]">Pendientes</p>
-                <p className="mt-2 text-3xl font-semibold text-[#8D7530]">{pendingCount}</p>
+              <div className="rounded-2xl border border-[#D4AF37]/20 bg-[#FDFBF7] p-3 sm:p-4">
+                <p className="text-[10px] sm:text-xs font-semibold uppercase tracking-[0.14em] text-[#8A7D69]">Pendientes</p>
+                <p className="mt-1 sm:mt-2 text-2xl sm:text-3xl font-semibold text-[#8D7530]">{pendingCount}</p>
               </div>
-              <div className="rounded-2xl border border-[#D4AF37]/20 bg-[#FDFBF7] p-4">
-                <p className="text-xs font-semibold uppercase tracking-[0.14em] text-[#8A7D69]">Confirmadas</p>
-                <p className="mt-2 text-3xl font-semibold text-[#0D3B22]">{paidCount}</p>
+              <div className="rounded-2xl border border-[#D4AF37]/20 bg-[#FDFBF7] p-3 sm:p-4">
+                <p className="text-[10px] sm:text-xs font-semibold uppercase tracking-[0.14em] text-[#8A7D69]">Confirmadas</p>
+                <p className="mt-1 sm:mt-2 text-2xl sm:text-3xl font-semibold text-[#0D3B22]">{paidCount}</p>
               </div>
-              <div className="rounded-2xl border border-[#D4AF37]/20 bg-[#FDFBF7] p-4">
-                <p className="text-xs font-semibold uppercase tracking-[0.14em] text-[#8A7D69]">Fuente</p>
-                <p className="mt-2 text-sm font-semibold capitalize text-[#0D3B22]">{source.replace("-", " ")}</p>
+              <div className="rounded-2xl border border-[#D4AF37]/20 bg-[#FDFBF7] p-3 sm:p-4">
+                <p className="text-[10px] sm:text-xs font-semibold uppercase tracking-[0.14em] text-[#8A7D69]">Fuente</p>
+                <p className="mt-1 sm:mt-2 text-sm sm:text-base font-semibold capitalize text-[#0D3B22] truncate">{source.replace("-", " ")}</p>
               </div>
             </div>
           </div>
         </section>
 
         {/* Tabs */}
-        <div className="flex flex-wrap gap-1 rounded-2xl border border-[#D4AF37]/30 bg-white p-1 shadow-sm shadow-[#0D3B22]/5">
+        <div className="flex overflow-x-auto whitespace-nowrap scrollbar-none gap-1 rounded-2xl border border-[#D4AF37]/30 bg-white p-1 shadow-sm shadow-[#0D3B22]/5">
           {([
             { id: "dashboard", label: "Dashboard", icon: <BarChart3 className="h-4 w-4" /> },
             { id: "crm", label: "CRM Académico", icon: <Users className="h-4 w-4" /> },
@@ -506,7 +506,7 @@ export function AdminClient({
               key={id}
               type="button"
               onClick={() => setActiveTab(id)}
-              className={`inline-flex h-11 items-center gap-2 rounded-xl px-4 text-sm font-semibold transition-colors ${tabClass(id)}`}
+              className={`inline-flex h-10 shrink-0 items-center gap-1.5 rounded-xl px-3 sm:px-4 text-xs sm:text-sm font-semibold transition-colors ${tabClass(id)}`}
             >
               {icon}
               {label}
@@ -517,19 +517,19 @@ export function AdminClient({
         {/* ── DASHBOARD ── */}
         {activeTab === "dashboard" ? (
           <section className="space-y-6">
-            <div className="grid grid-cols-2 gap-4 sm:grid-cols-4">
+            <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
               {[
-                { label: "Total Inscripciones", value: crmRows.length, icon: <Users className="h-5 w-5 text-[#C5A028]" />, color: "border-[#D4AF37]/30" },
-                { label: "Confirmadas", value: paidCount, icon: <TrendingUp className="h-5 w-5 text-[#0D3B22]" />, color: "border-[#0D3B22]/15" },
-                { label: "Anticipo Pendiente", value: pendingCount, icon: <DollarSign className="h-5 w-5 text-[#C5A028]" />, color: "border-[#D4AF37]/30" },
-                { label: "Cursos en Catálogo", value: catalogCourses.length, icon: <GraduationCap className="h-5 w-5 text-[#C5A028]" />, color: "border-[#D4AF37]/30" },
+                { label: "Total Inscripciones", value: crmRows.length, icon: <Users className="h-4 w-4 sm:h-5 sm:w-5 text-[#C5A028]" />, color: "border-[#D4AF37]/30" },
+                { label: "Confirmadas", value: paidCount, icon: <TrendingUp className="h-4 w-4 sm:h-5 sm:w-5 text-[#0D3B22]" />, color: "border-[#0D3B22]/15" },
+                { label: "Anticipo Pendiente", value: pendingCount, icon: <DollarSign className="h-4 w-4 sm:h-5 sm:w-5 text-[#C5A028]" />, color: "border-[#D4AF37]/30" },
+                { label: "Cursos en Catálogo", value: catalogCourses.length, icon: <GraduationCap className="h-4 w-4 sm:h-5 sm:w-5 text-[#C5A028]" />, color: "border-[#D4AF37]/30" },
               ].map(({ label, value, icon, color }) => (
-                <div key={label} className={`rounded-3xl border ${color} bg-white p-5 shadow-sm shadow-[#0D3B22]/5`}>
-                  <div className="flex items-center gap-3">
-                    <span className="inline-flex h-10 w-10 items-center justify-center rounded-2xl border border-[#D4AF37]/20 bg-[#FDFBF7]">{icon}</span>
-                    <span className="text-xs font-semibold uppercase tracking-[0.14em] text-[#8A7D69]">{label}</span>
+                <div key={label} className={`rounded-2xl sm:rounded-3xl border ${color} bg-white p-3 sm:p-5 shadow-sm shadow-[#0D3B22]/5`}>
+                  <div className="flex items-center gap-2.5">
+                    <span className="inline-flex h-8 w-8 sm:h-10 sm:w-10 shrink-0 items-center justify-center rounded-xl border border-[#D4AF37]/20 bg-[#FDFBF7]">{icon}</span>
+                    <span className="text-[10px] sm:text-xs font-semibold uppercase tracking-[0.14em] text-[#8A7D69] truncate">{label}</span>
                   </div>
-                  <p className="mt-4 text-4xl font-bold text-[#0D3B22]">{value}</p>
+                  <p className="mt-2.5 sm:mt-4 text-2xl sm:text-4xl font-bold text-[#0D3B22]">{value}</p>
                 </div>
               ))}
             </div>
@@ -682,52 +682,54 @@ export function AdminClient({
                     return (
                       <div key={row.idInscripcion} className="rounded-2xl border border-[#E7DAC2] bg-[#FDFBF7] overflow-hidden transition-all duration-200">
                         {/* Row header */}
-                        <div className="flex flex-wrap items-center gap-3 px-4 py-3">
+                        <div className="flex flex-col gap-3 p-4 sm:flex-row sm:items-center sm:justify-between sm:gap-4">
                           {/* Name & course */}
-                          <div className="flex-1 min-w-0">
-                            <p className="truncate text-sm font-semibold text-[#0D3B22]">{row.nombreCompleto}</p>
-                            <p className="truncate text-xs text-[#6B6048]">{row.cursoNombre} · {row.provincia || "Sin provincia"}</p>
+                          <div className="min-w-0 flex-1">
+                            <p className="text-sm font-semibold text-[#0D3B22]">{row.nombreCompleto}</p>
+                            <p className="mt-0.5 text-xs text-[#6B6048]">{row.cursoNombre} · {row.provincia || "Sin provincia"}</p>
                           </div>
 
-                          {/* Status pill */}
-                          <StatusPill status={effectiveStatus} />
+                          {/* Middle details row for mobile, integrated in horizontal flow on desktop */}
+                          <div className="flex flex-wrap items-center justify-between gap-3 sm:contents">
+                            <StatusPill status={effectiveStatus} />
 
-                          {/* Amounts */}
-                          <div className="hidden sm:flex items-center gap-4 text-xs text-[#6B6048]">
-                            {row.montoPagado > 0 && (
-                              <span className="flex items-center gap-1">
-                                <span className="text-emerald-700 font-semibold">{formatDop(row.montoPagado)}</span> anticipo
-                              </span>
-                            )}
-                            {row.balancePendiente > 0 && (
-                              <span className="flex items-center gap-1">
-                                <span className="text-orange-700 font-semibold">{formatDop(row.balancePendiente)}</span> balance
-                              </span>
-                            )}
-                          </div>
+                            {/* Amounts */}
+                            <div className="flex items-center gap-4 text-xs text-[#6B6048]">
+                              {row.montoPagado > 0 && (
+                                <span className="flex items-center gap-1">
+                                  <span className="text-emerald-700 font-semibold">{formatDop(row.montoPagado)}</span> anticipo
+                                </span>
+                              )}
+                              {row.balancePendiente > 0 && (
+                                <span className="flex items-center gap-1">
+                                  <span className="text-orange-700 font-semibold">{formatDop(row.balancePendiente)}</span> balance
+                                </span>
+                              )}
+                            </div>
 
-                          {/* Action buttons */}
-                          <div className="flex items-center gap-2 shrink-0">
-                            {waHref && (
-                              <a
-                                href={waHref}
-                                target="_blank"
-                                rel="noreferrer"
-                                className="inline-flex h-9 items-center gap-1.5 rounded-xl bg-[#0D3B22] px-3 text-xs font-semibold text-[#FDFBF7] shadow-sm transition-colors hover:bg-[#145332]"
-                                title="Contactar por WhatsApp"
+                            {/* Action buttons */}
+                            <div className="flex items-center gap-2 w-full sm:w-auto mt-1 sm:mt-0 justify-end">
+                              {waHref && (
+                                <a
+                                  href={waHref}
+                                  target="_blank"
+                                  rel="noreferrer"
+                                  className="inline-flex h-10 sm:h-9 items-center justify-center gap-1.5 rounded-xl bg-[#0D3B22] px-3.5 sm:px-3 text-xs font-semibold text-[#FDFBF7] shadow-sm transition-colors hover:bg-[#145332] flex-1 sm:flex-initial"
+                                  title="Contactar por WhatsApp"
+                                >
+                                  <MessageCircle className="h-4 w-4 sm:h-3.5 sm:w-3.5" />
+                                  <span>WhatsApp</span>
+                                </a>
+                              )}
+                              <button
+                                type="button"
+                                onClick={() => setExpandedRow(isExpanded ? null : row.idInscripcion)}
+                                className="inline-flex h-10 sm:h-9 items-center justify-center gap-1.5 rounded-xl border border-[#D4AF37]/30 bg-white px-3.5 sm:px-3 text-xs font-semibold text-[#0D3B22] transition-colors hover:bg-[#F7F1E7] flex-1 sm:flex-initial"
                               >
-                                <MessageCircle className="h-3.5 w-3.5" />
-                                <span className="hidden sm:inline">WhatsApp</span>
-                              </a>
-                            )}
-                            <button
-                              type="button"
-                              onClick={() => setExpandedRow(isExpanded ? null : row.idInscripcion)}
-                              className="inline-flex h-9 items-center gap-1.5 rounded-xl border border-[#D4AF37]/30 bg-white px-3 text-xs font-semibold text-[#0D3B22] transition-colors hover:bg-[#F7F1E7]"
-                            >
-                              <ExternalLink className="h-3.5 w-3.5" />
-                              <span className="hidden sm:inline">{isExpanded ? "Cerrar" : "Detalle"}</span>
-                            </button>
+                                <ExternalLink className="h-4 w-4 sm:h-3.5 sm:w-3.5" />
+                                <span>{isExpanded ? "Cerrar" : "Detalle"}</span>
+                              </button>
+                            </div>
                           </div>
                         </div>
 
@@ -922,34 +924,38 @@ export function AdminClient({
                 </div>
               </div>
 
-              <div className="grid grid-cols-7 gap-2 text-center text-xs font-semibold uppercase tracking-[0.14em] text-[#8A7D69]">
-                {weekdays.map((day) => <div key={day} className="py-2">{day}</div>)}
-              </div>
-              <div className="mt-2 grid grid-cols-7 gap-2">
-                {dayGrid.map((cell, index) => {
-                  const dayEvents = cell.date ? eventsByDate[cell.date] ?? [] : [];
-                  return (
-                    <div
-                      key={`${cell.day}-${index}`}
-                      className={cell.currentMonth
-                        ? "min-h-[128px] rounded-2xl border border-[#D4AF37]/20 bg-[#FDFBF7] p-2 shadow-sm"
-                        : "min-h-[128px] rounded-2xl border border-[#E7DAC2]/70 bg-white p-2 opacity-55"}
-                    >
-                      <div className="flex items-center justify-between gap-2">
-                        <span className={cell.currentMonth
-                          ? "inline-flex h-7 w-7 items-center justify-center rounded-full bg-white text-sm font-semibold text-[#0D3B22]"
-                          : "text-sm font-semibold text-[#8A7D69]"}
-                        >{cell.day}</span>
-                      </div>
-                      <div className="mt-2 space-y-1.5">
-                        {dayEvents.slice(0, 2).map((event) => <CourseChip key={event.id} event={event} />)}
-                        {dayEvents.length > 2 ? (
-                          <p className="rounded-full border border-[#D4AF37]/25 bg-white px-2 py-1 text-center text-[10px] font-semibold text-[#8D7530]">+{dayEvents.length - 2} mas</p>
-                        ) : null}
-                      </div>
-                    </div>
-                  );
-                })}
+              <div className="overflow-x-auto -mx-4 px-4 sm:mx-0 sm:px-0 scrollbar-thin">
+                <div className="min-w-[640px] sm:min-w-0">
+                  <div className="grid grid-cols-7 gap-2 text-center text-xs font-semibold uppercase tracking-[0.14em] text-[#8A7D69]">
+                    {weekdays.map((day) => <div key={day} className="py-2">{day}</div>)}
+                  </div>
+                  <div className="mt-2 grid grid-cols-7 gap-2">
+                    {dayGrid.map((cell, index) => {
+                      const dayEvents = cell.date ? eventsByDate[cell.date] ?? [] : [];
+                      return (
+                        <div
+                          key={`${cell.day}-${index}`}
+                          className={cell.currentMonth
+                            ? "min-h-[128px] rounded-2xl border border-[#D4AF37]/20 bg-[#FDFBF7] p-2 shadow-sm"
+                            : "min-h-[128px] rounded-2xl border border-[#E7DAC2]/70 bg-white p-2 opacity-55"}
+                        >
+                          <div className="flex items-center justify-between gap-2">
+                            <span className={cell.currentMonth
+                              ? "inline-flex h-7 w-7 items-center justify-center rounded-full bg-white text-sm font-semibold text-[#0D3B22]"
+                              : "text-sm font-semibold text-[#8A7D69]"}
+                            >{cell.day}</span>
+                          </div>
+                          <div className="mt-2 space-y-1.5">
+                            {dayEvents.slice(0, 2).map((event) => <CourseChip key={event.id} event={event} />)}
+                            {dayEvents.length > 2 ? (
+                              <p className="rounded-full border border-[#D4AF37]/25 bg-white px-2 py-1 text-center text-[10px] font-semibold text-[#8D7530]">+{dayEvents.length - 2} mas</p>
+                            ) : null}
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </div>
+                </div>
               </div>
             </div>
 

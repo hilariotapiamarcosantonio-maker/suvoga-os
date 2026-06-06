@@ -115,7 +115,7 @@ export default function CoursePage({ params }: CoursePageProps) {
   return (
     <main className="min-h-screen bg-[#FDFBF7] text-[#0D3B22]">
       {/* Premium Split Hero Section */}
-      <section className="relative bg-gradient-to-br from-[#072515] via-[#0D3B22] to-[#124026] text-[#FDFBF7] overflow-hidden py-16 sm:py-20 lg:py-24">
+      <section className="relative bg-gradient-to-br from-[#072515] via-[#0D3B22] to-[#124026] text-[#FDFBF7] overflow-hidden py-12 sm:py-16 lg:py-24">
         {/* Background Decorative Accent */}
         <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,rgba(212,175,55,0.08),transparent_50%)] pointer-events-none" />
 
@@ -123,71 +123,85 @@ export default function CoursePage({ params }: CoursePageProps) {
           {/* Back Navigation */}
           <Link
             href="/"
-            className="inline-flex items-center gap-2 text-sm font-semibold text-[#EAE2D0] transition-colors hover:text-[#D4AF37] focus:outline-none focus:ring-2 focus:ring-[#D4AF37]/50 rounded-lg px-2 py-1"
+            className="inline-flex items-center gap-2 text-xs sm:text-sm font-semibold text-[#EAE2D0] transition-colors hover:text-[#D4AF37] focus:outline-none focus:ring-2 focus:ring-[#D4AF37]/50 rounded-lg px-2 py-1"
           >
             <ArrowLeft className="h-4 w-4" />
             Volver al catálogo
           </Link>
 
           {/* Two-Column Split Layout */}
-          <div className="mt-10 grid gap-12 lg:grid-cols-12 lg:items-center">
+          <div className="mt-8 grid gap-8 lg:grid-cols-12 lg:items-center">
             {/* Left Column: Information & Main Details */}
-            <div className="space-y-6 lg:col-span-7">
+            <div className="space-y-5 lg:col-span-7">
               {/* Badges Row */}
               <div className="flex flex-wrap gap-2 items-center">
-                <span className="inline-flex items-center gap-1.5 rounded-full border border-[#D4AF37]/40 bg-[#0D3B22]/60 px-3.5 py-1.5 text-xs font-semibold uppercase tracking-[0.16em] text-[#D4AF37] backdrop-blur-sm">
-                  <Sparkles className="h-3.5 w-3.5" />
+                <span className="inline-flex items-center gap-1.5 rounded-full border border-[#D4AF37]/40 bg-[#0D3B22]/60 px-3 py-1 text-[10px] sm:text-xs font-semibold uppercase tracking-[0.16em] text-[#D4AF37] backdrop-blur-sm">
+                  <Sparkles className="h-3 w-3 sm:h-3.5 sm:w-3.5" />
                   {course.category}
                 </span>
                 {course.nivel && (
-                  <span className="inline-flex items-center gap-1 rounded-full border border-white/20 bg-white/5 px-3.5 py-1.5 text-xs font-semibold uppercase tracking-[0.16em] text-white backdrop-blur-sm">
-                    <Award className="h-3.5 w-3.5 text-[#D4AF37]" />
+                  <span className="inline-flex items-center gap-1 rounded-full border border-white/20 bg-white/5 px-3 py-1 text-[10px] sm:text-xs font-semibold uppercase tracking-[0.16em] text-white backdrop-blur-sm">
+                    <Award className="h-3 w-3 sm:h-3.5 sm:w-3.5 text-[#D4AF37]" />
                     Nivel: {course.nivel}
                   </span>
                 )}
                 {course.certificado_incluido && (
-                  <span className="inline-flex items-center gap-1 rounded-full border border-white/20 bg-white/5 px-3.5 py-1.5 text-xs font-semibold uppercase tracking-[0.16em] text-white backdrop-blur-sm">
-                    <ShieldCheck className="h-3.5 w-3.5 text-[#D4AF37]" />
+                  <span className="inline-flex items-center gap-1 rounded-full border border-white/20 bg-white/5 px-3 py-1 text-[10px] sm:text-xs font-semibold uppercase tracking-[0.16em] text-white backdrop-blur-sm">
+                    <ShieldCheck className="h-3 w-3 sm:h-3.5 sm:w-3.5 text-[#D4AF37]" />
                     Certificación Oficial
                   </span>
                 )}
               </div>
 
               {/* Title */}
-              <h1 className="suvoga-serif text-4xl font-bold leading-[1.1] text-white sm:text-5xl lg:text-6xl">
+              <h1 className="suvoga-serif text-3xl font-bold leading-tight text-white sm:text-5xl lg:text-6xl">
                 {course.nombre}
               </h1>
 
               {/* Subtitle */}
-              <p className="max-w-2xl text-lg leading-relaxed text-[#EAE2D0] font-sans font-light">
+              <p className="max-w-2xl text-sm sm:text-lg leading-relaxed text-[#EAE2D0] font-sans font-light">
                 {course.subtitulo_premium || course.description}
               </p>
 
+              {/* Mobile visual image - visible early on mobile, hidden on desktop */}
+              <div className="block lg:hidden w-full my-5">
+                <div className="relative w-full max-w-md mx-auto group overflow-hidden rounded-3xl border border-[#D4AF37]/35 bg-[#0D3B22]/40 p-2 shadow-2xl shadow-black/45">
+                  <div className="relative overflow-hidden rounded-2xl aspect-[4/3] sm:aspect-[16/10]">
+                    <img
+                      src={bgImageRelativePath}
+                      alt={course.nombre}
+                      className="h-full w-full object-cover"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/25 via-transparent to-transparent pointer-events-none" />
+                  </div>
+                </div>
+              </div>
+
               {/* Duration & Modality Row */}
-              <div className="flex flex-wrap gap-6 pt-2 text-sm text-[#EAE2D0]">
+              <div className="flex flex-wrap gap-5 pt-1 text-xs sm:text-sm text-[#EAE2D0]">
                 <div className="flex items-center gap-2">
-                  <Clock3 className="h-5 w-5 text-[#D4AF37]" />
+                  <Clock3 className="h-4.5 w-4.5 text-[#D4AF37]" />
                   <span>{course.duracion || duration}</span>
                 </div>
                 <div className="flex items-center gap-2">
-                  <CalendarDays className="h-5 w-5 text-[#D4AF37]" />
+                  <CalendarDays className="h-4.5 w-4.5 text-[#D4AF37]" />
                   <span>{course.modalidad || "Práctica presencial"}</span>
                 </div>
               </div>
 
               {/* Investment & Availability Highlights */}
-              <div className="grid grid-cols-3 gap-4 border-t border-b border-white/10 py-5 my-6 max-w-xl">
+              <div className="grid grid-cols-3 gap-2 sm:gap-4 border-t border-b border-white/10 py-4 my-4 max-w-xl text-center sm:text-left">
                 <div>
-                  <span className="text-[10px] font-semibold uppercase tracking-[0.16em] text-[#D4AF37]">Inversión</span>
-                  <p className="mt-1 text-xl font-bold text-white sm:text-2xl">{priceLabel(course.precioTotal)}</p>
+                  <span className="text-[9px] sm:text-[10px] font-semibold uppercase tracking-[0.16em] text-[#D4AF37]">Inversión</span>
+                  <p className="mt-0.5 text-base font-bold text-white sm:text-2xl">{priceLabel(course.precioTotal)}</p>
                 </div>
                 <div>
-                  <span className="text-[10px] font-semibold uppercase tracking-[0.16em] text-[#D4AF37]">Anticipo</span>
-                  <p className="mt-1 text-xl font-bold text-white sm:text-2xl">{formatDop(course.montoAnticipo)}</p>
+                  <span className="text-[9px] sm:text-[10px] font-semibold uppercase tracking-[0.16em] text-[#D4AF37]">Anticipo</span>
+                  <p className="mt-0.5 text-base font-bold text-white sm:text-2xl">{formatDop(course.montoAnticipo)}</p>
                 </div>
                 <div>
-                  <span className="text-[10px] font-semibold uppercase tracking-[0.16em] text-[#D4AF37]">Cupos</span>
-                  <p className="mt-1 text-xl font-bold text-white sm:text-2xl">{course.cuposTotales || 12} disponibles</p>
+                  <span className="text-[9px] sm:text-[10px] font-semibold uppercase tracking-[0.16em] text-[#D4AF37]">Cupos</span>
+                  <p className="mt-0.5 text-base font-bold text-white sm:text-2xl">{course.cuposTotales || 12} libres</p>
                 </div>
               </div>
 
@@ -197,8 +211,8 @@ export default function CoursePage({ params }: CoursePageProps) {
               </div>
             </div>
 
-            {/* Right Column: Visual Course Image Frame */}
-            <div className="lg:col-span-5 w-full flex justify-center">
+            {/* Right Column: Visual Course Image Frame - Desktop Only */}
+            <div className="hidden lg:flex lg:col-span-5 w-full justify-center">
               <div className="relative w-full max-w-md lg:max-w-none group overflow-hidden rounded-[2rem] border border-[#D4AF37]/35 bg-[#0D3B22]/40 p-2.5 shadow-2xl shadow-black/45">
                 <div className="relative overflow-hidden rounded-[1.75rem] aspect-[4/3] sm:aspect-[16/10] lg:aspect-[4/3]">
                   <img
@@ -215,12 +229,12 @@ export default function CoursePage({ params }: CoursePageProps) {
       </section>
 
       {/* Supporting Materials Section (Video & PDF Grid) */}
-      <section className="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
-        <div className="mb-8">
+      <section className="mx-auto max-w-7xl px-4 py-10 sm:px-6 lg:px-8">
+        <div className="mb-6">
           <span className="text-xs font-semibold uppercase tracking-[0.2em] text-[#C5A028]">
             Material de apoyo
           </span>
-          <h2 className="suvoga-serif mt-2 text-3xl font-semibold text-[#0D3B22]">
+          <h2 className="suvoga-serif mt-2 text-2xl sm:text-3xl font-semibold text-[#0D3B22]">
             Conoce el curso
           </h2>
         </div>
@@ -229,12 +243,12 @@ export default function CoursePage({ params }: CoursePageProps) {
           {/* Left Column: YouTube Video Embed */}
           <div className="h-full">
             {isRealVideo ? (
-              <div className="h-full flex flex-col justify-between rounded-3xl border border-[#D4AF37]/20 bg-white p-6 shadow-sm shadow-[#0D3B22]/5">
+              <div className="h-full flex flex-col justify-between rounded-3xl border border-[#D4AF37]/20 bg-white p-5 sm:p-6 shadow-sm shadow-[#0D3B22]/5">
                 <div className="flex items-center gap-3 mb-4">
-                  <div className="inline-flex h-9 w-9 items-center justify-center rounded-xl border border-[#D4AF37]/30 bg-[#FDFBF7] text-[#0D3B22]">
+                  <div className="inline-flex h-8 w-8 items-center justify-center rounded-xl border border-[#D4AF37]/30 bg-[#FDFBF7] text-[#0D3B22]">
                     <Video className="h-4 w-4 text-[#C5A028]" />
                   </div>
-                  <h3 className="suvoga-serif text-lg font-semibold text-[#0D3B22]">
+                  <h3 className="suvoga-serif text-base sm:text-lg font-semibold text-[#0D3B22]">
                     Video de Presentación
                   </h3>
                 </div>
@@ -249,13 +263,13 @@ export default function CoursePage({ params }: CoursePageProps) {
                 </div>
               </div>
             ) : (
-              <div className="h-full flex flex-col items-center justify-center text-center p-8 rounded-3xl border border-dashed border-[#D4AF37]/30 bg-[#FDFBF7]/50 min-h-[240px]">
-                <Video className="h-8 w-8 text-[#C5A028]/40 mb-3" />
-                <h3 className="suvoga-serif text-lg font-semibold text-[#0D3B22]/80">
+              <div className="h-full flex flex-col items-center justify-center text-center p-6 rounded-3xl border border-dashed border-[#D4AF37]/45 bg-[#0D3B22]/5 min-h-[220px]">
+                <Video className="h-7 w-7 text-[#C5A028] mb-3" />
+                <h3 className="suvoga-serif text-base font-semibold text-[#0D3B22]">
                   Video de presentación próximamente
                 </h3>
-                <p className="text-xs text-[#6B6048] mt-2 max-w-xs leading-relaxed">
-                  Aquí se colocará una explicación de 3–5 minutos sobre el curso, requisitos e inscripción.
+                <p className="text-[11px] text-[#6B6048] mt-2 max-w-xs leading-relaxed">
+                  El video explicativo sobre la metodología de esta cohorte estará disponible próximamente.
                 </p>
               </div>
             )}
@@ -264,41 +278,65 @@ export default function CoursePage({ params }: CoursePageProps) {
           {/* Right Column: PDF Download / Syllabus Info */}
           <div className="h-full">
             {course.pdf_drive_url ? (
-              <div className="h-full flex flex-col justify-between rounded-3xl border border-[#D4AF37]/20 bg-[#0D3B22] p-6 shadow-md text-[#FDFBF7] min-h-[240px]">
+              <div className="h-full flex flex-col justify-between rounded-3xl border border-[#D4AF37]/20 bg-[#0D3B22] p-5 sm:p-6 shadow-md text-[#FDFBF7] min-h-[220px]">
                 <div className="space-y-3">
-                  <div className="inline-flex h-9 w-9 items-center justify-center rounded-xl border border-white/20 bg-white/5 text-[#FDFBF7]">
+                  <div className="inline-flex h-8 w-8 items-center justify-center rounded-xl border border-white/20 bg-white/5 text-[#FDFBF7]">
                     <FileText className="h-4 w-4 text-[#D4AF37]" />
                   </div>
-                  <h3 className="suvoga-serif text-xl font-semibold text-white">
+                  <h3 className="suvoga-serif text-lg sm:text-xl font-semibold text-white">
                     Plan de Estudios Completo
                   </h3>
                   <p className="text-xs text-[#EAE2D0] leading-relaxed">
                     Descarga el temario oficial en PDF. Incluye el cronograma de clases, requisitos prácticos, normas de egreso y políticas académicas completas.
                   </p>
                 </div>
-                <div className="mt-6">
+                <div className="mt-5">
                   <Link
                     href={course.pdf_drive_url}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="inline-flex h-12 w-full items-center justify-center gap-2 rounded-2xl bg-[#D4AF37] px-6 text-sm font-semibold text-[#0D3B22] shadow-md hover:bg-[#C5A028] transition-all duration-300 hover:scale-[1.01]"
+                    className="inline-flex h-11 w-full items-center justify-center gap-2 rounded-2xl bg-[#D4AF37] px-6 text-sm font-semibold text-[#0D3B22] shadow-md hover:bg-[#C5A028] transition-all duration-300 hover:scale-[1.01]"
                   >
                     <Download className="h-4 w-4" />
-                    Descargar Programa PDF
+                    Ver temario del curso
                   </Link>
                 </div>
               </div>
             ) : (
-              <div className="h-full flex flex-col items-center justify-center text-center p-8 rounded-3xl border border-dashed border-[#0D3B22]/15 bg-[#F5F0E5] min-h-[240px]">
-                <Download className="h-8 w-8 text-[#0D3B22]/30 mb-3" />
-                <h3 className="suvoga-serif text-lg font-semibold text-[#0D3B22]">
-                  Programa PDF del Curso
+              <div className="h-full flex flex-col items-center justify-center text-center p-6 rounded-3xl border border-dashed border-[#D4AF37]/45 bg-[#0D3B22]/5 min-h-[220px]">
+                <Download className="h-7 w-7 text-[#C5A028] mb-3" />
+                <h3 className="suvoga-serif text-base font-semibold text-[#0D3B22]">
+                  Programa PDF disponible próximamente
                 </h3>
-                <p className="text-xs text-[#6B6048] mt-1 max-w-xs leading-relaxed">
-                  El dossier informativo con el temario extendido del curso estará disponible próximamente para su descarga.
+                <p className="text-[11px] text-[#6B6048] mt-2 max-w-xs leading-relaxed">
+                  El dossier informativo y temario detallado de esta formación se encuentra en revisión académica.
                 </p>
               </div>
             )}
+          </div>
+        </div>
+      </section>
+
+      {/* Repeated CTA after supporting materials */}
+      <section className="mx-auto max-w-7xl px-4 pb-10 sm:px-6 lg:px-8">
+        <div className="rounded-3xl border border-[#D4AF37]/35 bg-[#0D3B22] p-6 sm:p-8 text-center text-[#FDFBF7] shadow-xl relative overflow-hidden">
+          <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(212,175,55,0.12),transparent_70%)] pointer-events-none" />
+          <h3 className="suvoga-serif text-xl sm:text-3xl font-semibold text-white leading-tight">
+            Comienza tu formación en {course.nombre}
+          </h3>
+          <p className="mt-3 text-xs sm:text-sm text-[#EAE2D0] max-w-xl mx-auto leading-relaxed">
+            Reserva tu cupo hoy mismo para asegurar tu camilla y acompañamiento directo en esta cohorte de cupos reducidos.
+          </p>
+          <div className="mt-6 flex flex-col sm:flex-row items-center justify-center gap-4">
+            <div className="w-full sm:w-auto">
+              <CourseHeroCTA course={course} />
+            </div>
+            <Link
+              href="/"
+              className="text-xs sm:text-sm font-semibold uppercase tracking-wider text-[#D4AF37] hover:text-[#C5A028] transition-colors underline underline-offset-4 decoration-[#D4AF37]/30"
+            >
+              Explorar otros cursos
+            </Link>
           </div>
         </div>
       </section>

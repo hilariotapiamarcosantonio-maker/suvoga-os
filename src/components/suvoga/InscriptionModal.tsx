@@ -57,7 +57,7 @@ function Field({
 }) {
   return (
     <label className="block" htmlFor={id}>
-      <span className="text-xs font-medium uppercase tracking-[0.16em] text-[#6B6048]">
+      <span className="text-[10px] font-semibold uppercase tracking-[0.16em] text-[#8D7530] block mb-1.5">
         {label}
       </span>
       <input
@@ -67,7 +67,7 @@ function Field({
         onChange={(event) => onChange(id, event.target.value)}
         required
         autoComplete={autoComplete}
-        className="mt-2 h-11 w-full border-0 border-b border-[#0D3B22]/55 bg-transparent px-0 text-[15px] text-[#102318] outline-none transition-colors placeholder:text-[#9A927F] focus:border-[#D4AF37] focus:ring-0"
+        className="h-12 w-full rounded-2xl border border-[#D4AF37]/35 bg-[#FDFBF7] px-4 text-[14px] text-[#0D3B22] outline-none transition-all placeholder:text-[#9A927F] focus:border-[#0D3B22] focus:ring-1 focus:ring-[#0D3B22]"
       />
     </label>
   );
@@ -130,9 +130,9 @@ export function InscriptionModal({
       setForm(initialForm);
     } catch (caughtError) {
       setError(
-        caughtError instanceof Error
-          ? caughtError.message
-          : "No se pudo guardar la inscripcion."
+          caughtError instanceof Error
+            ? caughtError.message
+            : "No se pudo guardar la inscripcion."
       );
     } finally {
       setIsLoading(false);
@@ -143,7 +143,7 @@ export function InscriptionModal({
     <div
       aria-modal="true"
       role="dialog"
-      className="fixed inset-0 z-[80] flex items-center justify-center bg-[#0D3B22]/45 p-4 backdrop-blur-sm"
+      className="fixed inset-0 z-[80] flex items-center justify-center bg-[#0D3B22]/45 p-4 backdrop-blur-sm overflow-y-auto"
     >
       <button
         type="button"
@@ -151,13 +151,13 @@ export function InscriptionModal({
         className="absolute inset-0 cursor-default"
         onClick={closeAndReset}
       />
-      <div className="relative w-full max-w-lg overflow-hidden rounded-lg border border-[#D4AF37]/30 bg-[#FAFAFA] text-[#102318] shadow-2xl shadow-black/30">
-        <div className="flex items-start justify-between gap-5 border-b border-[#D4AF37]/20 px-6 py-5">
+      <div className="relative w-full max-w-lg overflow-hidden rounded-[2rem] border border-[#D4AF37]/30 bg-[#FAFAFA] text-[#102318] shadow-2xl shadow-black/30 flex flex-col my-auto max-h-[92vh]">
+        <div className="flex items-start justify-between gap-5 border-b border-[#D4AF37]/20 px-6 py-5 shrink-0 bg-[#FDFBF7]">
           <div>
-            <p className="text-xs font-semibold uppercase tracking-[0.2em] text-[#8D7530]">
-              Separar cupo
+            <p className="text-[10px] font-semibold uppercase tracking-[0.2em] text-[#8D7530]">
+              Reserva privada de cupo
             </p>
-            <h2 className="suvoga-serif mt-2 text-3xl font-semibold leading-tight text-[#0D3B22]">
+            <h2 className="suvoga-serif mt-2 text-2xl font-semibold leading-tight text-[#0D3B22] truncate max-w-[280px] sm:max-w-none">
               {course.nombre}
             </h2>
           </div>
@@ -171,37 +171,44 @@ export function InscriptionModal({
           </button>
         </div>
 
-        <div className="px-6 py-5">
+        <div className="px-6 py-5 overflow-y-auto flex-grow scrollbar-thin">
           {success ? (
-            <div className="rounded-lg border border-[#0D3B22]/15 bg-[#0D3B22]/[0.04] p-5 text-center">
+            <div className="rounded-2xl border border-[#0D3B22]/15 bg-[#0D3B22]/[0.04] p-5 text-center">
               <CheckCircle2 className="mx-auto h-9 w-9 text-[#0D3B22]" />
-              <h3 className="suvoga-serif mt-3 text-2xl font-semibold text-[#0D3B22]">
-                Cupo solicitado con exito
+              <h3 className="suvoga-serif mt-3 text-xl font-semibold text-[#0D3B22]">
+                Cupo solicitado con éxito
               </h3>
-              <p className="mt-2 text-sm leading-6 text-[#6B6048]">
+              <p className="mt-2 text-xs leading-relaxed text-[#6B6048]">
                 Guardamos tus datos en SuVoGa OS. El equipo puede confirmar el
                 anticipo de {formatDop(course.montoAnticipo)} desde la base.
               </p>
               <button
                 type="button"
                 onClick={closeAndReset}
-                className="mt-5 inline-flex h-11 items-center justify-center rounded-md bg-[#0D3B22] px-5 text-sm font-semibold text-[#FAFAFA] transition-colors hover:bg-[#145332]"
+                className="mt-5 inline-flex h-11 w-full items-center justify-center rounded-xl bg-[#0D3B22] px-5 text-sm font-semibold text-[#FAFAFA] transition-colors hover:bg-[#145332]"
               >
                 Cerrar
               </button>
             </div>
           ) : (
             <>
-              <div className="mb-5 rounded-md border border-[#D4AF37]/25 bg-[#F5F0E5] px-4 py-3">
-                <p className="text-xs uppercase tracking-[0.16em] text-[#8D7530]">
-                  Anticipo requerido
-                </p>
-                <p className="mt-1 text-xl font-semibold text-[#0D3B22]">
-                  {formatDop(course.montoAnticipo)}
-                </p>
+              {/* Detailed course selection highlights */}
+              <div className="mb-5 rounded-2xl border border-[#D4AF37]/35 bg-[#0D3B22]/[0.02] p-4 space-y-2.5">
+                <div className="flex justify-between items-center text-xs">
+                  <span className="text-[#8D7530] font-semibold uppercase tracking-wider">Programa</span>
+                  <span className="font-bold text-[#0D3B22] truncate max-w-[200px]">{course.nombre}</span>
+                </div>
+                <div className="flex justify-between items-center text-xs border-t border-[#D4AF37]/15 pt-2">
+                  <span className="text-[#8D7530] font-semibold uppercase tracking-wider">Anticipo de Reserva</span>
+                  <span className="font-bold text-[#0D3B22] text-sm">{formatDop(course.montoAnticipo)}</span>
+                </div>
+                <div className="flex justify-between items-center text-xs border-t border-[#D4AF37]/15 pt-2">
+                  <span className="text-[#8D7530] font-semibold uppercase tracking-wider">Cupos Disponibles</span>
+                  <span className="font-semibold text-[#0D3B22]">{course.cuposTotales || 12} libres</span>
+                </div>
               </div>
 
-              <form className="space-y-5" onSubmit={handleSubmit}>
+              <form className="space-y-4" onSubmit={handleSubmit}>
                 <Field
                   id="nombreCompleto"
                   label="Nombre Completo"
@@ -218,7 +225,7 @@ export function InscriptionModal({
                 />
                 <Field
                   id="cedula"
-                  label="Cedula"
+                  label="Cédula"
                   value={form.cedula}
                   onChange={updateField}
                 />
@@ -231,25 +238,30 @@ export function InscriptionModal({
                 />
 
                 {error ? (
-                  <p className="rounded-md border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-700">
+                  <p className="rounded-xl border border-red-200 bg-red-50 px-3 py-2 text-xs text-red-700">
                     {error}
                   </p>
                 ) : null}
 
-                <button
-                  type="submit"
-                  disabled={!canSubmit || isLoading}
-                  className="inline-flex h-12 w-full items-center justify-center rounded-md bg-[#0D3B22] px-5 text-sm font-semibold text-[#FAFAFA] transition-colors hover:bg-[#145332] disabled:cursor-not-allowed disabled:bg-[#0D3B22]/45"
-                >
-                  {isLoading ? (
-                    <>
-                      <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                      Guardando en Sheets
-                    </>
-                  ) : (
-                    "Confirmar y Separar Cupo"
-                  )}
-                </button>
+                <div className="pt-2">
+                  <button
+                    type="submit"
+                    disabled={!canSubmit || isLoading}
+                    className="inline-flex h-12 w-full items-center justify-center rounded-2xl bg-[#0D3B22] px-5 text-sm font-semibold text-[#FAFAFA] transition-colors hover:bg-[#145332] disabled:cursor-not-allowed disabled:bg-[#0D3B22]/45"
+                  >
+                    {isLoading ? (
+                      <>
+                        <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                        Guardando en Sheets...
+                      </>
+                    ) : (
+                      "Confirmar reserva de cupo"
+                    )}
+                  </button>
+                  <p className="mt-3 text-center text-[10px] leading-relaxed text-[#6B6048]">
+                    Tu información será usada solo para confirmar disponibilidad y seguimiento académico.
+                  </p>
+                </div>
               </form>
             </>
           )}

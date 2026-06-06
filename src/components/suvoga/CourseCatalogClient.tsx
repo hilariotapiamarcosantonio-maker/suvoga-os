@@ -7,6 +7,8 @@ import { CalendarDays, GraduationCap, Sparkles, Users } from "lucide-react";
 import { suvogaCourses } from "@/data/courses";
 import { InscriptionModal } from "@/components/suvoga/InscriptionModal";
 
+import { useReducedMotion } from "framer-motion";
+
 type Course = (typeof suvogaCourses)[number];
 
 const DEMO_COURSES_STORAGE_KEY = "suvoga_demo_courses";
@@ -19,21 +21,6 @@ const gridVariants: Variants = {
     transition: {
       delayChildren: 0.08,
       staggerChildren: 0.055,
-    },
-  },
-};
-
-const cardVariants: Variants = {
-  hidden: {
-    opacity: 0,
-    y: 20,
-  },
-  visible: {
-    opacity: 1,
-    y: 0,
-    transition: {
-      duration: 0.45,
-      ease: [0.22, 1, 0.36, 1] as const,
     },
   },
 };
@@ -107,6 +94,22 @@ function mergeCourses(baseCourses: Course[], demoCourses: Course[]) {
 export function CourseCatalogClient() {
   const [courses, setCourses] = useState<Course[]>(suvogaCourses);
   const [selectedCourse, setSelectedCourse] = useState<Course | null>(null);
+  const shouldReduceMotion = useReducedMotion();
+
+  const cardVariants: Variants = {
+    hidden: {
+      opacity: 0,
+      y: shouldReduceMotion ? 0 : 20,
+    },
+    visible: {
+      opacity: 1,
+      y: 0,
+      transition: {
+        duration: 0.45,
+        ease: [0.22, 1, 0.36, 1] as const,
+      },
+    },
+  };
 
   useEffect(() => {
     function syncDemoCourses() {
@@ -126,7 +129,7 @@ export function CourseCatalogClient() {
   return (
     <>
       <motion.div
-        className="grid gap-4 md:grid-cols-2 xl:grid-cols-4"
+        className="grid gap-6 sm:gap-4 md:grid-cols-2 xl:grid-cols-4"
         initial="hidden"
         animate="visible"
         variants={gridVariants}
@@ -141,14 +144,16 @@ export function CourseCatalogClient() {
             <motion.article
               key={course.idServicio}
               variants={cardVariants}
-              whileHover={{ y: -8 }}
-              className="group flex h-full flex-col overflow-hidden rounded-3xl border border-[#D4AF37]/30 bg-white text-[#0D3B22] shadow-sm shadow-[#0D3B22]/5 transition-all duration-300 hover:border-[#D4AF37]/70 hover:shadow-xl hover:shadow-[#D4AF37]/20"
+              whileHover={shouldReduceMotion ? {} : { y: -5 }}
+              whileTap={shouldReduceMotion ? { scale: 0.99 } : { scale: 0.97 }}
+              className="group flex h-full flex-col overflow-hidden rounded-3xl border border-[#D4AF37]/35 bg-white text-[#0D3B22] shadow-sm shadow-[#0D3B22]/5 transition-all duration-300 hover:border-[#D4AF37]/70 hover:shadow-xl hover:shadow-[#D4AF37]/20"
             >
               {/* Image Header */}
-              <div className="relative w-full overflow-hidden h-[160px] sm:h-[180px] md:h-[200px] shrink-0">
+              <div className="relative w-full overflow-hidden h-[150px] sm:h-[180px] md:h-[200px] shrink-0">
                 <img
                   src={cardImageUrl}
                   alt={course.nombre}
+                  loading="lazy"
                   className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
                 />
                 <div
@@ -174,12 +179,12 @@ export function CourseCatalogClient() {
               </div>
 
               {/* Card Body */}
-              <div className="flex flex-col flex-grow p-5">
+              <div className="flex flex-col flex-grow p-4 sm:p-5">
                 <Link
                   href={`/curso/${course.idServicio}`}
                   className="block rounded-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#D4AF37]/70 focus-visible:ring-offset-2 focus-visible:ring-offset-white"
                 >
-                  <h3 className="suvoga-serif text-xl font-semibold leading-snug text-[#0D3B22] transition-colors hover:text-[#145332]">
+                  <h3 className="suvoga-serif text-lg sm:text-xl font-semibold leading-tight text-[#0D3B22] transition-colors hover:text-[#145332]">
                     {course.nombre}
                   </h3>
                 </Link>
@@ -189,37 +194,37 @@ export function CourseCatalogClient() {
                 </p>
 
                 <div className="mt-5 space-y-4">
-                  <div className="grid grid-cols-2 gap-3 text-xs">
-                    <div className="rounded-2xl border border-[#0D3B22]/10 bg-[#0D3B22]/[0.03] p-3">
-                      <p className="text-[10px] font-semibold uppercase tracking-[0.14em] text-[#6B6048]">
+                  <div className="grid grid-cols-2 gap-2 text-xs">
+                    <div className="rounded-xl border border-[#0D3B22]/10 bg-[#0D3B22]/[0.03] p-2 sm:p-3 sm:rounded-2xl">
+                      <p className="text-[9px] sm:text-[10px] font-semibold uppercase tracking-[0.14em] text-[#6B6048]">
                         Precio
                       </p>
-                      <p className="mt-1 font-semibold text-[#0D3B22]">
+                      <p className="mt-1 font-semibold text-[#0D3B22] text-xs sm:text-sm">
                         {priceLabel(course.precioTotal)}
                       </p>
                     </div>
-                    <div className="rounded-2xl border border-[#D4AF37]/25 bg-[#FDFBF7] p-3">
-                      <p className="text-[10px] font-semibold uppercase tracking-[0.14em] text-[#8D7530]">
+                    <div className="rounded-xl border border-[#D4AF37]/25 bg-[#FDFBF7] p-2 sm:p-3 sm:rounded-2xl">
+                      <p className="text-[9px] sm:text-[10px] font-semibold uppercase tracking-[0.14em] text-[#8D7530]">
                         Anticipo
                       </p>
-                      <p className="mt-1 font-semibold text-[#0D3B22]">
+                      <p className="mt-1 font-semibold text-[#0D3B22] text-xs sm:text-sm">
                         {formatDop(course.montoAnticipo || 1000)}
                       </p>
                     </div>
                   </div>
 
                   <div className="flex items-center justify-between gap-3 border-t border-[#D4AF37]/20 pt-4 text-xs text-[#4E6658]">
-                    <span className="inline-flex items-center gap-1.5">
+                    <span className="inline-flex items-center gap-1.5 font-medium">
                       <Users className="h-4 w-4 text-[#0D3B22]" />
                       {course.cuposTotales || 12} cupos
                     </span>
-                    <span className="inline-flex items-center gap-1.5">
+                    <span className="inline-flex items-center gap-1.5 font-medium">
                       <CalendarDays className="h-4 w-4 text-[#0D3B22]" />
                       Abierto
                     </span>
                   </div>
 
-                  <div className="flex flex-col gap-2 pt-2">
+                  <div className="flex flex-col gap-2.5 pt-2">
                     <button
                       type="button"
                       onClick={() => setSelectedCourse(course)}
@@ -229,7 +234,7 @@ export function CourseCatalogClient() {
                     </button>
                     <Link
                       href={`/curso/${course.idServicio}`}
-                      className="inline-flex h-11 w-full items-center justify-center rounded-2xl border border-[#D4AF37]/40 bg-white px-4 text-sm font-semibold text-[#0D3B22] transition-colors hover:border-[#D4AF37]/70 hover:bg-[#FDFBF7] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#D4AF37]/70 focus-visible:ring-offset-2 focus-visible:ring-offset-[#FDFBF7]"
+                      className="inline-flex h-10 w-full items-center justify-center rounded-2xl text-xs sm:text-sm font-semibold text-[#0D3B22] underline underline-offset-4 decoration-[#D4AF37]/50 hover:text-[#145332] hover:decoration-[#D4AF37] transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#D4AF37]/70 focus-visible:ring-offset-2 focus-visible:ring-offset-[#FDFBF7]"
                     >
                       Ver Detalles
                     </Link>
