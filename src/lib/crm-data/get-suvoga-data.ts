@@ -32,6 +32,7 @@ export type SuvogaServicio = {
   category: string;
   description: string;
   precioTotal: number;
+  precioMiembros?: number;
   montoAnticipo: number;
   cuposTotales: number;
 

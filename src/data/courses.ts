@@ -57,8 +57,9 @@ export function courseRecordToSuvogaServicio(
       : [],
     imagen_url: imageForCourse(course.sourceId),
     imagen_prompt: "",
-    youtube_url: "",
-    pdf_drive_url: "",
+    youtube_url: course.publicCopy.videoUrl ?? "",
+    pdf_drive_url: course.publicCopy.pdfUrl ?? "",
+    precioMiembros: pricing.memberPrice?.amount ?? 0,
     nivel: "",
     certificado_incluido: course.publicCopy.certifications.length > 0,
     estado_publicacion:
@@ -87,6 +88,18 @@ export function findSuvogaCourseByIdentifier(identifier: string) {
     findCourseByLegacyId(identifier) ?? findCourseByPublicIdentifier(identifier);
   if (!course || course.publicationStatus !== "published") return null;
   return courseRecordToSuvogaServicio(course);
+}
+
+/**
+ * Resolve the rich CourseRecord for a public identifier (slug, sourceId or
+ * legacy id). Legacy aliases resolve first; drafts and unknowns return null so
+ * the route can answer with a real 404. Mirrors findSuvogaCourseByIdentifier.
+ */
+export function findPublishedCourseRecord(identifier: string): CourseRecord | null {
+  const course =
+    findCourseByLegacyId(identifier) ?? findCourseByPublicIdentifier(identifier);
+  if (!course || course.publicationStatus !== "published") return null;
+  return course;
 }
 
 export function findSuvogaCourseByLegacyId(legacyId: string) {

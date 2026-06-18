@@ -108,6 +108,10 @@ export type CoursePublicCopy = {
   legalNotes: string[];
   professionalNotes: string[];
   normalizedMarkdown: string;
+  /** Optional external program PDF (Google Drive, etc.). Empty until uploaded. */
+  pdfUrl?: string;
+  /** Optional YouTube presentation URL. Empty until provided. */
+  videoUrl?: string;
 };
 
 export type CourseRecord = {

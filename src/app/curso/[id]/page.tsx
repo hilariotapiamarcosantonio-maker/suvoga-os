@@ -4,102 +4,78 @@ import { notFound, permanentRedirect } from "next/navigation";
 import {
   ArrowLeft,
   Award,
+  BadgeCheck,
   CalendarDays,
-  Clock3,
-  Sparkles,
-  Video,
-  Download,
   Check,
+  Clock3,
+  GraduationCap,
+  Layers,
+  ListChecks,
+  ScrollText,
+  ShieldAlert,
   ShieldCheck,
+  Sparkles,
+  Target,
   UserCheck,
-  FileText,
-  BookOpen,
-  Quote,
+  Users,
 } from "lucide-react";
-import { findSuvogaCourseByIdentifier, suvogaCourses } from "@/data/courses";
+import {
+  courseRecordToSuvogaServicio,
+  findPublishedCourseRecord,
+  suvogaCourses,
+} from "@/data/courses";
 import { CourseLandingSignup } from "@/components/suvoga/CourseLandingSignup";
 import { CourseHeroCTA } from "@/components/suvoga/CourseHeroCTA";
-import { studentTestimonials } from "@/data/testimonials";
-import { graduatesList } from "@/data/graduates";
-import { contactInfo } from "@/data/contact";
-import { MessageCircle } from "lucide-react";
-import { Instagram } from "@/components/suvoga/BrandIcons";
-import type { SuvogaServicio } from "@/lib/crm-data/get-suvoga-data";
-
+import { CourseSyllabus } from "@/components/suvoga/CourseSyllabus";
+import { CourseSectionNav } from "@/components/suvoga/CourseSectionNav";
+import { CoursePdfResource } from "@/components/suvoga/CoursePdfResource";
+import { YouTubeLiteEmbed } from "@/components/suvoga/YouTubeLiteEmbed";
+import {
+  cleanLabeledValue,
+  cleanList,
+  cleanText,
+  courseCategory,
+  courseImage,
+  courseModality,
+  formatDop,
+  parseSyllabusModules,
+  priceLabel,
+  youTubeId,
+} from "@/lib/course-presentation";
 
 type CoursePageProps = {
-  params: {
-    id: string;
-  };
+  params: { id: string };
 };
-
-const learningItems = [
-  "Protocolos profesionales para ejecutar la técnica con seguridad.",
-  "Criterios de atención, postura y ritmo para una experiencia premium.",
-  "Secuencia práctica para llevar el aprendizaje al servicio real.",
-  "Bases de comunicación para orientar al cliente antes y después de la sesión.",
-];
-
-function formatDop(value: number) {
-  return new Intl.NumberFormat("es-DO", {
-    style: "currency",
-    currency: "DOP",
-    maximumFractionDigits: 0,
-  }).format(value);
-}
-
-function priceLabel(value: number) {
-  return value > 0 ? formatDop(value) : "";
-}
-
-function durationLabel(description: string) {
-  const match = description.match(/(\d+\s+clases?)/i);
-  return match?.[1] ?? "Duración según calendario";
-}
-
-function findCourse(id: string) {
-  return findSuvogaCourseByIdentifier(id);
-}
 
 function normalizeRouteIdentifier(identifier: string) {
   return decodeURIComponent(identifier).trim().toLowerCase();
 }
 
-function canonicalCoursePath(course: SuvogaServicio) {
-  return `/curso/${course.slug || course.idServicio}`;
-}
-
-function isCanonicalCourseRequest(identifier: string, course: SuvogaServicio) {
-  return normalizeRouteIdentifier(identifier) === normalizeRouteIdentifier(course.slug || course.idServicio);
-}
-
 export function generateStaticParams() {
-  return suvogaCourses.map((course) => ({
-    id: course.slug || course.idServicio,
-  }));
+  return suvogaCourses.map((course) => ({ id: course.slug || course.idServicio }));
 }
 
 export function generateMetadata({ params }: CoursePageProps): Metadata {
-  const course = findCourse(params.id);
-
-  if (!course) {
-    return {
-      title: "Curso no encontrado | SuVoGa Academia",
-    };
+  const record = findPublishedCourseRecord(params.id);
+  if (!record) {
+    return { title: "Curso no encontrado | SuVoGa Academia" };
   }
 
-  const canonicalPath = canonicalCoursePath(course);
-  const isCanonical = isCanonicalCourseRequest(params.id, course);
+  const canonicalPath = `/curso/${record.slug}`;
+  const isCanonical =
+    normalizeRouteIdentifier(params.id) === normalizeRouteIdentifier(record.slug);
+  const description =
+    cleanText(record.publicCopy.description.value) ||
+    record.publicCopy.subtitle ||
+    record.title;
 
   return {
-    title: `${course.nombre} | SuVoGa Academia`,
-    description: course.description,
-    alternates: {
-      canonical: canonicalPath,
-    },
+    title: `${record.title} | SuVoGa Academia`,
+    description,
+    alternates: { canonical: canonicalPath },
     openGraph: {
-      title: `${course.nombre} | SuVoGa Academia`,
-      description: course.description,
+      title: `${record.title} | SuVoGa Academia`,
+      description,
       url: canonicalPath,
       type: "article",
     },
@@ -108,569 +84,453 @@ export function generateMetadata({ params }: CoursePageProps): Metadata {
 }
 
 export default function CoursePage({ params }: CoursePageProps) {
-  const course = findCourse(params.id);
+  const record = findPublishedCourseRecord(params.id);
+  if (!record) notFound();
 
-  if (!course) {
-    notFound();
+  if (normalizeRouteIdentifier(params.id) !== normalizeRouteIdentifier(record.slug)) {
+    permanentRedirect(`/curso/${record.slug}`);
   }
 
-  if (!isCanonicalCourseRequest(params.id, course)) {
-    permanentRedirect(canonicalCoursePath(course));
-  }
+  const course = courseRecordToSuvogaServicio(record);
+  const pc = record.publicCopy;
 
-  const duration = durationLabel(course.description);
-  const isRealVideo = course.youtube_url && !course.youtube_url.includes("dQw4w9WgXcQ");
+  // --- Clean and structure the source content ---------------------------------
+  const objectiveList = cleanList(pc.objectives);
+  const objective =
+    objectiveList.find((s) => s.length > 45) || objectiveList[0] || cleanText(pc.description.value);
 
-  // Resolving image paths
-  const courseIdNum = parseInt(course.idServicio.replace("CUR-", ""), 10);
-  const ext = (courseIdNum >= 18 && courseIdNum <= 25) ? "svg" : "png";
-  const bgImageRelativePath = course.imagen_url || `/images/courses/${course.idServicio.toLowerCase()}.${ext}`;
+  const profile = (() => {
+    const out: string[] = [];
+    for (const raw of cleanList(pc.profile)) {
+      if (raw === objective || /^capacitar/i.test(raw)) continue;
+      const dirigido = raw.match(/^dirigido a:?\s*(.*)/i);
+      if (dirigido) {
+        out.push(
+          ...dirigido[1]
+            .split(/[,;]|\sy\s/)
+            .map((x) => x.trim())
+            .filter((x) => x.length > 2)
+        );
+      } else {
+        out.push(raw);
+      }
+    }
+    return Array.from(new Set(out));
+  })();
 
-  // Fallbacks for standard items
-  const includesList = course.incluye && course.incluye.length > 0 ? course.incluye : [];
-  const forWhoList = course.para_quien_es && course.para_quien_es.length > 0 ? course.para_quien_es : [];
-  const whatYouWillLearnList = course.que_aprenderas && course.que_aprenderas.length > 0 ? course.que_aprenderas : learningItems;
+  const requirements = cleanList(pc.requirements);
+  const modules = parseSyllabusModules(pc.syllabusMarkdown);
+  const learn = pc.competencies?.length
+    ? cleanList(pc.competencies)
+    : modules.slice(0, 8).map((m) => m.title);
+  const materials = cleanList(pc.materials);
+  const practices = cleanList(pc.practices);
+  const indications = cleanList(pc.indications);
+  const contraindications = cleanList(pc.contraindications);
+  const certifications = cleanList(pc.certifications);
+  const facilitator = cleanText(pc.facilitator);
+
+  const duration = cleanLabeledValue(course.duracion);
+  const modality = courseModality(course);
+  const category = courseCategory(course);
   const hasPublicPrice = course.precioTotal > 0;
+  const memberPrice = course.precioMiembros ?? 0;
+  const reservationNote = cleanText(pc.pricing.reservation?.raw);
+  const paymentPlan = cleanList(pc.pricing.paymentPlan);
+  const hasVideo = Boolean(youTubeId(course.youtube_url));
+  const hasPdf = Boolean(course.pdf_drive_url && /^https?:\/\//i.test(course.pdf_drive_url));
 
-  // Find related testimonials or graduates for trust section
-  const relatedTestimonial = studentTestimonials.find(
-    (t) => t.curso.toLowerCase() === course.nombre.toLowerCase()
-  );
-  const relatedGraduate = graduatesList.find(
-    (g) => g.cursoCompletado.toLowerCase() === course.nombre.toLowerCase()
-  );
+  // --- Build the sticky in-page navigation from what actually exists ----------
+  const sections: { id: string; label: string }[] = [{ id: "descripcion", label: "Descripción" }];
+  if (learn.length) sections.push({ id: "aprenderas", label: "Lo que aprenderás" });
+  if (modules.length) sections.push({ id: "temario", label: "Temario" });
+  if (practices.length || materials.length) sections.push({ id: "practicas", label: "Prácticas" });
+  sections.push({ id: "inversion", label: "Inversión" });
+  if (certifications.length || facilitator) sections.push({ id: "certificacion", label: "Certificación" });
+  if (hasVideo || hasPdf) sections.push({ id: "recursos", label: "Recursos" });
+
+  const sectionClass = "scroll-mt-32 md:scroll-mt-36";
 
   return (
-    <main className="min-h-screen bg-[#FDFBF7] text-[#0D3B22]">
-      {/* Premium Split Hero Section */}
-      <section className="relative bg-gradient-to-br from-[#072515] via-[#0D3B22] to-[#124026] text-[#FDFBF7] overflow-hidden py-12 sm:py-16 lg:py-24">
-        {/* Background Decorative Accent */}
-        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,rgba(212,175,55,0.08),transparent_50%)] pointer-events-none" />
-
-        <div className="relative z-10 mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 w-full">
-          {/* Back Navigation */}
+    <main className="bg-[#FDFBF7] text-[#0D3B22]">
+      {/* HERO */}
+      <section className="relative overflow-hidden bg-gradient-to-br from-[#072515] via-[#0D3B22] to-[#124026] text-[#FDFBF7]">
+        <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,rgba(212,175,55,0.1),transparent_55%)]" />
+        <div className="relative mx-auto max-w-7xl px-4 py-10 sm:px-6 lg:px-8 lg:py-16">
           <Link
-            href="/"
-            className="inline-flex items-center gap-2 text-xs sm:text-sm font-semibold text-[#EAE2D0] transition-colors hover:text-[#D4AF37] focus:outline-none focus:ring-2 focus:ring-[#D4AF37]/50 rounded-lg px-2 py-1"
+            href="/cursos"
+            className="inline-flex items-center gap-2 rounded-lg px-1 py-1 text-xs font-semibold text-[#EAE2D0] transition-colors hover:text-[#D4AF37]"
           >
             <ArrowLeft className="h-4 w-4" />
             Volver al catálogo
           </Link>
 
-          {/* Two-Column Split Layout */}
-          <div className="mt-8 grid gap-8 lg:grid-cols-12 lg:items-center">
-            {/* Left Column: Information & Main Details */}
-            <div className="space-y-5 lg:col-span-7">
-              {/* Badges Row */}
-              <div className="flex flex-wrap gap-2 items-center">
-                {course.category ? (
-                  <span className="inline-flex items-center gap-1.5 rounded-full border border-[#D4AF37]/40 bg-[#0D3B22]/60 px-3 py-1 text-[10px] sm:text-xs font-semibold uppercase tracking-[0.16em] text-[#D4AF37] backdrop-blur-sm">
-                    <Sparkles className="h-3 w-3 sm:h-3.5 sm:w-3.5" />
-                    {course.category}
+          <div className="mt-7 grid gap-10 lg:grid-cols-[1.05fr_0.95fr] lg:items-center">
+            <div>
+              <div className="flex flex-wrap items-center gap-2">
+                <span className="inline-flex items-center gap-1.5 rounded-full border border-[#D4AF37]/40 bg-[#0D3B22]/60 px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.16em] text-[#F4E6BE]">
+                  <Sparkles className="h-3.5 w-3.5" />
+                  {category}
+                </span>
+                {course.certificado_incluido ? (
+                  <span className="inline-flex items-center gap-1 rounded-full border border-white/20 bg-white/5 px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.16em] text-white">
+                    <ShieldCheck className="h-3.5 w-3.5 text-[#D4AF37]" />
+                    Certificación
                   </span>
                 ) : null}
-                {course.nivel && (
-                  <span className="inline-flex items-center gap-1 rounded-full border border-white/20 bg-white/5 px-3 py-1 text-[10px] sm:text-xs font-semibold uppercase tracking-[0.16em] text-white backdrop-blur-sm">
-                    <Award className="h-3 w-3 sm:h-3.5 sm:w-3.5 text-[#D4AF37]" />
-                    Nivel: {course.nivel}
+                {record.requiresLegalReview ? (
+                  <span className="inline-flex items-center gap-1 rounded-full border border-[#D4AF37]/40 bg-[#D4AF37]/15 px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.16em] text-[#F4E6BE]">
+                    <ShieldAlert className="h-3.5 w-3.5" />
+                    Contenido profesional
                   </span>
-                )}
-                {course.certificado_incluido && (
-                  <span className="inline-flex items-center gap-1 rounded-full border border-white/20 bg-white/5 px-3 py-1 text-[10px] sm:text-xs font-semibold uppercase tracking-[0.16em] text-white backdrop-blur-sm">
-                    <ShieldCheck className="h-3 w-3 sm:h-3.5 sm:w-3.5 text-[#D4AF37]" />
-                    Certificación Oficial
-                  </span>
-                )}
+                ) : null}
               </div>
 
-              {/* Title */}
-              <h1 className="suvoga-serif text-3xl font-bold leading-tight text-white sm:text-5xl lg:text-6xl">
+              <h1 className="suvoga-serif mt-5 text-3xl font-semibold leading-tight text-white sm:text-5xl">
                 {course.nombre}
               </h1>
+              {course.subtitulo_premium ? (
+                <p className="mt-4 max-w-xl text-sm leading-7 text-[#EAE2D0] sm:text-base">
+                  {cleanText(course.subtitulo_premium)}
+                </p>
+              ) : null}
 
-              {/* Subtitle */}
-              <p className="max-w-2xl text-sm sm:text-lg leading-relaxed text-[#EAE2D0] font-sans font-light">
-                {course.subtitulo_premium || course.description}
-              </p>
-
-              {/* Mobile visual image - visible early on mobile, hidden on desktop */}
-              <div className="block lg:hidden w-full my-5">
-                <div className="relative w-full max-w-md mx-auto group overflow-hidden rounded-3xl border border-[#D4AF37]/35 bg-[#0D3B22]/40 p-2 shadow-2xl shadow-black/45">
-                  <div className="relative overflow-hidden rounded-2xl aspect-[4/3] sm:aspect-[16/10]">
-                    <img
-                      src={bgImageRelativePath}
-                      alt={course.nombre}
-                      className="h-full w-full object-cover"
-                    />
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/25 via-transparent to-transparent pointer-events-none" />
-                  </div>
-                </div>
+              <div className="mt-6 flex flex-wrap gap-x-6 gap-y-3 text-xs text-[#EAE2D0] sm:text-sm">
+                {duration ? (
+                  <span className="inline-flex items-center gap-2">
+                    <Clock3 className="h-4 w-4 text-[#D4AF37]" />
+                    {duration}
+                  </span>
+                ) : null}
+                <span className="inline-flex items-center gap-2">
+                  <Layers className="h-4 w-4 text-[#D4AF37]" />
+                  {modality}
+                </span>
+                <span className="inline-flex items-center gap-2">
+                  <CalendarDays className="h-4 w-4 text-[#D4AF37]" />
+                  {course.fechaTexto || "Próxima fecha por anunciar"}
+                </span>
               </div>
 
-              {/* Duration & Modality Row */}
-              <div className="flex flex-wrap gap-5 pt-1 text-xs sm:text-sm text-[#EAE2D0]">
-                <div className="flex items-center gap-2">
-                  <Clock3 className="h-4.5 w-4.5 text-[#D4AF37]" />
-                  <span>{course.duracion || duration}</span>
-                </div>
-                <div className="flex items-center gap-2">
-                  <CalendarDays className="h-4.5 w-4.5 text-[#D4AF37]" />
-                  <span>{course.modalidad || "Práctica presencial"}</span>
-                </div>
-              </div>
-
-              {/* Investment & Availability Highlights */}
-              <div className={`grid gap-2 sm:gap-4 border-t border-b border-white/10 py-4 my-4 max-w-xl text-center sm:text-left ${hasPublicPrice ? "grid-cols-3" : "grid-cols-2"}`}>
+              <div className="mt-7 grid max-w-lg grid-cols-2 gap-3 sm:grid-cols-3">
                 {hasPublicPrice ? (
-                  <div>
-                  <span className="text-[9px] sm:text-[10px] font-semibold uppercase tracking-[0.16em] text-[#D4AF37]">Inversión</span>
-                    <p className="mt-0.5 text-base font-bold text-white sm:text-2xl">{priceLabel(course.precioTotal)}</p>
+                  <div className="rounded-2xl border border-[#D4AF37]/25 bg-white/5 p-4 backdrop-blur-sm">
+                    <p className="text-[9px] font-semibold uppercase tracking-[0.16em] text-[#D4AF37]">Inversión</p>
+                    <p className="suvoga-serif mt-1 text-xl font-semibold text-white">{priceLabel(course.precioTotal)}</p>
                   </div>
                 ) : null}
-                <div>
-                  <span className="text-[9px] sm:text-[10px] font-semibold uppercase tracking-[0.16em] text-[#D4AF37]">Anticipo</span>
-                  <p className="mt-0.5 text-base font-bold text-white sm:text-2xl">{formatDop(course.montoAnticipo)}</p>
-                </div>
-                <div>
-                  <span className="text-[9px] sm:text-[10px] font-semibold uppercase tracking-[0.16em] text-[#D4AF37]">Cupos</span>
-                  <p className="mt-0.5 text-base font-bold text-white sm:text-2xl">{course.cuposTotales || 12} libres</p>
+                {memberPrice > 0 ? (
+                  <div className="rounded-2xl border border-[#D4AF37]/25 bg-white/5 p-4 backdrop-blur-sm">
+                    <p className="text-[9px] font-semibold uppercase tracking-[0.16em] text-[#D4AF37]">Miembros</p>
+                    <p className="suvoga-serif mt-1 text-xl font-semibold text-white">{formatDop(memberPrice)}</p>
+                  </div>
+                ) : null}
+                <div className="rounded-2xl border border-[#D4AF37]/25 bg-white/5 p-4 backdrop-blur-sm">
+                  <p className="text-[9px] font-semibold uppercase tracking-[0.16em] text-[#D4AF37]">Anticipo</p>
+                  <p className="suvoga-serif mt-1 text-xl font-semibold text-white">{formatDop(course.montoAnticipo || 1000)}</p>
                 </div>
               </div>
 
-              {/* CTA Action Button */}
-              <div className="pt-2">
+              <div className="mt-8">
                 <CourseHeroCTA course={course} />
               </div>
             </div>
 
-            {/* Right Column: Visual Course Image Frame - Desktop Only */}
-            <div className="hidden lg:flex lg:col-span-5 w-full justify-center">
-              <div className="relative w-full max-w-md lg:max-w-none group overflow-hidden rounded-[2rem] border border-[#D4AF37]/35 bg-[#0D3B22]/40 p-2.5 shadow-2xl shadow-black/45">
-                <div className="relative overflow-hidden rounded-[1.75rem] aspect-[4/3] sm:aspect-[16/10] lg:aspect-[4/3]">
-                  <img
-                    src={bgImageRelativePath}
-                    alt={course.nombre}
-                    className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-102"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-transparent pointer-events-none" />
-                </div>
+            <div className="relative">
+              <div className="overflow-hidden rounded-[2rem] border border-[#D4AF37]/35 bg-[#0D3B22]/40 p-2.5 shadow-2xl shadow-black/45">
+                <img
+                  src={courseImage(course)}
+                  alt={course.nombre}
+                  className="aspect-[4/3] w-full rounded-[1.75rem] object-cover"
+                />
               </div>
             </div>
           </div>
         </div>
       </section>
 
-      {/* Supporting Materials Section (Video & PDF Grid) */}
-      <section className="mx-auto max-w-7xl px-4 py-10 sm:px-6 lg:px-8 w-full max-w-full overflow-hidden">
-        <div className="mb-6">
-          <span className="text-xs font-semibold uppercase tracking-[0.2em] text-[#C5A028]">
-            Material de apoyo
-          </span>
-          <h2 className="suvoga-serif mt-2 text-2xl sm:text-3xl font-semibold text-[#0D3B22]">
-            Conoce el curso
-          </h2>
-        </div>
+      {/* STICKY SECTION NAV */}
+      <CourseSectionNav sections={sections} />
 
-        <div className="grid gap-6 md:grid-cols-2 w-full max-w-full min-w-0 overflow-hidden">
-          {/* Left Column: YouTube Video Embed */}
-          <div className="h-full w-full max-w-full min-w-0 overflow-hidden">
-            {isRealVideo ? (
-              <div className="h-full flex flex-col justify-between rounded-3xl border border-[#D4AF37]/20 bg-white p-5 sm:p-6 shadow-sm shadow-[#0D3B22]/5">
-                <div className="flex items-center gap-3 mb-4">
-                  <div className="inline-flex h-8 w-8 items-center justify-center rounded-xl border border-[#D4AF37]/30 bg-[#FDFBF7] text-[#0D3B22]">
-                    <Video className="h-4 w-4 text-[#C5A028]" />
-                  </div>
-                  <h3 className="suvoga-serif text-base sm:text-lg font-semibold text-[#0D3B22]">
-                    Video de Presentación
-                  </h3>
-                </div>
-                <div className="relative aspect-video w-full overflow-hidden rounded-2xl border border-[#D4AF37]/10 shadow-sm">
-                  <iframe
-                    src={course.youtube_url}
-                    title={`Presentación del curso ${course.nombre}`}
-                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                    allowFullScreen
-                    className="absolute inset-0 h-full w-full border-0"
-                  />
-                </div>
+      {/* CONTENT */}
+      <section className="mx-auto grid max-w-7xl gap-10 px-4 py-12 sm:px-6 lg:grid-cols-[1fr_360px] lg:px-8 lg:py-16">
+        <div className="min-w-0 space-y-12">
+          {/* Descripción */}
+          <article id="descripcion" className={sectionClass}>
+            <SectionTitle icon={Target} eyebrow="El programa" title="Descripción" />
+            <p className="mt-5 text-base leading-8 text-[#4E6658]">{cleanText(pc.description.value) || objective}</p>
+            {objective && objective !== cleanText(pc.description.value) ? (
+              <div className="mt-6 rounded-2xl border border-[#D4AF37]/25 bg-white p-5 shadow-sm">
+                <p className="text-xs font-semibold uppercase tracking-[0.14em] text-[#8D7530]">Objetivo</p>
+                <p className="mt-2 text-sm leading-7 text-[#4E6658]">{objective}</p>
               </div>
-            ) : (
-              <div className="h-full flex flex-col items-center justify-center text-center p-5 sm:p-6 rounded-3xl border border-dashed border-[#D4AF37]/45 bg-[#0D3B22]/5 min-h-[220px] w-full max-w-full min-w-0 overflow-hidden">
-                <Video className="h-7 w-7 text-[#C5A028] mb-3 shrink-0" />
-                <h3 className="suvoga-serif text-base font-semibold text-[#0D3B22] max-w-full break-words text-balance">
-                  Video de presentación próximamente
-                </h3>
-                <p className="text-[11px] text-[#6B6048] mt-2 max-w-xs leading-relaxed break-words text-balance">
-                  El video explicativo sobre la metodología de esta cohorte estará disponible próximamente.
-                </p>
-              </div>
-            )}
-          </div>
+            ) : null}
 
-          {/* Right Column: PDF Download / Syllabus Info */}
-          <div className="h-full w-full max-w-full min-w-0 overflow-hidden">
-            {course.pdf_drive_url ? (
-              <div className="h-full flex flex-col justify-between rounded-3xl border border-[#D4AF37]/20 bg-[#0D3B22] p-5 sm:p-6 shadow-md text-[#FDFBF7] min-h-[220px] w-full max-w-full min-w-0 overflow-hidden">
-                <div className="space-y-3">
-                  <div className="inline-flex h-8 w-8 items-center justify-center rounded-xl border border-white/20 bg-white/5 text-[#FDFBF7]">
-                    <FileText className="h-4 w-4 text-[#D4AF37]" />
+            {(profile.length || requirements.length) ? (
+              <div className="mt-6 grid gap-5 sm:grid-cols-2">
+                {profile.length ? (
+                  <InfoCard icon={UserCheck} title="Para quién es">
+                    <BulletList items={profile} />
+                  </InfoCard>
+                ) : null}
+                {requirements.length ? (
+                  <InfoCard icon={ListChecks} title="Requisitos">
+                    <BulletList items={requirements} />
+                  </InfoCard>
+                ) : null}
+              </div>
+            ) : null}
+          </article>
+
+          {/* Lo que aprenderás */}
+          {learn.length ? (
+            <article id="aprenderas" className={sectionClass}>
+              <SectionTitle icon={GraduationCap} eyebrow="Resultados" title="Lo que aprenderás" />
+              <div className="mt-5 grid gap-3 sm:grid-cols-2">
+                {learn.map((item, i) => (
+                  <div key={i} className="flex gap-3 rounded-2xl border border-[#0D3B22]/10 bg-white p-4 shadow-sm">
+                    <span className="inline-flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-[#0D3B22] text-[11px] font-bold text-[#F4E6BE]">
+                      {i + 1}
+                    </span>
+                    <p className="text-sm leading-6 text-[#4E6658]">{item}</p>
                   </div>
-                  <h3 className="suvoga-serif text-lg sm:text-xl font-semibold text-white max-w-full break-words text-balance">
-                    Plan de Estudios Completo
-                  </h3>
-                  <p className="text-xs text-[#EAE2D0] leading-relaxed break-words text-balance">
-                    Descarga el temario oficial en PDF. Incluye el cronograma de clases, requisitos prácticos, normas de egreso y políticas académicas completas.
+                ))}
+              </div>
+            </article>
+          ) : null}
+
+          {/* Temario */}
+          {modules.length ? (
+            <article id="temario" className={sectionClass}>
+              <SectionTitle icon={ScrollText} eyebrow="Contenido" title="Temario" />
+              <div className="mt-5">
+                <CourseSyllabus modules={modules} />
+              </div>
+              {hasPdf ? (
+                <div className="mt-6">
+                  <CoursePdfResource url={course.pdf_drive_url} courseName={course.nombre} />
+                </div>
+              ) : null}
+            </article>
+          ) : null}
+
+          {/* Prácticas, materiales, indicaciones */}
+          {(practices.length || materials.length || indications.length || contraindications.length) ? (
+            <article id="practicas" className={sectionClass}>
+              <SectionTitle icon={Sparkles} eyebrow="Experiencia formativa" title="Prácticas y materiales" />
+              <div className="mt-5 grid gap-5 sm:grid-cols-2">
+                {practices.length ? (
+                  <InfoCard icon={Sparkles} title="Prácticas supervisadas">
+                    <BulletList items={practices} />
+                  </InfoCard>
+                ) : null}
+                {materials.length ? (
+                  <InfoCard icon={Check} title="El programa incluye">
+                    <BulletList items={materials} />
+                  </InfoCard>
+                ) : null}
+              </div>
+
+              {(indications.length || contraindications.length) ? (
+                <div className="mt-5 grid gap-5 sm:grid-cols-2">
+                  {indications.length ? (
+                    <InfoCard icon={Check} title="Indicaciones">
+                      <BulletList items={indications} />
+                    </InfoCard>
+                  ) : null}
+                  {contraindications.length ? (
+                    <InfoCard icon={ShieldAlert} title="Contraindicaciones" tone="warn">
+                      <BulletList items={contraindications} tone="warn" />
+                    </InfoCard>
+                  ) : null}
+                </div>
+              ) : null}
+            </article>
+          ) : null}
+
+          {/* Inversión */}
+          <article id="inversion" className={sectionClass}>
+            <SectionTitle icon={BadgeCheck} eyebrow="Plan de inversión" title="Inversión" />
+            <div className="mt-5 grid gap-3 sm:grid-cols-3">
+              {hasPublicPrice ? (
+                <PriceCard label="Público general" value={priceLabel(course.precioTotal)} />
+              ) : null}
+              {memberPrice > 0 ? (
+                <PriceCard label="Miembros ASNaMaTeM" value={formatDop(memberPrice)} />
+              ) : null}
+              <PriceCard label="Anticipo de reserva" value={formatDop(course.montoAnticipo || 1000)} highlight />
+            </div>
+            {paymentPlan.length ? (
+              <div className="mt-5 rounded-2xl border border-[#D4AF37]/25 bg-white p-5 shadow-sm">
+                <p className="text-xs font-semibold uppercase tracking-[0.14em] text-[#8D7530]">Plan de pago</p>
+                <BulletList items={paymentPlan} className="mt-3" />
+              </div>
+            ) : null}
+            <p className="mt-4 text-xs leading-6 text-[#6B6048]">
+              {reservationNote
+                ? `${reservationNote}. `
+                : "El anticipo no es reembolsable ni transferible a otro curso. "}
+              Se descuenta del precio total del programa.
+            </p>
+          </article>
+
+          {/* Certificación */}
+          {(certifications.length || facilitator) ? (
+            <article id="certificacion" className={sectionClass}>
+              <SectionTitle icon={Award} eyebrow="Respaldo" title="Certificación" />
+              <div className="mt-5 grid gap-5 sm:grid-cols-2">
+                {certifications.length ? (
+                  <InfoCard icon={Award} title="Al finalizar recibes">
+                    <BulletList items={certifications} />
+                  </InfoCard>
+                ) : null}
+                {facilitator ? (
+                  <div className="rounded-2xl border border-[#D4AF37]/25 bg-white p-5 shadow-sm">
+                    <p className="text-xs font-semibold uppercase tracking-[0.14em] text-[#8D7530]">Facilitadora</p>
+                    <p className="suvoga-serif mt-2 text-lg font-semibold text-[#0D3B22]">{facilitator}</p>
+                    <p className="mt-1 text-xs text-[#6B6048]">Directora de SuVoGa Escuela y Centro de Masajes</p>
+                  </div>
+                ) : null}
+              </div>
+              {record.requiresLegalReview ? (
+                <div className="mt-5 flex items-start gap-3 rounded-2xl border border-[#D4AF37]/35 bg-[#0D3B22]/[0.03] p-5">
+                  <ShieldAlert className="mt-0.5 h-5 w-5 shrink-0 text-[#C5A028]" />
+                  <p className="text-xs leading-6 text-[#4E6658]">
+                    Este programa aborda técnicas profesionales que pueden estar reguladas.
+                    Está dirigido a personal autorizado y su ejercicio queda sujeto a la
+                    legislación local; la formación no habilita por sí sola para ejercer
+                    fuera del marco legal vigente.
                   </p>
                 </div>
-                <div className="mt-5">
-                  <Link
-                    href={course.pdf_drive_url}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="inline-flex h-11 w-full items-center justify-center gap-2 rounded-2xl bg-[#D4AF37] px-6 text-sm font-semibold text-[#0D3B22] shadow-md hover:bg-[#C5A028] transition-all duration-300 hover:scale-[1.01]"
-                  >
-                    <Download className="h-4 w-4" />
-                    Ver temario del curso
-                  </Link>
-                </div>
-              </div>
-            ) : (
-              <div className="h-full flex flex-col items-center justify-center text-center p-5 sm:p-6 rounded-3xl border border-dashed border-[#D4AF37]/45 bg-[#0D3B22]/5 min-h-[220px] w-full max-w-full min-w-0 overflow-hidden">
-                <Download className="h-7 w-7 text-[#C5A028] mb-3 shrink-0" />
-                <h3 className="suvoga-serif text-base font-semibold text-[#0D3B22] max-w-full break-words text-balance">
-                  Programa PDF disponible próximamente
-                </h3>
-                <p className="text-[11px] text-[#6B6048] mt-2 max-w-xs leading-relaxed break-words text-balance">
-                  El dossier informativo y temario detallado de esta formación se encuentra en revisión académica.
-                </p>
-              </div>
-            )}
-          </div>
-        </div>
-      </section>
+              ) : null}
+            </article>
+          ) : null}
 
-      {/* Repeated CTA after supporting materials */}
-      <section className="mx-auto max-w-7xl px-4 pb-10 sm:px-6 lg:px-8 w-full max-w-full overflow-hidden">
-        <div className="rounded-3xl border border-[#D4AF37]/35 bg-[#0D3B22] p-6 sm:p-8 text-center text-[#FDFBF7] shadow-xl relative overflow-hidden">
-          <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(212,175,55,0.12),transparent_70%)] pointer-events-none" />
-          <h3 className="suvoga-serif text-xl sm:text-3xl font-semibold text-white leading-tight">
-            Comienza tu formación en {course.nombre}
-          </h3>
-          <p className="mt-3 text-xs sm:text-sm text-[#EAE2D0] max-w-xl mx-auto leading-relaxed">
-            Reserva tu cupo hoy mismo para asegurar tu camilla y acompañamiento directo en esta cohorte de cupos reducidos.
-          </p>
-          <div className="mt-6 flex flex-col sm:flex-row items-center justify-center gap-4">
-            <div className="w-full sm:w-auto">
-              <CourseHeroCTA course={course} />
-            </div>
-            <Link
-              href="/"
-              className="text-xs sm:text-sm font-semibold uppercase tracking-wider text-[#D4AF37] hover:text-[#C5A028] transition-colors underline underline-offset-4 decoration-[#D4AF37]/30"
-            >
-              Explorar otros cursos
-            </Link>
-          </div>
-        </div>
-      </section>
+          {/* Recursos */}
+          {(hasVideo || hasPdf) ? (
+            <article id="recursos" className={sectionClass}>
+              <SectionTitle icon={ScrollText} eyebrow="Material de apoyo" title="Recursos" />
+              <div className="mt-5 space-y-5">
+                {hasVideo ? <YouTubeLiteEmbed url={course.youtube_url} title={course.nombre} /> : null}
+                {hasPdf ? <CoursePdfResource url={course.pdf_drive_url} courseName={course.nombre} /> : null}
+              </div>
+            </article>
+          ) : null}
 
-      {/* Main Content Details Grid */}
-      <section className="mx-auto grid max-w-7xl gap-8 px-4 py-8 sm:px-6 lg:grid-cols-[1fr_380px] lg:px-8 lg:py-12 w-full max-w-full overflow-hidden">
-        {/* Left Column: Academic Content */}
-        <div className="space-y-8">
-          {/* Resumen del programa Section */}
-          <article className="rounded-3xl border border-[#D4AF37]/25 bg-white p-6 shadow-sm shadow-[#0D3B22]/5 sm:p-8">
-            <span className="text-xs font-semibold uppercase tracking-[0.2em] text-[#C5A028]">
-              Resumen del programa
-            </span>
-            <h2 className="suvoga-serif mt-3 text-3xl font-semibold leading-tight text-[#0D3B22]">
-              Una formación diseñada para el éxito práctico.
-            </h2>
-            <p className="mt-4 text-base leading-relaxed text-[#4E6658]">
-              {course.description}
-            </p>
-
-            {/* 3 Key Benefits */}
-            <div className="mt-6 grid gap-4 sm:grid-cols-3">
-              <div className="rounded-2xl bg-[#FDFBF7] border border-[#0D3B22]/10 p-4">
-                <h4 className="font-semibold text-sm text-[#0D3B22]">Práctica Intensiva Real</h4>
-                <p className="text-xs text-[#6B6048] mt-1">
-                  Clases prácticas guiadas sobre camilla con retroalimentación en tiempo real.
-                </p>
-              </div>
-              <div className="rounded-2xl bg-[#FDFBF7] border border-[#0D3B22]/10 p-4">
-                <h4 className="font-semibold text-sm text-[#0D3B22]">Grupos Exclusivos</h4>
-                <p className="text-xs text-[#6B6048] mt-1">
-                  Máximo 12 participantes para asegurar atención personalizada del facilitador.
-                </p>
-              </div>
-              <div className="rounded-2xl bg-[#FDFBF7] border border-[#0D3B22]/10 p-4">
-                <h4 className="font-semibold text-sm text-[#0D3B22]">Salida Laboral Premium</h4>
-                <p className="text-xs text-[#6B6048] mt-1">
-                  Técnicas y protocolos alineados a los estándares de spas de alta gama.
-                </p>
-              </div>
-            </div>
-
-            {/* Ideal para... */}
-            <div className="mt-6 border-t border-[#0D3B22]/10 pt-5">
-              <h4 className="font-semibold text-[#0D3B22] text-sm">Ideal para:</h4>
-              <ul className="mt-2 grid gap-2 text-xs text-[#4E6658] sm:grid-cols-2">
-                <li className="flex items-center gap-2">
-                  <span className="h-1.5 w-1.5 rounded-full bg-[#D4AF37]" />
-                  Principiantes que desean iniciar en la terapia de masajes.
-                </li>
-                <li className="flex items-center gap-2">
-                  <span className="h-1.5 w-1.5 rounded-full bg-[#D4AF37]" />
-                  Profesionales de la salud y estética corporal.
-                </li>
-                <li className="flex items-center gap-2">
-                  <span className="h-1.5 w-1.5 rounded-full bg-[#D4AF37]" />
-                  Emprendedores en el sector de bienestar y spa.
-                </li>
-                <li className="flex items-center gap-2">
-                  <span className="h-1.5 w-1.5 rounded-full bg-[#D4AF37]" />
-                  Terapeutas que buscan certificar sus conocimientos.
-                </li>
-              </ul>
-            </div>
-          </article>
-
-          {/* Confianza y resultados Section */}
-          <article className="rounded-3xl border border-[#D4AF37]/25 bg-white p-6 shadow-sm shadow-[#0D3B22]/5 sm:p-8 space-y-6">
-            <div>
-              <span className="text-xs font-semibold uppercase tracking-[0.2em] text-[#C5A028]">
-                Seguridad y Calidad
-              </span>
-              <h2 className="suvoga-serif mt-2 text-3xl font-semibold text-[#0D3B22]">
-                Confianza y resultados
-              </h2>
-            </div>
-
-            {/* Trust Points Grid */}
-            <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4 pt-2">
-              <div className="flex items-start gap-2.5 p-3 rounded-2xl bg-[#0D3B22]/[0.02] border border-[#0D3B22]/5">
-                <div className="h-2 w-2 rounded-full bg-[#D4AF37] mt-2 shrink-0" />
-                <div>
-                  <h4 className="font-semibold text-xs text-[#0D3B22]">Cupos Limitados</h4>
-                  <p className="text-[10px] text-[#6B6048] mt-0.5">Máximo 12 estudiantes por cohorte académica.</p>
-                </div>
-              </div>
-              <div className="flex items-start gap-2.5 p-3 rounded-2xl bg-[#0D3B22]/[0.02] border border-[#0D3B22]/5">
-                <div className="h-2 w-2 rounded-full bg-[#D4AF37] mt-2 shrink-0" />
-                <div>
-                  <h4 className="font-semibold text-xs text-[#0D3B22]">Formación Práctica</h4>
-                  <p className="text-[10px] text-[#6B6048] mt-0.5">Prácticas reales en cabina y camillas de spa.</p>
-                </div>
-              </div>
-              <div className="flex items-start gap-2.5 p-3 rounded-2xl bg-[#0D3B22]/[0.02] border border-[#0D3B22]/5">
-                <div className="h-2 w-2 rounded-full bg-[#D4AF37] mt-2 shrink-0" />
-                <div>
-                  <h4 className="font-semibold text-xs text-[#0D3B22]">Certificación Oficial</h4>
-                  <p className="text-[10px] text-[#6B6048] mt-0.5">Diploma oficial avalado por la academia SuVoGa.</p>
-                </div>
-              </div>
-              <div className="flex items-start gap-2.5 p-3 rounded-2xl bg-[#0D3B22]/[0.02] border border-[#0D3B22]/5">
-                <div className="h-2 w-2 rounded-full bg-[#D4AF37] mt-2 shrink-0" />
-                <div>
-                  <h4 className="font-semibold text-xs text-[#0D3B22]">Acompañamiento</h4>
-                  <p className="text-[10px] text-[#6B6048] mt-0.5">Mentoría directa del docente durante el aprendizaje.</p>
-                </div>
-              </div>
-            </div>
-
-            {/* Testimonial / Egresada Grid */}
-            <div className="border-t border-[#0D3B22]/10 pt-6 grid gap-6 md:grid-cols-2">
-              {/* Testimonio */}
-              <div className="space-y-3">
-                <h4 className="text-xs font-semibold uppercase tracking-wider text-[#8D7530]">Experiencia en este programa</h4>
-                {relatedTestimonial ? (
-                  <div className="relative p-4 rounded-2xl bg-[#FDFBF7] border border-[#D4AF37]/20 shadow-sm">
-                    <Quote className="absolute top-2 right-2 h-8 w-8 text-[#D4AF37]/10 pointer-events-none" />
-                    <p className="text-xs italic leading-relaxed text-[#4E6658]">
-                      &ldquo;{relatedTestimonial.comentario}&rdquo;
-                    </p>
-                    <div className="mt-3 flex items-center gap-2 pt-2 border-t border-[#0D3B22]/5">
-                      <img src={relatedTestimonial.imagen_url} alt={relatedTestimonial.nombre} className="h-6 w-6 rounded-full object-cover" />
-                      <div>
-                        <span className="text-xs font-bold text-[#0D3B22] block leading-none">{relatedTestimonial.nombre}</span>
-                        <span className="text-[9px] text-[#8D7530]">{relatedTestimonial.fuente}</span>
-                      </div>
-                    </div>
-                  </div>
-                ) : (
-                  <div className="p-4 rounded-2xl bg-[#FDFBF7]/50 border border-dashed border-[#0D3B22]/10 flex flex-col items-center justify-center text-center min-h-[120px]">
-                    <span className="text-xs text-[#6B6048] italic">
-                      Este espacio estará reservado para testimonios reales de alumnas de este programa.
-                    </span>
-                  </div>
-                )}
-              </div>
-
-              {/* Egresada Destacada */}
-              <div className="space-y-3">
-                <h4 className="text-xs font-semibold uppercase tracking-wider text-[#8D7530]">Egresada destacada</h4>
-                {relatedGraduate ? (
-                  <div className="flex items-center gap-4 p-4 rounded-2xl bg-[#FDFBF7] border border-[#D4AF37]/20 shadow-sm">
-                    <img src={relatedGraduate.imagen_url} alt={relatedGraduate.nombre} className="h-14 w-14 rounded-2xl object-cover border border-[#D4AF37]/30" />
-                    <div>
-                      <h5 className="suvoga-serif text-sm font-bold text-[#0D3B22]">{relatedGraduate.nombre}</h5>
-                      <p className="text-[10px] text-[#8D7530] font-semibold">{relatedGraduate.cohorte}</p>
-                      <span className="inline-flex items-center gap-1 rounded bg-[#0D3B22]/10 border border-[#0D3B22]/20 px-1.5 py-0.5 text-[9px] font-bold text-[#0D3B22] mt-1.5">
-                        {relatedGraduate.estado}
-                      </span>
-                    </div>
-                  </div>
-                ) : (
-                  <div className="p-4 rounded-2xl bg-[#FDFBF7]/50 border border-dashed border-[#0D3B22]/10 flex flex-col items-center justify-center text-center min-h-[120px]">
-                    <span className="text-xs text-[#6B6048] italic">
-                      Próximamente se listarán perfiles destacados de egresadas de esta formación.
-                    </span>
-                  </div>
-                )}
-              </div>
-            </div>
-          </article>
-
-          {/* Contacto Directo Section */}
-          <article className="rounded-3xl border border-[#D4AF37]/25 bg-white p-6 shadow-sm shadow-[#0D3B22]/5 sm:p-8 space-y-4">
-            <div>
-              <span className="text-xs font-semibold uppercase tracking-[0.2em] text-[#C5A028]">
-                ¿Tienes dudas sobre la inscripción o la academia?
-              </span>
-              <h2 className="suvoga-serif mt-2 text-2xl font-semibold text-[#0D3B22]">
-                Ponte en contacto directo
-              </h2>
-              <p className="text-xs text-[#6B6048] mt-1 leading-relaxed">
-                Estamos disponibles para ayudarte a elegir el mejor programa y resolver tus preguntas sobre horarios, pagos y certificación.
-              </p>
-            </div>
-            
-            <div className="grid gap-4 sm:grid-cols-2 pt-2">
-              <div className="flex items-start gap-3 p-3 rounded-2xl bg-[#0D3B22]/[0.02] border border-[#0D3B22]/5">
-                <div className="h-2 w-2 rounded-full bg-[#D4AF37] mt-2 shrink-0" />
-                <div className="text-xs">
-                  <span className="font-semibold text-[#0D3B22] block">Horario de Atención</span>
-                  <span className="text-[#6B6048]">{contactInfo.horario}</span>
-                </div>
-              </div>
-              <div className="flex items-start gap-3 p-3 rounded-2xl bg-[#0D3B22]/[0.02] border border-[#0D3B22]/5">
-                <div className="h-2 w-2 rounded-full bg-[#D4AF37] mt-2 shrink-0" />
-                <div className="text-xs text-[#6B6048]">
-                  <span className="font-semibold text-[#0D3B22] block text-xs">Ubicación y Zona</span>
-                  <span>{contactInfo.ubicacion}</span>
-                </div>
-              </div>
-            </div>
-
-            <div className="flex flex-wrap gap-3 pt-2">
-              <a
-                href={contactInfo.whatsapp.link}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-[#0D3B22] hover:text-[#C5A028] bg-[#FDFBF7] border border-[#D4AF37]/30 hover:bg-[#F7F1E7] rounded-xl px-4 py-2.5 transition-all shadow-sm"
-              >
-                <MessageCircle className="h-4 w-4 text-[#C5A028]" />
-                Hablar por WhatsApp
-              </a>
-              <a
-                href={contactInfo.instagram.link}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-[#0D3B22] hover:text-[#C5A028] bg-[#FDFBF7] border border-[#D4AF37]/30 hover:bg-[#F7F1E7] rounded-xl px-4 py-2.5 transition-all shadow-sm"
-              >
-                <Instagram className="h-4 w-4 text-[#C5A028]" />
-                Ver Instagram
-              </a>
-            </div>
-          </article>
-
-          {/* Mobile Reservation Card (Only Visible on Mobile/Tablet) */}
-          <div className="block lg:hidden">
+          {/* Mobile reservation */}
+          <div className="lg:hidden">
             <CourseLandingSignup course={course} />
           </div>
-
-          {/* Qué aprenderás Section */}
-          <article className="rounded-3xl border border-[#D4AF37]/25 bg-white p-6 shadow-sm shadow-[#0D3B22]/5 sm:p-8">
-            <div className="flex items-center gap-3">
-              <div className="inline-flex h-10 w-10 items-center justify-center rounded-xl border border-[#D4AF37]/30 bg-[#FDFBF7] text-[#0D3B22]">
-                <BookOpen className="h-5 w-5 text-[#C5A028]" />
-              </div>
-              <h2 className="suvoga-serif text-2xl font-semibold text-[#0D3B22]">
-                Contenido Curricular: Qué aprenderás
-              </h2>
-            </div>
-
-            <div className="mt-8 grid gap-4 sm:grid-cols-2">
-              {whatYouWillLearnList.map((item, index) => (
-                <div
-                  key={index}
-                  className="flex gap-4 rounded-2xl border border-[#0D3B22]/10 bg-[#FDFBF7] p-5 hover:border-[#D4AF37]/50 transition-colors duration-300"
-                >
-                  <div className="inline-flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-[#0D3B22] text-[#FDFBF7] text-xs font-bold">
-                    {index + 1}
-                  </div>
-                  <p className="text-sm leading-6 text-[#4E6658]">{item}</p>
-                </div>
-              ))}
-            </div>
-          </article>
-
-          {/* Includes Section (if has inclusions) */}
-          {includesList.length > 0 && (
-            <article className="rounded-3xl border border-[#D4AF37]/25 bg-white p-6 shadow-sm shadow-[#0D3B22]/5 sm:p-8">
-              <div className="flex items-center gap-3">
-                <div className="inline-flex h-10 w-10 items-center justify-center rounded-xl border border-[#D4AF37]/30 bg-[#FDFBF7] text-[#0D3B22]">
-                  <FileText className="h-5 w-5 text-[#C5A028]" />
-                </div>
-                <h2 className="suvoga-serif text-2xl font-semibold text-[#0D3B22]">
-                  El Programa Incluye
-                </h2>
-              </div>
-              <div className="mt-6 grid gap-4 sm:grid-cols-2">
-                {includesList.map((item, index) => (
-                  <div
-                    key={index}
-                    className="flex gap-3 items-start p-3 bg-[#0D3B22]/[0.02] border border-[#0D3B22]/5 rounded-2xl"
-                  >
-                    <Check className="h-5 w-5 text-[#C5A028] shrink-0 mt-0.5" />
-                    <span className="text-sm text-[#4E6658] leading-relaxed">{item}</span>
-                  </div>
-                ))}
-              </div>
-            </article>
-          )}
-
-          {/* Para quién es Section (if has target audience) */}
-          {forWhoList.length > 0 && (
-            <article className="rounded-3xl border border-[#D4AF37]/25 bg-white p-6 shadow-sm shadow-[#0D3B22]/5 sm:p-8">
-              <div className="flex items-center gap-3">
-                <div className="inline-flex h-10 w-10 items-center justify-center rounded-xl border border-[#D4AF37]/30 bg-[#FDFBF7] text-[#0D3B22]">
-                  <UserCheck className="h-5 w-5 text-[#C5A028]" />
-                </div>
-                <h2 className="suvoga-serif text-2xl font-semibold text-[#0D3B22]">
-                  ¿Para quién es esta formación?
-                </h2>
-              </div>
-              <div className="mt-6 space-y-4">
-                {forWhoList.map((item, index) => (
-                  <div
-                    key={index}
-                    className="flex gap-4 items-start border-b border-[#0D3B22]/5 pb-4 last:border-b-0 last:pb-0"
-                  >
-                    <div className="h-2 w-2 rounded-full bg-[#D4AF37] mt-2 shrink-0" />
-                    <span className="text-sm text-[#4E6658] leading-relaxed">{item}</span>
-                  </div>
-                ))}
-              </div>
-            </article>
-          )}
         </div>
 
-        {/* Right Column: Sticky Sidebar Reservation Card (Desktop Only) */}
-        <div className="hidden lg:block">
+        {/* Sticky sidebar */}
+        <aside className="hidden lg:block">
           <CourseLandingSignup course={course} />
+        </aside>
+      </section>
+
+      {/* Related strip */}
+      <section className="border-t border-[#D4AF37]/20 bg-[#F6EFE2]/50">
+        <div className="mx-auto max-w-7xl px-4 py-12 text-center sm:px-6 lg:px-8">
+          <h2 className="suvoga-serif text-2xl font-semibold text-[#0D3B22]">Explora más formaciones</h2>
+          <p className="mx-auto mt-2 max-w-xl text-sm text-[#4E6658]">
+            Descubre el catálogo completo de SuVoGa Academia y encuentra tu próximo paso profesional.
+          </p>
+          <Link
+            href="/cursos"
+            className="mt-6 inline-flex h-12 items-center justify-center gap-2 rounded-2xl bg-[#0D3B22] px-7 text-sm font-semibold text-[#FDFBF7] transition-colors hover:bg-[#145332]"
+          >
+            <Users className="h-4 w-4" />
+            Ver todos los cursos
+          </Link>
         </div>
       </section>
     </main>
+  );
+}
+
+// --- Small presentational helpers (server components) -------------------------
+
+function SectionTitle({
+  icon: Icon,
+  eyebrow,
+  title,
+}: {
+  icon: React.ComponentType<{ className?: string }>;
+  eyebrow: string;
+  title: string;
+}) {
+  return (
+    <div className="flex items-center gap-3">
+      <span className="inline-flex h-11 w-11 items-center justify-center rounded-2xl border border-[#D4AF37]/30 bg-white text-[#C5A028]">
+        <Icon className="h-5 w-5" />
+      </span>
+      <div>
+        <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-[#C5A028]">{eyebrow}</p>
+        <h2 className="suvoga-serif text-2xl font-semibold leading-tight text-[#0D3B22]">{title}</h2>
+      </div>
+    </div>
+  );
+}
+
+function InfoCard({
+  icon: Icon,
+  title,
+  tone = "default",
+  children,
+}: {
+  icon: React.ComponentType<{ className?: string }>;
+  title: string;
+  tone?: "default" | "warn";
+  children: React.ReactNode;
+}) {
+  return (
+    <div
+      className={`rounded-2xl border p-5 shadow-sm ${
+        tone === "warn" ? "border-[#C9913A]/30 bg-[#FBF4E6]" : "border-[#D4AF37]/25 bg-white"
+      }`}
+    >
+      <p className="flex items-center gap-2 text-sm font-semibold text-[#0D3B22]">
+        <Icon className="h-4 w-4 text-[#C5A028]" />
+        {title}
+      </p>
+      <div className="mt-3">{children}</div>
+    </div>
+  );
+}
+
+function BulletList({
+  items,
+  tone = "default",
+  className = "",
+}: {
+  items: string[];
+  tone?: "default" | "warn";
+  className?: string;
+}) {
+  return (
+    <ul className={`space-y-2 ${className}`}>
+      {items.map((item, i) => (
+        <li key={i} className="flex items-start gap-2.5 text-sm leading-6 text-[#4E6658]">
+          <Check className={`mt-0.5 h-4 w-4 shrink-0 ${tone === "warn" ? "text-[#C9913A]" : "text-[#C5A028]"}`} />
+          <span>{item}</span>
+        </li>
+      ))}
+    </ul>
+  );
+}
+
+function PriceCard({ label, value, highlight = false }: { label: string; value: string; highlight?: boolean }) {
+  return (
+    <div
+      className={`rounded-2xl border p-5 text-center shadow-sm ${
+        highlight ? "border-[#0D3B22] bg-[#0D3B22] text-[#FDFBF7]" : "border-[#D4AF37]/25 bg-white text-[#0D3B22]"
+      }`}
+    >
+      <p className={`text-[10px] font-semibold uppercase tracking-[0.14em] ${highlight ? "text-[#D4AF37]" : "text-[#8D7530]"}`}>
+        {label}
+      </p>
+      <p className="suvoga-serif mt-2 text-2xl font-semibold">{value}</p>
+    </div>
   );
 }

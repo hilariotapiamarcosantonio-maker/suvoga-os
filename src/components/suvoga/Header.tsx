@@ -31,11 +31,14 @@ export function Header() {
   }, [isOpen]);
 
   const navLinks = [
-    { label: "Cursos", href: "/#cursos-disponibles" },
-    { label: "Historias", href: "/#historias" },
-    { label: "Comunidad", href: "/#footer" },
-    { label: "Contacto", href: "/#footer" },
+    { label: "Cursos", href: "/cursos" },
+    { label: "Historias", href: "/historias" },
+    { label: "Comunidad", href: "/comunidad" },
+    { label: "Contacto", href: "/contacto" },
   ];
+
+  const isActive = (href: string) =>
+    href === "/" ? pathname === "/" : pathname === href || pathname.startsWith(`${href}/`);
 
   const handleLinkClick = (e: React.MouseEvent<HTMLAnchorElement>, href: string) => {
     setIsOpen(false);
@@ -116,10 +119,17 @@ export function Header() {
               key={link.label}
               href={link.href}
               onClick={(e) => handleLinkClick(e, link.href)}
-              className="text-xs font-semibold uppercase tracking-widest text-[#0D3B22] hover:text-[#C5A028] transition-colors relative py-1 group"
+              aria-current={isActive(link.href) ? "page" : undefined}
+              className={`text-xs font-semibold uppercase tracking-widest transition-colors relative py-1 group ${
+                isActive(link.href) ? "text-[#C5A028]" : "text-[#0D3B22] hover:text-[#C5A028]"
+              }`}
             >
               {link.label}
-              <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-[#D4AF37] transition-all duration-300 group-hover:w-full" />
+              <span
+                className={`absolute bottom-0 left-0 h-0.5 bg-[#D4AF37] transition-all duration-300 ${
+                  isActive(link.href) ? "w-full" : "w-0 group-hover:w-full"
+                }`}
+              />
             </Link>
           ))}
         </div>
@@ -127,8 +137,8 @@ export function Header() {
         {/* Desktop CTA Button */}
         <div className="hidden md:flex items-center">
           <Link
-            href="/#cursos-disponibles"
-            onClick={(e) => handleLinkClick(e, "/#cursos-disponibles")}
+            href="/cursos"
+            onClick={(e) => handleLinkClick(e, "/cursos")}
             className="inline-flex h-11 items-center justify-center gap-1.5 rounded-2xl border border-[#D4AF37]/35 bg-[#0D3B22] px-5 text-sm font-semibold text-[#FDFBF7] shadow-sm shadow-[#0D3B22]/10 transition-colors hover:bg-[#145332]"
           >
             Ver cursos
