@@ -30,7 +30,7 @@ export function cleanLabeledValue(value?: string) {
 // Leading glyphs observed in the source documents that should be stripped
 // before display (avoids the Unicode property-escape regex flag, which this
 // project's TypeScript target does not support).
-const LEADING_GLYPHS = "*✅✔✨•📖🎓💰🔒💚🍇🍫☕🧖🏅📘👐🔒🎗";
+const LEADING_GLYPHS = "#*✅✔✨•📖🎓💰🔒💚🍇🍫☕🧖🏅📘👐🔒🎗";
 
 // Markers that, in the contaminated `duracion` field, signal where the real
 // duration text ends and other (misclassified) data begins.
