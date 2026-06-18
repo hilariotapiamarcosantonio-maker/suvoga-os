@@ -4,7 +4,7 @@ function unauthorized() {
   return new NextResponse("Authentication required", {
     status: 401,
     headers: {
-      "WWW-Authenticate": 'Basic realm="SuVoGa OS"',
+      "WWW-Authenticate": 'Basic realm="SuVoGa Academia"',
     },
   });
 }

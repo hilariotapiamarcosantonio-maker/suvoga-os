@@ -1,0 +1,127 @@
+{
+  "courseUid": "taller-de-elaboracion-de-velas-artesanales",
+  "sourceId": "CUR-015",
+  "legacyIds": [
+    "CUR-016"
+  ],
+  "slug": "taller-de-elaboracion-de-velas-artesanales",
+  "title": "Taller de Elaboración de Velas Artesanales",
+  "requiresOwnerReview": false,
+  "requiresLegalReview": false,
+  "pendingOwnerReview": false,
+  "publicationStatus": "published",
+  "sourceRaw": {
+    "heading": "### 📘 CUR-015 \\- **🕯️ TALLER DE ELABORACIÓN DE VELAS ARTESANALES**",
+    "markdown": "### 📘 CUR-015 \\- **🕯️ TALLER DE ELABORACIÓN DE VELAS ARTESANALES**\n\n### **Categoría Actual:** \\[Categoría\\]\n\n* **Descripción en Plataforma:** \\> \\[Descripción editable: Ingrese aquí los detalles formativos, objetivos y alcances del taller para la revisión final.\\]  \n*   \n* **SuVoGa Escuela y Centro de Masajes**  \n   **Facilitadora:** Sugeidy Vólquez García  \n   **Modalidad:** Teórico \\- Práctico  \n   **Duración:** 4 a 6 horas\n\n* ## **OBJETIVO GENERAL**\n\n* Capacitar a los participantes en la elaboración de velas artesanales decorativas y aromáticas, desarrollando habilidades creativas y conocimientos básicos sobre materiales, técnicas de fabricación, seguridad y comercialización.\n\n### **Inversión y Reserva**\n\n* ### **Miembros ASNaMaTeM:** 2500\n\n* ### **Público General:** RD$3000\n\n* ### **Reservación:** RD$1,000 *(No reembolsable Ni transferible a otro curso)* TEMARIO\n\n  ---\n\n  TEMARIO DEL TALLER\n\n  MÓDULO I: INTRODUCCIÓN A LA VELERÍA ARTESANAL\n\n* Historia y evolución de las velas.  \n* Tipos de velas artesanales.  \n* Beneficios y usos de las velas.  \n* Tendencias actuales del mercado.  \n  MÓDULO II: MATERIALES Y HERRAMIENTAS  \n* Tipos de ceras:  \n  * Parafina.  \n  * Cera de soya 464 Y 494\\.  \n  * Cera de abeja.  \n  * Cera de coco.  \n  * Cera de arena  \n  * Cera de Gel  \n  * Cera de Palma  \n* Tipos de mechas y sus características.  \n* Colorantes para velas.  \n* Fragancias y aceites esenciales.  \n* Moldes y recipientes.  \n* Equipos y utensilios básicos.  \n  MÓDULO III: NORMAS DE SEGURIDAD E HIGIENE  \n* Manipulación segura de materiales calientes.  \n* Prevención de accidentes.  \n* Higiene en el área de trabajo.  \n* Conservación y almacenamiento de insumos.  \n  MÓDULO IV: TÉCNICAS DE ELABORACIÓN  \n  Velas en Recipientes  \n* Preparación del recipiente.  \n* Colocación de la mecha.  \n* Mezcla de colores y fragancias.  \n* Vertido correcto de la cera.  \n  Velas Moldeadas  \n* Preparación de moldes.  \n* Técnicas de desmolde.  \n* Acabados profesionales.  \n  Velas Decorativas  \n* Velas multicolor.  \n* Velas con inclusiones decorativas.  \n* Velas temáticas y personalizadas.  \n  MÓDULO V: AROMATERAPIA Y VELAS  \n* Introducción a la aromaterapia.  \n* Propiedades de los aceites esenciales.  \n* Combinación de aromas.  \n* Elaboración de velas aromáticas relajantes y terapéuticas.  \n  MÓDULO VI: DECORACIÓN Y PRESENTACIÓN  \n* Técnicas de decoración artesanal.  \n* Etiquetado profesional.  \n* Empaque y presentación comercial.  \n* Diseño de líneas de productos.  \n  MÓDULO VII: COSTOS Y COMERCIALIZACIÓN  \n* Cálculo de costos de producción.  \n* Determinación del precio de venta.  \n* Estrategias básicas de marketing.  \n* Ventas por redes sociales.  \n* Atención al cliente y fidelización.  \n  PRÁCTICA FINAL\n\nCada participante elaborará:\n\n* 1 Vela aromática en recipiente.  \n* 1 Vela decorativa moldeada.  \n* 1 Vela personalizada con color y fragancia.  \n* Empaque y presentación final del producto.  \n  ---\n\n  MATERIALES INCLUIDOS\n\n✅ Cera para elaboración de velas.  \n ✅ Mechas.  \n ✅ Colorantes.  \n ✅ Fragancias.  \n ✅ Moldes básicos.  \n ✅ Recipientes para velas.  \n ✅ Material decorativo.\n\n---\n\nAL FINALIZAR EL TALLER EL PARTICIPANTE SERÁ CAPAZ DE:\n\n✔ Elaborar velas artesanales decorativas y aromáticas.  \n ✔ Seleccionar adecuadamente materiales e insumos.  \n ✔ Aplicar técnicas seguras de fabricación.  \n ✔ Diseñar productos atractivos para la venta.  \n ✔ Calcular costos y comercializar sus creaciones.\n\n**Certificado de Participación Avalado por SuVoGa Escuela y Centro de Masajes.**\n\n*Elaborado por: Sugeidy Vólquez García – Directora de SuVoGa Escuela y Centro de Masajes.* 🕯️✨",
+    "lineStart": 1075,
+    "lineEnd": 1190
+  },
+  "publicCopy": {
+    "title": "Taller de Elaboración de Velas Artesanales",
+    "subtitle": "SuVoGa Escuela y Centro de Masajes",
+    "category": {
+      "value": "\\[Categoría\\]",
+      "pendingOwnerReview": false
+    },
+    "description": {
+      "value": "Descripción en Plataforma: \\> \\[Descripción editable: Ingrese aquí los detalles formativos, objetivos y alcances del taller para la revisión final.\\]",
+      "pendingOwnerReview": false
+    },
+    "pricing": {
+      "publicPrice": {
+        "amount": 3000,
+        "currency": "DOP",
+        "raw": "Público General: RD$3000",
+        "pendingOwnerReview": false
+      },
+      "memberPrice": {
+        "amount": 2500,
+        "currency": "DOP",
+        "raw": "Miembros ASNaMaTeM: 2500",
+        "pendingOwnerReview": false
+      },
+      "reservation": {
+        "amount": 1000,
+        "currency": "DOP",
+        "raw": "Reservación: RD$1,000 (No reembolsable Ni transferible a otro curso) TEMARIO",
+        "pendingOwnerReview": false
+      },
+      "paymentPlan": [
+        "Reservación: RD$1,000 (No reembolsable Ni transferible a otro curso) TEMARIO"
+      ],
+      "rawLines": [
+        "Miembros ASNaMaTeM: 2500",
+        "Público General: RD$3000",
+        "Reservación: RD$1,000 (No reembolsable Ni transferible a otro curso) TEMARIO"
+      ],
+      "pendingOwnerReview": false
+    },
+    "schedule": {
+      "dateText": "Próxima fecha por anunciar",
+      "duration": {
+        "value": "Duración: 4 a 6 horas",
+        "pendingOwnerReview": false
+      },
+      "modality": {
+        "value": "Modalidad: Teórico - Práctico",
+        "pendingOwnerReview": false
+      },
+      "rawLines": [
+        "Modalidad: Teórico - Práctico",
+        "Duración: 4 a 6 horas"
+      ],
+      "pendingOwnerReview": false
+    },
+    "objectives": [
+      "OBJETIVO GENERAL",
+      "Capacitar a los participantes en la elaboración de velas artesanales decorativas y aromáticas, desarrollando habilidades creativas y conocimientos básicos sobre materiales, técnicas de fabricación, seguridad y comercialización.",
+      "Inversión y Reserva",
+      "Miembros ASNaMaTeM: 2500",
+      "Público General: RD$3000",
+      "Reservación: RD$1,000 (No reembolsable Ni transferible a otro curso) TEMARIO"
+    ],
+    "profile": [],
+    "requirements": [],
+    "syllabusMarkdown": "* ### **Reservación:** RD$1,000 *(No reembolsable Ni transferible a otro curso)* TEMARIO\n\n  ---\n\n  TEMARIO DEL TALLER\n\n  MÓDULO I: INTRODUCCIÓN A LA VELERÍA ARTESANAL\n\n* Historia y evolución de las velas.\n* Tipos de velas artesanales.\n* Beneficios y usos de las velas.\n* Tendencias actuales del mercado.\n  MÓDULO II: MATERIALES Y HERRAMIENTAS\n* Tipos de ceras:\n  * Parafina.\n  * Cera de soya 464 Y 494\\.\n  * Cera de abeja.\n  * Cera de coco.\n  * Cera de arena\n  * Cera de Gel\n  * Cera de Palma\n* Tipos de mechas y sus características.\n* Colorantes para velas.\n* Fragancias y aceites esenciales.\n* Moldes y recipientes.\n* Equipos y utensilios básicos.\n  MÓDULO III: NORMAS DE SEGURIDAD E HIGIENE\n* Manipulación segura de materiales calientes.\n* Prevención de accidentes.\n* Higiene en el área de trabajo.\n* Conservación y almacenamiento de insumos.\n  MÓDULO IV: TÉCNICAS DE ELABORACIÓN\n  Velas en Recipientes\n* Preparación del recipiente.\n* Colocación de la mecha.\n* Mezcla de colores y fragancias.\n* Vertido correcto de la cera.\n  Velas Moldeadas\n* Preparación de moldes.\n* Técnicas de desmolde.\n* Acabados profesionales.\n  Velas Decorativas\n* Velas multicolor.\n* Velas con inclusiones decorativas.\n* Velas temáticas y personalizadas.\n  MÓDULO V: AROMATERAPIA Y VELAS\n* Introducción a la aromaterapia.\n* Propiedades de los aceites esenciales.\n* Combinación de aromas.\n* Elaboración de velas aromáticas relajantes y terapéuticas.\n  MÓDULO VI: DECORACIÓN Y PRESENTACIÓN\n* Técnicas de decoración artesanal.\n* Etiquetado profesional.\n* Empaque y presentación comercial.\n* Diseño de líneas de productos.\n  MÓDULO VII: COSTOS Y COMERCIALIZACIÓN\n* Cálculo de costos de producción.\n* Determinación del precio de venta.\n* Estrategias básicas de marketing.\n* Ventas por redes sociales.\n* Atención al cliente y fidelización.\n  PRÁCTICA FINAL\n\nCada participante elaborará:\n\n* 1 Vela aromática en recipiente.\n* 1 Vela decorativa moldeada.\n* 1 Vela personalizada con color y fragancia.\n* Empaque y presentación final del producto.\n  ---",
+    "indications": [],
+    "contraindications": [],
+    "practices": [
+      "PRÁCTICA FINAL",
+      "Cada participante elaborará:",
+      "1 Vela aromática en recipiente.",
+      "1 Vela decorativa moldeada.",
+      "1 Vela personalizada con color y fragancia.",
+      "Empaque y presentación final del producto."
+    ],
+    "materials": [
+      "MATERIALES INCLUIDOS",
+      "✅ Cera para elaboración de velas.",
+      "✅ Mechas.",
+      "✅ Colorantes.",
+      "✅ Fragancias.",
+      "✅ Moldes básicos.",
+      "✅ Recipientes para velas.",
+      "✅ Material decorativo.",
+      "AL FINALIZAR EL TALLER EL PARTICIPANTE SERÁ CAPAZ DE:",
+      "✔ Elaborar velas artesanales decorativas y aromáticas.",
+      "✔ Seleccionar adecuadamente materiales e insumos.",
+      "✔ Aplicar técnicas seguras de fabricación.",
+      "✔ Diseñar productos atractivos para la venta.",
+      "✔ Calcular costos y comercializar sus creaciones.",
+      "Certificado de Participación Avalado por SuVoGa Escuela y Centro de Masajes.",
+      "Elaborado por: Sugeidy Vólquez García – Directora de SuVoGa Escuela y Centro de Masajes. 🕯️✨"
+    ],
+    "competencies": [],
+    "certifications": [
+      "Certificado de Participación Avalado por SuVoGa Escuela y Centro de Masajes."
+    ],
+    "endorsements": [
+      "Miembros ASNaMaTeM: 2500",
+      "Certificado de Participación Avalado por SuVoGa Escuela y Centro de Masajes."
+    ],
+    "facilitator": "Sugeidy Vólquez García",
+    "legalNotes": [],
+    "professionalNotes": [],
+    "normalizedMarkdown": "### 📘 CUR-015 \\- **🕯️ TALLER DE ELABORACIÓN DE VELAS ARTESANALES**\n\n### **Categoría Actual:** \\[Categoría\\]\n\n* **Descripción en Plataforma:** \\> \\[Descripción editable: Ingrese aquí los detalles formativos, objetivos y alcances del taller para la revisión final.\\]\n*\n* **SuVoGa Escuela y Centro de Masajes**\n   **Facilitadora:** Sugeidy Vólquez García\n   **Modalidad:** Teórico \\- Práctico\n   **Duración:** 4 a 6 horas\n\n* ## **OBJETIVO GENERAL**\n\n* Capacitar a los participantes en la elaboración de velas artesanales decorativas y aromáticas, desarrollando habilidades creativas y conocimientos básicos sobre materiales, técnicas de fabricación, seguridad y comercialización.\n\n### **Inversión y Reserva**\n\n* ### **Miembros ASNaMaTeM:** 2500\n\n* ### **Público General:** RD$3000\n\n* ### **Reservación:** RD$1,000 *(No reembolsable Ni transferible a otro curso)* TEMARIO\n\n  ---\n\n  TEMARIO DEL TALLER\n\n  MÓDULO I: INTRODUCCIÓN A LA VELERÍA ARTESANAL\n\n* Historia y evolución de las velas.\n* Tipos de velas artesanales.\n* Beneficios y usos de las velas.\n* Tendencias actuales del mercado.\n  MÓDULO II: MATERIALES Y HERRAMIENTAS\n* Tipos de ceras:\n  * Parafina.\n  * Cera de soya 464 Y 494\\.\n  * Cera de abeja.\n  * Cera de coco.\n  * Cera de arena\n  * Cera de Gel\n  * Cera de Palma\n* Tipos de mechas y sus características.\n* Colorantes para velas.\n* Fragancias y aceites esenciales.\n* Moldes y recipientes.\n* Equipos y utensilios básicos.\n  MÓDULO III: NORMAS DE SEGURIDAD E HIGIENE\n* Manipulación segura de materiales calientes.\n* Prevención de accidentes.\n* Higiene en el área de trabajo.\n* Conservación y almacenamiento de insumos.\n  MÓDULO IV: TÉCNICAS DE ELABORACIÓN\n  Velas en Recipientes\n* Preparación del recipiente.\n* Colocación de la mecha.\n* Mezcla de colores y fragancias.\n* Vertido correcto de la cera.\n  Velas Moldeadas\n* Preparación de moldes.\n* Técnicas de desmolde.\n* Acabados profesionales.\n  Velas Decorativas\n* Velas multicolor.\n* Velas con inclusiones decorativas.\n* Velas temáticas y personalizadas.\n  MÓDULO V: AROMATERAPIA Y VELAS\n* Introducción a la aromaterapia.\n* Propiedades de los aceites esenciales.\n* Combinación de aromas.\n* Elaboración de velas aromáticas relajantes y terapéuticas.\n  MÓDULO VI: DECORACIÓN Y PRESENTACIÓN\n* Técnicas de decoración artesanal.\n* Etiquetado profesional.\n* Empaque y presentación comercial.\n* Diseño de líneas de productos.\n  MÓDULO VII: COSTOS Y COMERCIALIZACIÓN\n* Cálculo de costos de producción.\n* Determinación del precio de venta.\n* Estrategias básicas de marketing.\n* Ventas por redes sociales.\n* Atención al cliente y fidelización.\n  PRÁCTICA FINAL\n\nCada participante elaborará:\n\n* 1 Vela aromática en recipiente.\n* 1 Vela decorativa moldeada.\n* 1 Vela personalizada con color y fragancia.\n* Empaque y presentación final del producto.\n  ---\n\n  MATERIALES INCLUIDOS\n\n✅ Cera para elaboración de velas.\n ✅ Mechas.\n ✅ Colorantes.\n ✅ Fragancias.\n ✅ Moldes básicos.\n ✅ Recipientes para velas.\n ✅ Material decorativo.\n\n---\n\nAL FINALIZAR EL TALLER EL PARTICIPANTE SERÁ CAPAZ DE:\n\n✔ Elaborar velas artesanales decorativas y aromáticas.\n ✔ Seleccionar adecuadamente materiales e insumos.\n ✔ Aplicar técnicas seguras de fabricación.\n ✔ Diseñar productos atractivos para la venta.\n ✔ Calcular costos y comercializar sus creaciones.\n\n**Certificado de Participación Avalado por SuVoGa Escuela y Centro de Masajes.**\n\n*Elaborado por: Sugeidy Vólquez García – Directora de SuVoGa Escuela y Centro de Masajes.* 🕯️✨"
+  }
+}

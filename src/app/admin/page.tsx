@@ -118,6 +118,9 @@ export default async function AdminPage() {
     const balancePendiente = anticipo?.balancePendiente ?? 0;
     const estadoAsistencia = inscripcion.estadoAsistencia || "";
     const estadoPago = anticipo?.estadoPago || "";
+    const esRegistroPrueba =
+      Boolean(inscripcion.esRegistroPrueba) ||
+      Boolean(paciente?.esRegistroPrueba);
 
     return {
       idInscripcion: inscripcion.idInscripcion,
@@ -133,6 +136,9 @@ export default async function AdminPage() {
       montoPagado,
       balancePendiente,
       crmStatus: deriveCrmStatus(estadoAsistencia, estadoPago, montoPagado, balancePendiente),
+      esRegistroPrueba,
+      origenRegistro: inscripcion.origenRegistro || paciente?.origenRegistro || "",
+      notaInterna: inscripcion.notaInterna || paciente?.notaInterna || "",
     };
   });
 

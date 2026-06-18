@@ -6,6 +6,7 @@ import { usePathname } from "next/navigation";
 import { motion, AnimatePresence, useReducedMotion, type Variants } from "framer-motion";
 import { Menu, X, Leaf, MessageCircle, ArrowRight } from "lucide-react";
 import { contactInfo } from "@/data/contact";
+import { brand } from "@/lib/brand";
 
 export function Header() {
   const [isOpen, setIsOpen] = useState(false);
@@ -100,10 +101,10 @@ export function Header() {
           </span>
           <span className="flex flex-col leading-none">
             <span className="suvoga-serif text-lg md:text-2xl font-semibold tracking-normal text-[#0D3B22]">
-              SuVoGa OS
+              {brand.productName}
             </span>
             <span className="mt-0.5 md:mt-1 text-[9px] md:text-[11px] font-semibold uppercase tracking-[0.18em] text-[#8A7D69]">
-              Escuela & Spa
+              Masoterapia · Estética · Bienestar
             </span>
           </span>
         </Link>
@@ -170,10 +171,10 @@ export function Header() {
                 </span>
                 <span className="flex flex-col leading-none">
                   <span className="suvoga-serif text-lg font-semibold tracking-normal text-white">
-                    SuVoGa OS
+                    {brand.productName}
                   </span>
                   <span className="mt-0.5 text-[9px] font-semibold uppercase tracking-[0.18em] text-[#D4AF37]">
-                    Escuela & Spa
+                    Masoterapia · Estética · Bienestar
                   </span>
                 </span>
               </Link>
@@ -241,7 +242,7 @@ export function Header() {
                 <span>Hablar por WhatsApp</span>
               </a>
               <p className="text-center text-[10px] tracking-widest uppercase text-[#8A7D69] mt-2">
-                SuVoGa Academia · Premium Experience
+                {brand.productName} · Experiencia académica
               </p>
             </motion.div>
           </motion.div>

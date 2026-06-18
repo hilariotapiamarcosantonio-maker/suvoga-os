@@ -1,0 +1,129 @@
+{
+  "courseUid": "diplomado-de-masaje-corporal",
+  "sourceId": "CUR-003",
+  "legacyIds": [
+    "CUR-003"
+  ],
+  "slug": "diplomado-de-masaje-corporal",
+  "title": "Diplomado de Masaje Corporal",
+  "requiresOwnerReview": true,
+  "requiresLegalReview": true,
+  "pendingOwnerReview": true,
+  "publicationStatus": "published",
+  "sourceRaw": {
+    "heading": "### 📘 CUR-003 \\- Diplomado de Masaje Corporal",
+    "markdown": "### 📘 CUR-003 \\- Diplomado de Masaje Corporal\n\n* **Categoría Actual:** Diplomado\n\n**Lema:** Aprende, transforma y sana con tus manos   \n**Horario:** 2:00 PM a 5:00 PM  \n**Modalidad:** Presencial y Online  \n**Certificación:** Incluida\n\n### **Inversión**\n\n* **Inversión total:** $10,000  \n* **Reservación:** $1,000 (para asegurar el cupo)  \n  Primer dia de clases 3,000  \n* Tercer dia clase 3,000  \n* Quinto dia clases 3,000\n\n### **Beneficios del Diplomado**\n\n* Aprenderás técnicas profesionales con instructores certificados.  \n* Desarrollarás habilidades prácticas y teóricas desde el primer día.  \n* Certificación avalada por SuVoGa Escuelas de Masajes.  \n* Mejora tu bienestar y el de los demás.  \n* Oportunidad de emprender y generar ingresos.\n\n### **Contenido del Diplomado**\n\n1. **Fundamentos del Masaje Corporal**  \n   * Introducción al masaje y anatomía básica.  \n   * Principios, contraindicaciones y ética profesional.  \n2. **Técnicas Básicas de Masaje**  \n   * Maniobras esenciales.  \n   * Effleurage, petrissage, fricciones, presiones y percusiones.  \n3. **Masaje Relajante**  \n   * Técnicas de relajación muscular.  \n   * Bienestar físico y mental.  \n4. **Masaje Descontracturante y Ventosas**  \n   * Liberación de tensiones musculares.  \n   * Aplicación de ventosas (cupping therapy).  \n5. **Drenaje Linfático Manual**  \n   * Técnicas para activar el sistema linfático.  \n   * Beneficios estéticos y terapéuticos.  \n6. **Maderoterapia y Aparatología**  \n   * Uso de instrumentos de madera.  \n   * Aplicación de aparatología corporal.  \n7. **Chocolaterapia, Exfoliación y Presoterapia**  \n   * Tratamientos corporales revitalizantes.  \n   * Exfoliación y masaje con piedras frías.  \n8. **Protocolos Integrales y Práctica Supervisada**  \n   * Integración de técnicas aprendidas.  \n   * Prácticas supervisadas y evaluación final.  \n* **Cierre:** ¡Tu futuro comienza con tus manos\\!\n\n**Miembros de ASNaMaTeM: $8,000 *(Incluye logo de ASNaMaTeM)*** \n\n**Nota aclaratoria:** A diferencia del primer folleto (Drenaje Linfático Post Operatorio), este arte de Masaje Corporal **no contiene** ninguna mención, descuento ni el logotipo de **ASNaMaTeM** (Asociación Nacional de Masajistas y Terapeutas en Masajes).",
+    "lineStart": 72,
+    "lineEnd": 128
+  },
+  "publicCopy": {
+    "title": "Diplomado de Masaje Corporal",
+    "subtitle": "Lema: Aprende, transforma y sana con tus manos",
+    "category": {
+      "value": "Diplomado",
+      "pendingOwnerReview": false
+    },
+    "description": {
+      "value": "Aprenderás técnicas profesionales con instructores certificados.",
+      "pendingOwnerReview": false
+    },
+    "pricing": {
+      "publicPrice": {
+        "amount": 10000,
+        "currency": "DOP",
+        "raw": "Inversión total: $10,000",
+        "pendingOwnerReview": false
+      },
+      "memberPrice": {
+        "amount": 8000,
+        "currency": "DOP",
+        "raw": "Miembros de ASNaMaTeM: $8,000 (Incluye logo de ASNaMaTeM)",
+        "pendingOwnerReview": false
+      },
+      "reservation": {
+        "amount": 1000,
+        "currency": "DOP",
+        "raw": "Reservación: $1,000 (para asegurar el cupo)",
+        "pendingOwnerReview": false
+      },
+      "paymentPlan": [
+        "Reservación: $1,000 (para asegurar el cupo)",
+        "Primer dia de clases 3,000",
+        "Tercer dia clase 3,000",
+        "Quinto dia clases 3,000"
+      ],
+      "rawLines": [
+        "Inversión total: $10,000",
+        "Reservación: $1,000 (para asegurar el cupo)",
+        "Primer dia de clases 3,000",
+        "Tercer dia clase 3,000",
+        "Quinto dia clases 3,000",
+        "Miembros de ASNaMaTeM: $8,000 (Incluye logo de ASNaMaTeM)"
+      ],
+      "pendingOwnerReview": false
+    },
+    "schedule": {
+      "dateText": "Próxima fecha por anunciar",
+      "duration": {
+        "value": "",
+        "pendingOwnerReview": true
+      },
+      "modality": {
+        "value": "Modalidad: Presencial y Online",
+        "pendingOwnerReview": false
+      },
+      "rawLines": [
+        "Horario: 2:00 PM a 5:00 PM",
+        "Modalidad: Presencial y Online"
+      ],
+      "pendingOwnerReview": true
+    },
+    "objectives": [],
+    "profile": [],
+    "requirements": [],
+    "syllabusMarkdown": "### 📘 CUR-003 \\- Diplomado de Masaje Corporal\n\n* **Categoría Actual:** Diplomado\n\n**Lema:** Aprende, transforma y sana con tus manos\n**Horario:** 2:00 PM a 5:00 PM\n**Modalidad:** Presencial y Online",
+    "indications": [],
+    "contraindications": [],
+    "practices": [
+      "Desarrollarás habilidades prácticas y teóricas desde el primer día.",
+      "Certificación avalada por SuVoGa Escuelas de Masajes.",
+      "Mejora tu bienestar y el de los demás.",
+      "Oportunidad de emprender y generar ingresos.",
+      "Contenido del Diplomado",
+      "1. Fundamentos del Masaje Corporal",
+      "Introducción al masaje y anatomía básica.",
+      "Principios, contraindicaciones y ética profesional.",
+      "2. Técnicas Básicas de Masaje",
+      "Maniobras esenciales.",
+      "Effleurage, petrissage, fricciones, presiones y percusiones.",
+      "3. Masaje Relajante",
+      "Técnicas de relajación muscular.",
+      "Bienestar físico y mental.",
+      "4. Masaje Descontracturante y Ventosas",
+      "Liberación de tensiones musculares.",
+      "Aplicación de ventosas (cupping therapy).",
+      "5. Drenaje Linfático Manual"
+    ],
+    "materials": [],
+    "competencies": [],
+    "certifications": [
+      "📘 CUR-003 - Diplomado de Masaje Corporal",
+      "Categoría Actual: Diplomado",
+      "Certificación: Incluida",
+      "Beneficios del Diplomado",
+      "Aprenderás técnicas profesionales con instructores certificados.",
+      "Certificación avalada por SuVoGa Escuelas de Masajes.",
+      "Contenido del Diplomado"
+    ],
+    "endorsements": [
+      "Miembros de ASNaMaTeM: $8,000 (Incluye logo de ASNaMaTeM)",
+      "Nota aclaratoria: A diferencia del primer folleto (Drenaje Linfático Post Operatorio), este arte de Masaje Corporal no contiene ninguna mención, descuento ni el logotipo de ASNaMaTeM (Asociación Nacional de Masajistas y Terapeutas en Masajes)."
+    ],
+    "facilitator": "Sugeidy Vólquez García",
+    "legalNotes": [
+      "Principios, contraindicaciones y ética profesional."
+    ],
+    "professionalNotes": [],
+    "normalizedMarkdown": "### 📘 CUR-003 \\- Diplomado de Masaje Corporal\n\n* **Categoría Actual:** Diplomado\n\n**Lema:** Aprende, transforma y sana con tus manos\n**Horario:** 2:00 PM a 5:00 PM\n**Modalidad:** Presencial y Online\n**Certificación:** Incluida\n\n### **Inversión**\n\n* **Inversión total:** $10,000\n* **Reservación:** $1,000 (para asegurar el cupo)\n  Primer dia de clases 3,000\n* Tercer dia clase 3,000\n* Quinto dia clases 3,000\n\n### **Beneficios del Diplomado**\n\n* Aprenderás técnicas profesionales con instructores certificados.\n* Desarrollarás habilidades prácticas y teóricas desde el primer día.\n* Certificación avalada por SuVoGa Escuelas de Masajes.\n* Mejora tu bienestar y el de los demás.\n* Oportunidad de emprender y generar ingresos.\n\n### **Contenido del Diplomado**\n\n1. **Fundamentos del Masaje Corporal**\n   * Introducción al masaje y anatomía básica.\n   * Principios, contraindicaciones y ética profesional.\n2. **Técnicas Básicas de Masaje**\n   * Maniobras esenciales.\n   * Effleurage, petrissage, fricciones, presiones y percusiones.\n3. **Masaje Relajante**\n   * Técnicas de relajación muscular.\n   * Bienestar físico y mental.\n4. **Masaje Descontracturante y Ventosas**\n   * Liberación de tensiones musculares.\n   * Aplicación de ventosas (cupping therapy).\n5. **Drenaje Linfático Manual**\n   * Técnicas para activar el sistema linfático.\n   * Beneficios estéticos y terapéuticos.\n6. **Maderoterapia y Aparatología**\n   * Uso de instrumentos de madera.\n   * Aplicación de aparatología corporal.\n7. **Chocolaterapia, Exfoliación y Presoterapia**\n   * Tratamientos corporales revitalizantes.\n   * Exfoliación y masaje con piedras frías.\n8. **Protocolos Integrales y Práctica Supervisada**\n   * Integración de técnicas aprendidas.\n   * Prácticas supervisadas y evaluación final.\n* **Cierre:** ¡Tu futuro comienza con tus manos\\!\n\n**Miembros de ASNaMaTeM: $8,000 *(Incluye logo de ASNaMaTeM)***\n\n**Nota aclaratoria:** A diferencia del primer folleto (Drenaje Linfático Post Operatorio), este arte de Masaje Corporal **no contiene** ninguna mención, descuento ni el logotipo de **ASNaMaTeM** (Asociación Nacional de Masajistas y Terapeutas en Masajes)."
+  }
+}

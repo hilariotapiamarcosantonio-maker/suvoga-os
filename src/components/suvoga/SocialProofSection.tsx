@@ -4,6 +4,7 @@ import { motion, useReducedMotion } from "framer-motion";
 import { Star, GraduationCap, Video, Quote, ArrowUpRight, Award } from "lucide-react";
 import { studentTestimonials, googleReviews } from "@/data/testimonials";
 import { graduatesList } from "@/data/graduates";
+import { findSuvogaCourseByIdentifier } from "@/data/courses";
 
 const staggerContainer = {
   hidden: { opacity: 0 },
@@ -15,6 +16,15 @@ const staggerContainer = {
     }
   }
 };
+
+function graduateCourseHref(courseId?: string) {
+  if (!courseId) return null;
+
+  const course = findSuvogaCourseByIdentifier(courseId);
+  if (!course) return null;
+
+  return `/curso/${course.slug || course.idServicio}`;
+}
 
 export function SocialProofSection() {
   const shouldReduceMotion = useReducedMotion();
@@ -196,7 +206,10 @@ export function SocialProofSection() {
           whileInView="visible"
           viewport={{ once: true, margin: "-100px" }}
         >
-          {graduatesList.map((graduate) => (
+          {graduatesList.map((graduate) => {
+            const courseHref = graduateCourseHref(graduate.curso_id);
+
+            return (
             <motion.article
               key={graduate.id}
               variants={activeFadeInUp}
@@ -241,9 +254,9 @@ export function SocialProofSection() {
                 <p className="text-xs text-[#4E6658] font-medium line-clamp-1">
                   {graduate.cursoCompletado}
                 </p>
-                {graduate.curso_id && (
+                {courseHref && (
                   <motion.a
-                    href={`/curso/${graduate.curso_id}`}
+                    href={courseHref}
                     whileHover={{ x: 3 }}
                     className="inline-flex items-center gap-1 text-[11px] font-bold uppercase tracking-wider text-[#0D3B22] hover:text-[#C5A028]"
                   >
@@ -253,7 +266,8 @@ export function SocialProofSection() {
                 )}
               </div>
             </motion.article>
-          ))}
+            );
+          })}
         </motion.div>
         
         {/* Gallery reference warning label */}

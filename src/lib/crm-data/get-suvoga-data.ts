@@ -2,7 +2,11 @@ import "server-only";
 
 import fs from "node:fs/promises";
 import path from "node:path";
-import { genericCourseDescription, suvogaCourses } from "@/data/courses";
+import {
+  findSuvogaCourseByLegacyId,
+  genericCourseDescription,
+  suvogaCourses,
+} from "@/data/courses";
 import { getSheetsClient } from "../google-sheets";
 
 const SHEETS = {
@@ -19,6 +23,9 @@ type SheetRow = Record<string, RawValue | undefined>;
 type Source = "google-sheets" | "local-fallback";
 
 export type SuvogaServicio = {
+  courseUid?: string;
+  sourceId?: string;
+  legacyIds?: string[];
   idServicio: string;
   nombre: string;
   tipo: "Curso" | "Spa" | string;
@@ -33,6 +40,7 @@ export type SuvogaServicio = {
   subtitulo_premium?: string;
   duracion?: string;
   modalidad?: string;
+  fechaTexto?: string;
   incluye?: string[];
   para_quien_es?: string[];
   que_aprenderas?: string[];
@@ -44,6 +52,10 @@ export type SuvogaServicio = {
   certificado_incluido?: boolean;
   estado_publicacion?: string;
   orden_destacado?: number;
+  publicationStatus?: string;
+  pendingOwnerReview?: boolean;
+  requiresOwnerReview?: boolean;
+  requiresLegalReview?: boolean;
 };
 
 export type SuvogaProgramacionCurso = {
@@ -61,6 +73,9 @@ export type SuvogaPaciente = {
   cedula: string;
   provincia: string;
   fechaRegistro: string;
+  esRegistroPrueba?: boolean;
+  origenRegistro?: string;
+  notaInterna?: string;
 };
 
 export type SuvogaInscripcionCita = {
@@ -69,6 +84,9 @@ export type SuvogaInscripcionCita = {
   idServicio: string;
   fechaProgramada: string;
   estadoAsistencia: string;
+  esRegistroPrueba?: boolean;
+  origenRegistro?: string;
+  notaInterna?: string;
 };
 
 export type SuvogaAnticipo = {
@@ -146,6 +164,13 @@ const FIELD_ALIASES: Record<string, string[]> = {
   cedula: ["Cedula", "cedula"],
   provincia: ["Provincia", "provincia"],
   fecha_registro: ["Fecha_Registro", "fechaRegistro", "fecha_registro"],
+  es_registro_prueba: [
+    "Es_Registro_Prueba",
+    "esRegistroPrueba",
+    "es_registro_prueba",
+  ],
+  origen_registro: ["Origen_Registro", "origenRegistro", "origen_registro"],
+  nota_interna: ["Nota_Interna", "notaInterna", "nota_interna"],
   id_inscripcion: ["ID_Inscripcion", "idInscripcion", "id_inscripcion"],
   fecha_programada: ["Fecha_Programada", "fechaProgramada", "fecha_programada"],
   estado_asistencia: [
@@ -220,8 +245,16 @@ function readNumber(row: Record<string, RawValue>, aliases: string[]) {
   return parseNumber(readValue(row, aliases));
 }
 
+function readBoolean(row: Record<string, RawValue>, aliases: string[]) {
+  const normalized = String(readValue(row, aliases) ?? "")
+    .trim()
+    .toLowerCase();
+  return ["true", "1", "si", "sí", "yes"].includes(normalized);
+}
+
 function findStaticServicio(idServicio: string, nombre: string) {
   return (
+    findSuvogaCourseByLegacyId(idServicio) ??
     suvogaCourses.find((course) => course.idServicio === idServicio) ??
     suvogaCourses.find(
       (course) => normalizeKey(course.nombre) === normalizeKey(nombre)
@@ -452,6 +485,9 @@ function mapPaciente(row: Record<string, RawValue>): SuvogaPaciente {
     cedula: readString(row, FIELD_ALIASES.cedula),
     provincia: readString(row, FIELD_ALIASES.provincia),
     fechaRegistro: readString(row, FIELD_ALIASES.fecha_registro),
+    esRegistroPrueba: readBoolean(row, FIELD_ALIASES.es_registro_prueba),
+    origenRegistro: readString(row, FIELD_ALIASES.origen_registro),
+    notaInterna: readString(row, FIELD_ALIASES.nota_interna),
   };
 }
 
@@ -462,6 +498,9 @@ function mapInscripcion(row: Record<string, RawValue>): SuvogaInscripcionCita {
     idServicio: readString(row, FIELD_ALIASES.id_servicio),
     fechaProgramada: readString(row, FIELD_ALIASES.fecha_programada),
     estadoAsistencia: readString(row, FIELD_ALIASES.estado_asistencia),
+    esRegistroPrueba: readBoolean(row, FIELD_ALIASES.es_registro_prueba),
+    origenRegistro: readString(row, FIELD_ALIASES.origen_registro),
+    notaInterna: readString(row, FIELD_ALIASES.nota_interna),
   };
 }
 

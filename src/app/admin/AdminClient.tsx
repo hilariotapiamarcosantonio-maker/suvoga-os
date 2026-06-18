@@ -39,6 +39,9 @@ export type AdminCrmRow = {
   montoPagado: number;
   balancePendiente: number;
   crmStatus: string;
+  esRegistroPrueba?: boolean;
+  origenRegistro?: string;
+  notaInterna?: string;
 };
 
 /** Legacy alias kept so other imports don't break */
@@ -144,7 +147,7 @@ function cleanPhoneForWhatsapp(phone: string) {
 function whatsappHref(phone: string, name: string, curso: string) {
   const cleaned = cleanPhoneForWhatsapp(phone);
   if (!cleaned) return "";
-  const msg = `Hola ${name}. Te escribimos de SuVoGa Escuela de Masajes para confirmar tu solicitud para ${curso}.`;
+  const msg = `Hola ${name}. Te escribimos de SuVoGa Academia para confirmar tu solicitud para ${curso}.`;
   return `https://wa.me/${cleaned}?text=${encodeURIComponent(msg)}`;
 }
 
@@ -299,44 +302,50 @@ export function AdminClient({
   const [courseFormError, setCourseFormError] = useState("");
   const [localCrmStatus, setLocalCrmStatus] = useState<Record<string, string>>({});
   const [expandedRow, setExpandedRow] = useState<string | null>(null);
+  const [includeTestRecords, setIncludeTestRecords] = useState(false);
 
-  const pendingCount = crmRows.filter((r) => isPending(r.crmStatus)).length;
-  const paidCount = crmRows.filter((r) => !isPending(r.crmStatus)).length;
+  const visibleCrmRows = useMemo(
+    () => includeTestRecords ? crmRows : crmRows.filter((row) => !row.esRegistroPrueba),
+    [crmRows, includeTestRecords]
+  );
+  const testRecordCount = crmRows.filter((row) => row.esRegistroPrueba).length;
+  const pendingCount = visibleCrmRows.filter((r) => isPending(localCrmStatus[r.idInscripcion] || r.crmStatus)).length;
+  const paidCount = visibleCrmRows.filter((r) => !isPending(localCrmStatus[r.idInscripcion] || r.crmStatus)).length;
   const selectedCourse = catalogCourses.find((c) => c.idServicio === courseId);
   const dayGrid = getDayGrid(currentMonth);
 
   // Dashboard KPIs
   const topCourses = useMemo(() => {
     const counts: Record<string, { nombre: string; count: number }> = {};
-    for (const row of crmRows) {
+    for (const row of visibleCrmRows) {
       const key = row.cursoNombre;
       if (!counts[key]) counts[key] = { nombre: key, count: 0 };
       counts[key].count += 1;
     }
     return Object.values(counts).sort((a, b) => b.count - a.count).slice(0, 5);
-  }, [crmRows]);
+  }, [visibleCrmRows]);
 
   const topProvincias = useMemo(() => {
     const counts: Record<string, number> = {};
-    for (const row of crmRows) {
+    for (const row of visibleCrmRows) {
       const prov = row.provincia || "Sin provincia";
       counts[prov] = (counts[prov] || 0) + 1;
     }
     return Object.entries(counts).sort((a, b) => b[1] - a[1]).slice(0, 6);
-  }, [crmRows]);
+  }, [visibleCrmRows]);
 
   const maxCourseCount = topCourses[0]?.count || 1;
   const maxProvCount = topProvincias[0]?.[1] || 1;
 
   // CRM filtered rows
   const crmStatuses = useMemo(() => {
-    const set = new Set(crmRows.map((r) => localCrmStatus[r.idInscripcion] || r.crmStatus));
+    const set = new Set(visibleCrmRows.map((r) => localCrmStatus[r.idInscripcion] || r.crmStatus));
     return ["Todos", ...Array.from(set)];
-  }, [crmRows, localCrmStatus]);
+  }, [visibleCrmRows, localCrmStatus]);
 
   const filteredCrmRows = useMemo(() => {
     const needle = crmQuery.trim().toLowerCase();
-    return crmRows.filter((row) => {
+    return visibleCrmRows.filter((row) => {
       const effectiveStatus = localCrmStatus[row.idInscripcion] || row.crmStatus;
       const matchFilter = crmFilter === "Todos" || effectiveStatus === crmFilter;
       if (!matchFilter) return false;
@@ -346,7 +355,34 @@ export function AdminClient({
         .toLowerCase()
         .includes(needle);
     });
-  }, [crmQuery, crmFilter, crmRows, localCrmStatus]);
+  }, [crmQuery, crmFilter, visibleCrmRows, localCrmStatus]);
+
+  const visibleCourseViews = useMemo(() => {
+    const views = new Map(
+      courseViews.map((course) => [
+        course.idServicio,
+        {
+          ...course,
+          inscritas: 0,
+          anticiposPendientes: 0,
+          pagosRecibidos: 0,
+          balancePendienteTotal: 0,
+        },
+      ])
+    );
+
+    for (const row of visibleCrmRows) {
+      const view = views.get(row.idServicio);
+      if (!view) continue;
+      const effectiveStatus = localCrmStatus[row.idInscripcion] || row.crmStatus;
+      view.inscritas += 1;
+      if (row.montoPagado > 0) view.pagosRecibidos += row.montoPagado;
+      if (row.balancePendiente > 0) view.balancePendienteTotal += row.balancePendiente;
+      if (isPending(effectiveStatus)) view.anticiposPendientes += 1;
+    }
+
+    return Array.from(views.values()).sort((a, b) => b.inscritas - a.inscritas);
+  }, [courseViews, localCrmStatus, visibleCrmRows]);
 
   const eventsByDate = useMemo(() => {
     return events.reduce<Record<string, AdminScheduledCourse[]>>((acc, event) => {
@@ -470,12 +506,26 @@ export function AdminClient({
               <p className="mt-3 max-w-2xl text-sm leading-6 text-[#4E6658]">
                 Gestión centralizada de inscripciones, seguimiento de alumnas, cupos y calendario operativo.
               </p>
+              <label className="mt-4 inline-flex items-center gap-3 rounded-2xl border border-[#D4AF37]/25 bg-[#FDFBF7] px-3 py-2 text-xs font-semibold text-[#4E6658]">
+                <input
+                  type="checkbox"
+                  checked={includeTestRecords}
+                  onChange={(event) => setIncludeTestRecords(event.target.checked)}
+                  className="h-4 w-4 accent-[#0D3B22]"
+                />
+                <span>Incluir registros de prueba</span>
+                {testRecordCount > 0 ? (
+                  <span className="rounded-full bg-[#D4AF37]/15 px-2 py-0.5 text-[#8D7530]">
+                    {testRecordCount} QA
+                  </span>
+                ) : null}
+              </label>
             </div>
 
             <div className="grid grid-cols-2 gap-3 sm:grid-cols-4 lg:min-w-[640px]">
               <div className="rounded-2xl border border-[#D4AF37]/20 bg-[#FDFBF7] p-3 sm:p-4">
                 <p className="text-[10px] sm:text-xs font-semibold uppercase tracking-[0.14em] text-[#8A7D69]">Inscritas</p>
-                <p className="mt-1 sm:mt-2 text-2xl sm:text-3xl font-semibold text-[#0D3B22]">{crmRows.length}</p>
+                <p className="mt-1 sm:mt-2 text-2xl sm:text-3xl font-semibold text-[#0D3B22]">{visibleCrmRows.length}</p>
               </div>
               <div className="rounded-2xl border border-[#D4AF37]/20 bg-[#FDFBF7] p-3 sm:p-4">
                 <p className="text-[10px] sm:text-xs font-semibold uppercase tracking-[0.14em] text-[#8A7D69]">Pendientes</p>
@@ -519,7 +569,7 @@ export function AdminClient({
           <section className="space-y-6">
             <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
               {[
-                { label: "Total Inscripciones", value: crmRows.length, icon: <Users className="h-4 w-4 sm:h-5 sm:w-5 text-[#C5A028]" />, color: "border-[#D4AF37]/30" },
+                { label: "Total Inscripciones", value: visibleCrmRows.length, icon: <Users className="h-4 w-4 sm:h-5 sm:w-5 text-[#C5A028]" />, color: "border-[#D4AF37]/30" },
                 { label: "Confirmadas", value: paidCount, icon: <TrendingUp className="h-4 w-4 sm:h-5 sm:w-5 text-[#0D3B22]" />, color: "border-[#0D3B22]/15" },
                 { label: "Anticipo Pendiente", value: pendingCount, icon: <DollarSign className="h-4 w-4 sm:h-5 sm:w-5 text-[#C5A028]" />, color: "border-[#D4AF37]/30" },
                 { label: "Cursos en Catálogo", value: catalogCourses.length, icon: <GraduationCap className="h-4 w-4 sm:h-5 sm:w-5 text-[#C5A028]" />, color: "border-[#D4AF37]/30" },
@@ -616,12 +666,17 @@ export function AdminClient({
                   <p className="text-xs text-[#6B6048]">Las 5 más recientes</p>
                 </div>
               </div>
-              {crmRows.length > 0 ? (
+              {visibleCrmRows.length > 0 ? (
                 <div className="space-y-3">
-                  {crmRows.slice(-5).reverse().map((row) => (
+                  {visibleCrmRows.slice(-5).reverse().map((row) => (
                     <div key={row.idInscripcion} className="flex items-center justify-between gap-4 rounded-2xl border border-[#E7DAC2] bg-[#FDFBF7] px-4 py-3">
                       <div className="min-w-0">
-                        <p className="truncate text-sm font-semibold text-[#0D3B22]">{row.nombreCompleto}</p>
+                        <p className="truncate text-sm font-semibold text-[#0D3B22]">
+                          {row.nombreCompleto}
+                          {row.esRegistroPrueba ? (
+                            <span className="ml-2 rounded-full bg-[#D4AF37]/15 px-2 py-0.5 text-[10px] font-bold text-[#8D7530]">QA</span>
+                          ) : null}
+                        </p>
                         <p className="truncate text-xs text-[#6B6048]">{row.cursoNombre}</p>
                       </div>
                       <StatusPill status={localCrmStatus[row.idInscripcion] || row.crmStatus} />
@@ -685,7 +740,12 @@ export function AdminClient({
                         <div className="flex flex-col gap-3 p-4 sm:flex-row sm:items-center sm:justify-between sm:gap-4">
                           {/* Name & course */}
                           <div className="min-w-0 flex-1">
-                            <p className="text-sm font-semibold text-[#0D3B22]">{row.nombreCompleto}</p>
+                            <p className="text-sm font-semibold text-[#0D3B22]">
+                              {row.nombreCompleto}
+                              {row.esRegistroPrueba ? (
+                                <span className="ml-2 rounded-full bg-[#D4AF37]/15 px-2 py-0.5 text-[10px] font-bold text-[#8D7530]">QA</span>
+                              ) : null}
+                            </p>
                             <p className="mt-0.5 text-xs text-[#6B6048]">{row.cursoNombre} · {row.provincia || "Sin provincia"}</p>
                           </div>
 
@@ -802,7 +862,7 @@ export function AdminClient({
                 <div className="mt-5 rounded-3xl border border-dashed border-[#D4AF37]/35 bg-[#FDFBF7] p-8 text-center">
                   <Sparkles className="mx-auto h-8 w-8 text-[#D4AF37]" />
                   <p className="suvoga-serif mt-3 text-2xl font-semibold text-[#0D3B22]">Sin registros visibles</p>
-                  <p className="mt-2 text-sm text-[#6B6048]">Los registros aparecerán aquí cuando se guarden en SuVoGa OS.</p>
+                  <p className="mt-2 text-sm text-[#6B6048]">Los registros aparecerán aquí cuando se guarden en SuVoGa Academia.</p>
                 </div>
               )}
             </div>
@@ -819,9 +879,9 @@ export function AdminClient({
                 <p className="mt-1 text-sm text-[#6B6048]">Cupos, inscritas, anticipos y estado comercial de cada programa.</p>
               </div>
 
-              {courseViews.length > 0 ? (
+              {visibleCourseViews.length > 0 ? (
                 <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
-                  {courseViews.map((cv) => {
+                  {visibleCourseViews.map((cv) => {
                     const occupancy = cv.cuposTotales > 0 ? Math.min((cv.inscritas / cv.cuposTotales) * 100, 100) : 0;
                     const commercialStatus =
                       occupancy >= 90 ? "Lleno" :

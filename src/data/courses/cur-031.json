@@ -1,0 +1,156 @@
+{
+  "courseUid": "taller-de-terapia-de-alineacion-estructura-osea-cur-031",
+  "sourceId": "CUR-031",
+  "legacyIds": [],
+  "slug": "taller-de-terapia-de-alineacion-estructura-osea-cur-031",
+  "title": "Taller de Terapia de Alineación Estructura Ósea",
+  "requiresOwnerReview": true,
+  "requiresLegalReview": true,
+  "pendingOwnerReview": true,
+  "publicationStatus": "draft",
+  "sourceRaw": {
+    "heading": "### 📘 CUR-031-Taller de Terapia de Alineación Estructura Ósea",
+    "markdown": "### 📘 CUR-031-Taller de Terapia de Alineación Estructura Ósea\n\nEvaluación Postural y Técnicas de Reequilibrio Corporal\n\n### **SuVoGa Escuela y Centro de Masajes**  **Avalado por la Asociación Nacional de Masajistas Terapeutas Manuales y Afines (ASNAMATEM)**  **Modalidad:** Teórico – Práctico  **Duración:** 8 Horas\n\n### **Inversión y Reserva**\n\n* ### **Miembros ASNaMaTeM:** 3000\n\n* ### **Público General:** RD$4000\n\n* ### **Reservación:** RD$1,000 *(No reembolsable Ni transferible a otro curso)* \n\n🎯 Objetivo General\n\nCapacitar a los participantes en la evaluación postural y la aplicación de técnicas manuales de alineación estructural para mejorar el equilibrio corporal, la movilidad y el bienestar físico.\n\n📚 TEMARIO DEL TALLER\n\nMÓDULO I. FUNDAMENTOS DE LA ALINEACIÓN ESTRUCTURAL\n\n* Conceptos básicos de alineación corporal.  \n* Principios de biomecánica y postura.  \n* Beneficios de la terapia de alineación estructural.\n\nMÓDULO II. ANATOMÍA Y EVALUACIÓN POSTURAL\n\n* Sistema óseo y muscular aplicado.  \n* Identificación de desbalances corporales.  \n* Evaluación postural estática y dinámica.  \n* Historia clínica y consentimiento informado.\n\nMÓDULO III. TÉCNICAS DE ALINEACIÓN ESTRUCTURAL\n\n* Liberación miofascial básica.  \n* Estiramientos terapéuticos.  \n* Movilizaciones articulares suaves.  \n* Técnicas de reequilibrio corporal.\n\nMÓDULO IV. PROTOCOLO PRÁCTICO DE TRATAMIENTO\n\n* Evaluación inicial del cliente.  \n* Aplicación de técnicas por regiones corporales:  \n  * Cuello y hombros.  \n  * Columna vertebral.  \n  * Pelvis y caderas.  \n  * Rodillas y tobillos.  \n* Recomendaciones y ejercicios de mantenimiento.\n\nMÓDULO V. CONTRAINDICACIONES Y ÉTICA PROFESIONAL\n\n* Indicaciones y contraindicaciones.  \n* Límites de la terapia manual.  \n* Referencia oportuna a profesionales de la salud.  \n* Ética y responsabilidad profesional.\n\n👐 PRÁCTICAS SUPERVISADAS\n\n✅ Evaluación postural completa.  \n ✅ Identificación de desbalances musculoesqueléticos.  \n ✅ Aplicación de técnicas de liberación y movilización.  \n ✅ Protocolo completo de alineación estructural.  \n ✅ Simulación de una sesión terapéutica.\n\n📖 MATERIALES INCLUIDOS\n\n✅ Manual digital ilustrado.  \n ✅ Formatos de evaluación postural.  \n ✅ Material didáctico de apoyo.  \n ✅ Prácticas supervisadas.  \n ✅ Certificado de participación y aprobación.\n\n🏅 CERTIFICACIÓN\n\n**Certificado de Participación y Aprobación**\n\nAvalado por la **Asociación Nacional de Masajistas Terapeutas Manuales y Afines (ASNAMATEM)** y **SuVoGa Escuela y Centro de Masajes**.\n\n**Elaborado por:**  \n **Sugeidy Vólquez García**  \n *Directora de SuVoGa Escuela y Centro de Masajes*\n\n💚 *“Formando profesionales en terapias manuales y bienestar integral con excelencia y compromiso.”*",
+    "lineStart": 4683,
+    "lineEnd": 4767
+  },
+  "publicCopy": {
+    "title": "Taller de Terapia de Alineación Estructura Ósea",
+    "subtitle": "Miembros ASNaMaTeM: 3000",
+    "category": {
+      "value": "",
+      "pendingOwnerReview": true
+    },
+    "description": {
+      "value": "Evaluación Postural y Técnicas de Reequilibrio Corporal",
+      "pendingOwnerReview": false
+    },
+    "pricing": {
+      "publicPrice": {
+        "amount": 4000,
+        "currency": "DOP",
+        "raw": "Público General: RD$4000",
+        "pendingOwnerReview": false
+      },
+      "memberPrice": {
+        "amount": 3000,
+        "currency": "DOP",
+        "raw": "Miembros ASNaMaTeM: 3000",
+        "pendingOwnerReview": false
+      },
+      "reservation": {
+        "amount": 1000,
+        "currency": "DOP",
+        "raw": "Reservación: RD$1,000 (No reembolsable Ni transferible a otro curso)",
+        "pendingOwnerReview": false
+      },
+      "paymentPlan": [
+        "Reservación: RD$1,000 (No reembolsable Ni transferible a otro curso)"
+      ],
+      "rawLines": [
+        "Miembros ASNaMaTeM: 3000",
+        "Público General: RD$4000",
+        "Reservación: RD$1,000 (No reembolsable Ni transferible a otro curso)"
+      ],
+      "pendingOwnerReview": false
+    },
+    "schedule": {
+      "dateText": "Próxima fecha por anunciar",
+      "duration": {
+        "value": "SuVoGa Escuela y Centro de Masajes Avalado por la Asociación Nacional de Masajistas Terapeutas Manuales y Afines (ASNAMATEM) Modalidad: Teórico – Práctico Duración: 8 Horas",
+        "pendingOwnerReview": false
+      },
+      "modality": {
+        "value": "SuVoGa Escuela y Centro de Masajes Avalado por la Asociación Nacional de Masajistas Terapeutas Manuales y Afines (ASNAMATEM) Modalidad: Teórico – Práctico Duración: 8 Horas",
+        "pendingOwnerReview": false
+      },
+      "rawLines": [
+        "SuVoGa Escuela y Centro de Masajes Avalado por la Asociación Nacional de Masajistas Terapeutas Manuales y Afines (ASNAMATEM) Modalidad: Teórico – Práctico Duración: 8 Horas"
+      ],
+      "pendingOwnerReview": false
+    },
+    "objectives": [
+      "🎯 Objetivo General",
+      "Capacitar a los participantes en la evaluación postural y la aplicación de técnicas manuales de alineación estructural para mejorar el equilibrio corporal, la movilidad y el bienestar físico.",
+      "📚 TEMARIO DEL TALLER"
+    ],
+    "profile": [],
+    "requirements": [],
+    "syllabusMarkdown": "📚 TEMARIO DEL TALLER\n\nMÓDULO I. FUNDAMENTOS DE LA ALINEACIÓN ESTRUCTURAL\n\n* Conceptos básicos de alineación corporal.\n* Principios de biomecánica y postura.\n* Beneficios de la terapia de alineación estructural.\n\nMÓDULO II. ANATOMÍA Y EVALUACIÓN POSTURAL\n\n* Sistema óseo y muscular aplicado.\n* Identificación de desbalances corporales.\n* Evaluación postural estática y dinámica.\n* Historia clínica y consentimiento informado.\n\nMÓDULO III. TÉCNICAS DE ALINEACIÓN ESTRUCTURAL\n\n* Liberación miofascial básica.\n* Estiramientos terapéuticos.\n* Movilizaciones articulares suaves.\n* Técnicas de reequilibrio corporal.\n\nMÓDULO IV. PROTOCOLO PRÁCTICO DE TRATAMIENTO\n\n* Evaluación inicial del cliente.\n* Aplicación de técnicas por regiones corporales:\n  * Cuello y hombros.\n  * Columna vertebral.\n  * Pelvis y caderas.\n  * Rodillas y tobillos.\n* Recomendaciones y ejercicios de mantenimiento.\n\nMÓDULO V. CONTRAINDICACIONES Y ÉTICA PROFESIONAL\n\n* Indicaciones y contraindicaciones.\n* Límites de la terapia manual.\n* Referencia oportuna a profesionales de la salud.\n* Ética y responsabilidad profesional.\n\n👐 PRÁCTICAS SUPERVISADAS\n\n✅ Evaluación postural completa.\n ✅ Identificación de desbalances musculoesqueléticos.\n ✅ Aplicación de técnicas de liberación y movilización.\n ✅ Protocolo completo de alineación estructural.\n ✅ Simulación de una sesión terapéutica.",
+    "indications": [
+      "Indicaciones y contraindicaciones.",
+      "Límites de la terapia manual.",
+      "Referencia oportuna a profesionales de la salud.",
+      "Ética y responsabilidad profesional.",
+      "👐 PRÁCTICAS SUPERVISADAS",
+      "✅ Evaluación postural completa.",
+      "✅ Identificación de desbalances musculoesqueléticos.",
+      "✅ Aplicación de técnicas de liberación y movilización.",
+      "✅ Protocolo completo de alineación estructural.",
+      "✅ Simulación de una sesión terapéutica.",
+      "📖 MATERIALES INCLUIDOS",
+      "✅ Manual digital ilustrado.",
+      "✅ Formatos de evaluación postural.",
+      "✅ Material didáctico de apoyo.",
+      "✅ Prácticas supervisadas.",
+      "✅ Certificado de participación y aprobación."
+    ],
+    "contraindications": [],
+    "practices": [
+      "👐 PRÁCTICAS SUPERVISADAS",
+      "✅ Evaluación postural completa.",
+      "✅ Identificación de desbalances musculoesqueléticos.",
+      "✅ Aplicación de técnicas de liberación y movilización.",
+      "✅ Protocolo completo de alineación estructural.",
+      "✅ Simulación de una sesión terapéutica.",
+      "📖 MATERIALES INCLUIDOS",
+      "✅ Manual digital ilustrado.",
+      "✅ Formatos de evaluación postural.",
+      "✅ Material didáctico de apoyo.",
+      "✅ Prácticas supervisadas.",
+      "✅ Certificado de participación y aprobación.",
+      "🏅 CERTIFICACIÓN",
+      "Certificado de Participación y Aprobación",
+      "Avalado por la Asociación Nacional de Masajistas Terapeutas Manuales y Afines (ASNAMATEM) y SuVoGa Escuela y Centro de Masajes.",
+      "Elaborado por:",
+      "Sugeidy Vólquez García",
+      "Directora de SuVoGa Escuela y Centro de Masajes"
+    ],
+    "materials": [
+      "📖 MATERIALES INCLUIDOS",
+      "✅ Manual digital ilustrado.",
+      "✅ Formatos de evaluación postural.",
+      "✅ Material didáctico de apoyo.",
+      "✅ Prácticas supervisadas.",
+      "✅ Certificado de participación y aprobación.",
+      "🏅 CERTIFICACIÓN",
+      "Certificado de Participación y Aprobación",
+      "Avalado por la Asociación Nacional de Masajistas Terapeutas Manuales y Afines (ASNAMATEM) y SuVoGa Escuela y Centro de Masajes.",
+      "Elaborado por:",
+      "Sugeidy Vólquez García",
+      "Directora de SuVoGa Escuela y Centro de Masajes",
+      "💚 “Formando profesionales en terapias manuales y bienestar integral con excelencia y compromiso.”"
+    ],
+    "competencies": [],
+    "certifications": [
+      "✅ Certificado de participación y aprobación.",
+      "🏅 CERTIFICACIÓN",
+      "Certificado de Participación y Aprobación"
+    ],
+    "endorsements": [
+      "SuVoGa Escuela y Centro de Masajes Avalado por la Asociación Nacional de Masajistas Terapeutas Manuales y Afines (ASNAMATEM) Modalidad: Teórico – Práctico Duración: 8 Horas",
+      "Miembros ASNaMaTeM: 3000",
+      "Avalado por la Asociación Nacional de Masajistas Terapeutas Manuales y Afines (ASNAMATEM) y SuVoGa Escuela y Centro de Masajes."
+    ],
+    "facilitator": "Sugeidy Vólquez García",
+    "legalNotes": [
+      "Historia clínica y consentimiento informado.",
+      "MÓDULO V. CONTRAINDICACIONES Y ÉTICA PROFESIONAL",
+      "Indicaciones y contraindicaciones."
+    ],
+    "professionalNotes": [
+      "Pendiente de revisión de propietaria por posible duplicidad CUR-020/CUR-031."
+    ],
+    "normalizedMarkdown": "### 📘 CUR-031-Taller de Terapia de Alineación Estructura Ósea\n\nEvaluación Postural y Técnicas de Reequilibrio Corporal\n\n### **SuVoGa Escuela y Centro de Masajes**  **Avalado por la Asociación Nacional de Masajistas Terapeutas Manuales y Afines (ASNAMATEM)**  **Modalidad:** Teórico – Práctico  **Duración:** 8 Horas\n\n### **Inversión y Reserva**\n\n* ### **Miembros ASNaMaTeM:** 3000\n\n* ### **Público General:** RD$4000\n\n* ### **Reservación:** RD$1,000 *(No reembolsable Ni transferible a otro curso)*\n\n🎯 Objetivo General\n\nCapacitar a los participantes en la evaluación postural y la aplicación de técnicas manuales de alineación estructural para mejorar el equilibrio corporal, la movilidad y el bienestar físico.\n\n📚 TEMARIO DEL TALLER\n\nMÓDULO I. FUNDAMENTOS DE LA ALINEACIÓN ESTRUCTURAL\n\n* Conceptos básicos de alineación corporal.\n* Principios de biomecánica y postura.\n* Beneficios de la terapia de alineación estructural.\n\nMÓDULO II. ANATOMÍA Y EVALUACIÓN POSTURAL\n\n* Sistema óseo y muscular aplicado.\n* Identificación de desbalances corporales.\n* Evaluación postural estática y dinámica.\n* Historia clínica y consentimiento informado.\n\nMÓDULO III. TÉCNICAS DE ALINEACIÓN ESTRUCTURAL\n\n* Liberación miofascial básica.\n* Estiramientos terapéuticos.\n* Movilizaciones articulares suaves.\n* Técnicas de reequilibrio corporal.\n\nMÓDULO IV. PROTOCOLO PRÁCTICO DE TRATAMIENTO\n\n* Evaluación inicial del cliente.\n* Aplicación de técnicas por regiones corporales:\n  * Cuello y hombros.\n  * Columna vertebral.\n  * Pelvis y caderas.\n  * Rodillas y tobillos.\n* Recomendaciones y ejercicios de mantenimiento.\n\nMÓDULO V. CONTRAINDICACIONES Y ÉTICA PROFESIONAL\n\n* Indicaciones y contraindicaciones.\n* Límites de la terapia manual.\n* Referencia oportuna a profesionales de la salud.\n* Ética y responsabilidad profesional.\n\n👐 PRÁCTICAS SUPERVISADAS\n\n✅ Evaluación postural completa.\n ✅ Identificación de desbalances musculoesqueléticos.\n ✅ Aplicación de técnicas de liberación y movilización.\n ✅ Protocolo completo de alineación estructural.\n ✅ Simulación de una sesión terapéutica.\n\n📖 MATERIALES INCLUIDOS\n\n✅ Manual digital ilustrado.\n ✅ Formatos de evaluación postural.\n ✅ Material didáctico de apoyo.\n ✅ Prácticas supervisadas.\n ✅ Certificado de participación y aprobación.\n\n🏅 CERTIFICACIÓN\n\n**Certificado de Participación y Aprobación**\n\nAvalado por la **Asociación Nacional de Masajistas Terapeutas Manuales y Afines (ASNAMATEM)** y **SuVoGa Escuela y Centro de Masajes**.\n\n**Elaborado por:**\n **Sugeidy Vólquez García**\n *Directora de SuVoGa Escuela y Centro de Masajes*\n\n💚 *“Formando profesionales en terapias manuales y bienestar integral con excelencia y compromiso.”*"
+  }
+}

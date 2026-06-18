@@ -1,0 +1,95 @@
+{
+  "courseUid": "taller-de-drenaje-linfatico-post-operatorio",
+  "sourceId": "CUR-002",
+  "legacyIds": [
+    "CUR-002"
+  ],
+  "slug": "taller-de-drenaje-linfatico-post-operatorio",
+  "title": "Taller De Drenaje Linfático Post Operatorio",
+  "requiresOwnerReview": true,
+  "requiresLegalReview": true,
+  "pendingOwnerReview": true,
+  "publicationStatus": "published",
+  "sourceRaw": {
+    "heading": "### 📘 CUR-002 \\- Taller De Drenaje Linfático Post Operatorio",
+    "markdown": "### 📘 CUR-002 \\- Taller De Drenaje Linfático Post Operatorio\n\n* **Categoría Actual:** Avanzado  \n* Duración 2 clases de 5 horas c/u\n\nTemario: \n\n✅Regalo técnica de kinesiotape  \n✅Anatomia Del sistema linfatico  \n✅Complicaciones en un cirugía estética   \n✅Manejo de complicaciones De un post quirúrgico Tratamientos utilizados   \n✅Secuencia de drenaje linfático en cada fase del post quirurgico  \n✅Técnicas actualizadas  \n✅Aparatología utilizada en un post operatorio estético    \n✅Servicio a domicilio\n\nPrecio: 4,500 Miembros de AsNaMaTeM  \nPRecio público general 6,000 pesos Dominicanos\n\nClausura para realizar este taller, tienen que tener 6 meses de experiencia en  masaje.",
+    "lineStart": 51,
+    "lineEnd": 71
+  },
+  "publicCopy": {
+    "title": "Taller De Drenaje Linfático Post Operatorio",
+    "subtitle": "✅Regalo técnica de kinesiotape",
+    "category": {
+      "value": "Avanzado",
+      "pendingOwnerReview": false
+    },
+    "description": {
+      "value": "✅Manejo de complicaciones De un post quirúrgico Tratamientos utilizados",
+      "pendingOwnerReview": false
+    },
+    "pricing": {
+      "publicPrice": {
+        "amount": 6000,
+        "currency": "DOP",
+        "raw": "PRecio público general 6,000 pesos Dominicanos",
+        "pendingOwnerReview": false
+      },
+      "memberPrice": {
+        "amount": 4500,
+        "currency": "DOP",
+        "raw": "Precio: 4,500 Miembros de AsNaMaTeM",
+        "pendingOwnerReview": false
+      },
+      "reservation": {
+        "amount": 1000,
+        "currency": "DOP",
+        "raw": "Regla global de reservación individual: todos los demás son 1,000 pesos dominicanos.",
+        "pendingOwnerReview": false
+      },
+      "paymentPlan": [
+        "Regla global de reservación individual: todos los demás son 1,000 pesos dominicanos."
+      ],
+      "rawLines": [
+        "Precio: 4,500 Miembros de AsNaMaTeM",
+        "PRecio público general 6,000 pesos Dominicanos"
+      ],
+      "pendingOwnerReview": false
+    },
+    "schedule": {
+      "dateText": "Próxima fecha por anunciar",
+      "duration": {
+        "value": "Duración 2 clases de 5 horas c/u",
+        "pendingOwnerReview": false
+      },
+      "modality": {
+        "value": "",
+        "pendingOwnerReview": true
+      },
+      "rawLines": [
+        "Duración 2 clases de 5 horas c/u"
+      ],
+      "pendingOwnerReview": true
+    },
+    "objectives": [],
+    "profile": [],
+    "requirements": [
+      "Clausura para realizar este taller, tienen que tener 6 meses de experiencia en masaje."
+    ],
+    "syllabusMarkdown": "Temario:\n\n✅Regalo técnica de kinesiotape\n✅Anatomia Del sistema linfatico\n✅Complicaciones en un cirugía estética\n✅Manejo de complicaciones De un post quirúrgico Tratamientos utilizados\n✅Secuencia de drenaje linfático en cada fase del post quirurgico\n✅Técnicas actualizadas\n✅Aparatología utilizada en un post operatorio estético\n✅Servicio a domicilio\n\nPrecio: 4,500 Miembros de AsNaMaTeM\nPRecio público general 6,000 pesos Dominicanos\n\nClausura para realizar este taller, tienen que tener 6 meses de experiencia en  masaje.",
+    "indications": [],
+    "contraindications": [],
+    "practices": [],
+    "materials": [],
+    "competencies": [],
+    "certifications": [],
+    "endorsements": [
+      "Precio: 4,500 Miembros de AsNaMaTeM"
+    ],
+    "facilitator": "Sugeidy Vólquez García",
+    "legalNotes": [
+      "Requiere revisión legal antes de publicación pública."
+    ],
+    "professionalNotes": [],
+    "normalizedMarkdown": "### 📘 CUR-002 \\- Taller De Drenaje Linfático Post Operatorio\n\n* **Categoría Actual:** Avanzado\n* Duración 2 clases de 5 horas c/u\n\nTemario:\n\n✅Regalo técnica de kinesiotape\n✅Anatomia Del sistema linfatico\n✅Complicaciones en un cirugía estética\n✅Manejo de complicaciones De un post quirúrgico Tratamientos utilizados\n✅Secuencia de drenaje linfático en cada fase del post quirurgico\n✅Técnicas actualizadas\n✅Aparatología utilizada en un post operatorio estético\n✅Servicio a domicilio\n\nPrecio: 4,500 Miembros de AsNaMaTeM\nPRecio público general 6,000 pesos Dominicanos\n\nClausura para realizar este taller, tienen que tener 6 meses de experiencia en  masaje."
+  }
+}

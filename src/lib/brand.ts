@@ -1,9 +1,9 @@
 export const brand = {
-  productName: "SuVoGa OS",
+  productName: "SuVoGa Academia",
   parentBrand: "SuVoGa",
-  workspaceName: "DB Cursos y Spa",
+  workspaceName: "DB Cursos",
   tagline:
-    "Sistema operativo para cursos, servicios spa, pacientes e inscripciones.",
+    "Formación profesional en masoterapia, estética y bienestar.",
   description:
     "Infraestructura operativa para organizar catalogo, pacientes, inscripciones y anticipos.",
 };

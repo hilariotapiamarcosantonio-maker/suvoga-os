@@ -1,0 +1,106 @@
+{
+  "courseUid": "masaje-corporal-avanzado",
+  "sourceId": "CUR-004",
+  "legacyIds": [
+    "CUR-004"
+  ],
+  "slug": "masaje-corporal-avanzado",
+  "title": "Masaje Corporal Avanzado",
+  "requiresOwnerReview": true,
+  "requiresLegalReview": true,
+  "pendingOwnerReview": true,
+  "publicationStatus": "published",
+  "sourceRaw": {
+    "heading": "### 📘 CUR-004 \\- Masaje Corporal Avanzado",
+    "markdown": "### 📘 CUR-004 \\- Masaje Corporal Avanzado\n\n* **Categoría Actual:** Avanzado\n\n**Lema:** Aprende, transforma y sana con tus manos   \n**Horario:** 2:00 PM a 5:00 PM  \n**Modalidad:** Presencial y Online  \n**Certificación:** Incluida\n\n### **Inversión**\n\n* **Inversión total:** $12,000  \n* **Reservación:** $1,000 (para asegurar el cupo)  \n  Primer dia de clases 3,000  \n* Tercer dia clase 3,000  \n* Quinto dia clases 3,000  \n* Octava clase 2,000  \n  **Miembros de ASNaMaTeM: $10,000**\n\nPrograma de clase:\n\n**Módulo 1\\. Tipos de Masaje** \n\n1. **Servicio al Cliente**  \n2. **Ficha del Paciente Registro y Evaluación del paciente**  \n3. **Higienización**  \n4. **Signos Vitales**  \n5. **Preparación de cabina**  \n6. **Aromaterapia**  \n7. **Masaje con Velas Caliente**  \n8. **Servicio a Domicilio**\n\n**Módulo 2\\. Masaje Terapéutico Básico**\n\n**Concepto de Masaje Terapéutico**\n\n**Beneficios, Indicaciones y Contraindicaciones**\n\n**Masaje Terapéutico con Ventosas**\n\n**Masaje con piedras Calientes**\n\n**Tratamiento con Martillo de percusión**\n\n**Masaje Terapéutico con Tens**\n\n**Tratamiento con pen de Acupuntura**\n\n**Terapia con Parafina**\n\n**Tratamiento con Vendaje neuromuscular**\n\n**Masaje con pindas**\n\n**Chocolaterapia y Vinoterapia**\n\n**Módulo 3\\. Masaje deportivo Básico** \n\n1. **Concepto de Masaje deportivo**  \n2. **Beneficios, Indicaciones y Contraindicaciones**  \n3. **Técnicas**  \n4. **Tecnica precompetencia y post competencia**\n\n**Módulo 4\\. Drenaje Linfático Manual básico** \n\n1. **Concepto**  \n2. **Beneficios, Indicaciones y Contraindicaciones**  \n3. **Técnicas**\n\n**Módulo 5\\. Masaje Reductivo con AparatologíaUltrasonido corporal y Facial**\n\n1. **Cavitador**  \n2. **Radiofrecuencia**  \n3. **Vacumm-Tratamiento de tonificación y levantamiento de Glúteos y seno**  \n*",
+    "lineStart": 129,
+    "lineEnd": 204
+  },
+  "publicCopy": {
+    "title": "Masaje Corporal Avanzado",
+    "subtitle": "Lema: Aprende, transforma y sana con tus manos",
+    "category": {
+      "value": "Avanzado",
+      "pendingOwnerReview": false
+    },
+    "description": {
+      "value": "2. Ficha del Paciente Registro y Evaluación del paciente",
+      "pendingOwnerReview": false
+    },
+    "pricing": {
+      "publicPrice": {
+        "amount": 12000,
+        "currency": "DOP",
+        "raw": "Inversión total: $12,000",
+        "pendingOwnerReview": false
+      },
+      "memberPrice": {
+        "amount": 10000,
+        "currency": "DOP",
+        "raw": "Miembros de ASNaMaTeM: $10,000",
+        "pendingOwnerReview": false
+      },
+      "reservation": {
+        "amount": 1000,
+        "currency": "DOP",
+        "raw": "Reservación: $1,000 (para asegurar el cupo)",
+        "pendingOwnerReview": false
+      },
+      "paymentPlan": [
+        "Reservación: $1,000 (para asegurar el cupo)",
+        "Primer dia de clases 3,000",
+        "Tercer dia clase 3,000",
+        "Quinto dia clases 3,000",
+        "Octava clase 2,000"
+      ],
+      "rawLines": [
+        "Inversión total: $12,000",
+        "Reservación: $1,000 (para asegurar el cupo)",
+        "Primer dia de clases 3,000",
+        "Tercer dia clase 3,000",
+        "Quinto dia clases 3,000",
+        "Octava clase 2,000",
+        "Miembros de ASNaMaTeM: $10,000"
+      ],
+      "pendingOwnerReview": false
+    },
+    "schedule": {
+      "dateText": "Próxima fecha por anunciar",
+      "duration": {
+        "value": "",
+        "pendingOwnerReview": true
+      },
+      "modality": {
+        "value": "Modalidad: Presencial y Online",
+        "pendingOwnerReview": false
+      },
+      "rawLines": [
+        "Horario: 2:00 PM a 5:00 PM",
+        "Modalidad: Presencial y Online"
+      ],
+      "pendingOwnerReview": true
+    },
+    "objectives": [],
+    "profile": [],
+    "requirements": [],
+    "syllabusMarkdown": "Programa de clase:\n\n**Módulo 1\\. Tipos de Masaje**\n\n1. **Servicio al Cliente**\n2. **Ficha del Paciente Registro y Evaluación del paciente**\n3. **Higienización**\n4. **Signos Vitales**\n5. **Preparación de cabina**\n6. **Aromaterapia**\n7. **Masaje con Velas Caliente**\n8. **Servicio a Domicilio**\n\n**Módulo 2\\. Masaje Terapéutico Básico**\n\n**Concepto de Masaje Terapéutico**\n\n**Beneficios, Indicaciones y Contraindicaciones**\n\n**Masaje Terapéutico con Ventosas**\n\n**Masaje con piedras Calientes**\n\n**Tratamiento con Martillo de percusión**\n\n**Masaje Terapéutico con Tens**\n\n**Tratamiento con pen de Acupuntura**\n\n**Terapia con Parafina**\n\n**Tratamiento con Vendaje neuromuscular**\n\n**Masaje con pindas**\n\n**Chocolaterapia y Vinoterapia**\n\n**Módulo 3\\. Masaje deportivo Básico**\n\n1. **Concepto de Masaje deportivo**\n2. **Beneficios, Indicaciones y Contraindicaciones**\n3. **Técnicas**\n4. **Tecnica precompetencia y post competencia**\n\n**Módulo 4\\. Drenaje Linfático Manual básico**\n\n1. **Concepto**\n2. **Beneficios, Indicaciones y Contraindicaciones**\n3. **Técnicas**\n\n**Módulo 5\\. Masaje Reductivo con AparatologíaUltrasonido corporal y Facial**\n\n1. **Cavitador**\n2. **Radiofrecuencia**\n3. **Vacumm-Tratamiento de tonificación y levantamiento de Glúteos y seno**\n*",
+    "indications": [],
+    "contraindications": [],
+    "practices": [],
+    "materials": [],
+    "competencies": [],
+    "certifications": [
+      "Certificación: Incluida"
+    ],
+    "endorsements": [
+      "Miembros de ASNaMaTeM: $10,000"
+    ],
+    "facilitator": "Sugeidy Vólquez García",
+    "legalNotes": [
+      "Beneficios, Indicaciones y Contraindicaciones",
+      "2. Beneficios, Indicaciones y Contraindicaciones"
+    ],
+    "professionalNotes": [],
+    "normalizedMarkdown": "### 📘 CUR-004 \\- Masaje Corporal Avanzado\n\n* **Categoría Actual:** Avanzado\n\n**Lema:** Aprende, transforma y sana con tus manos\n**Horario:** 2:00 PM a 5:00 PM\n**Modalidad:** Presencial y Online\n**Certificación:** Incluida\n\n### **Inversión**\n\n* **Inversión total:** $12,000\n* **Reservación:** $1,000 (para asegurar el cupo)\n  Primer dia de clases 3,000\n* Tercer dia clase 3,000\n* Quinto dia clases 3,000\n* Octava clase 2,000\n  **Miembros de ASNaMaTeM: $10,000**\n\nPrograma de clase:\n\n**Módulo 1\\. Tipos de Masaje**\n\n1. **Servicio al Cliente**\n2. **Ficha del Paciente Registro y Evaluación del paciente**\n3. **Higienización**\n4. **Signos Vitales**\n5. **Preparación de cabina**\n6. **Aromaterapia**\n7. **Masaje con Velas Caliente**\n8. **Servicio a Domicilio**\n\n**Módulo 2\\. Masaje Terapéutico Básico**\n\n**Concepto de Masaje Terapéutico**\n\n**Beneficios, Indicaciones y Contraindicaciones**\n\n**Masaje Terapéutico con Ventosas**\n\n**Masaje con piedras Calientes**\n\n**Tratamiento con Martillo de percusión**\n\n**Masaje Terapéutico con Tens**\n\n**Tratamiento con pen de Acupuntura**\n\n**Terapia con Parafina**\n\n**Tratamiento con Vendaje neuromuscular**\n\n**Masaje con pindas**\n\n**Chocolaterapia y Vinoterapia**\n\n**Módulo 3\\. Masaje deportivo Básico**\n\n1. **Concepto de Masaje deportivo**\n2. **Beneficios, Indicaciones y Contraindicaciones**\n3. **Técnicas**\n4. **Tecnica precompetencia y post competencia**\n\n**Módulo 4\\. Drenaje Linfático Manual básico**\n\n1. **Concepto**\n2. **Beneficios, Indicaciones y Contraindicaciones**\n3. **Técnicas**\n\n**Módulo 5\\. Masaje Reductivo con AparatologíaUltrasonido corporal y Facial**\n\n1. **Cavitador**\n2. **Radiofrecuencia**\n3. **Vacumm-Tratamiento de tonificación y levantamiento de Glúteos y seno**\n*"
+  }
+}

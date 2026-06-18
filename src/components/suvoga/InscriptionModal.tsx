@@ -179,7 +179,7 @@ export function InscriptionModal({
                 Cupo solicitado con éxito
               </h3>
               <p className="mt-2 text-xs leading-relaxed text-[#6B6048]">
-                Guardamos tus datos en SuVoGa OS. El equipo puede confirmar el
+                Guardamos tus datos en SuVoGa Academia. El equipo puede confirmar el
                 anticipo de {formatDop(course.montoAnticipo)} desde la base.
               </p>
               <button

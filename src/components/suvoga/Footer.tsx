@@ -4,6 +4,7 @@ import Link from "next/link";
 import { MessageCircle, Mail, MapPin, Clock, ArrowUpRight } from "lucide-react";
 import { Instagram, Facebook } from "@/components/suvoga/BrandIcons";
 import { contactInfo } from "@/data/contact";
+import { brand } from "@/lib/brand";
 
 export function Footer() {
   return (
@@ -12,9 +13,9 @@ export function Footer() {
         <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-4 md:gap-10">
           {/* Column 1: Brand details */}
           <div className="space-y-4">
-            <h3 className="suvoga-serif text-2xl font-semibold text-white">SuVoGa OS</h3>
+            <h3 className="suvoga-serif text-2xl font-semibold text-white">{brand.productName}</h3>
             <p className="text-xs text-[#EAE2D0] leading-relaxed max-w-xs">
-              Formación técnica premium en masajes y estética corporal. Espacio diseñado para el éxito y la práctica de spa consciente.
+              {brand.tagline}
             </p>
             <div className="flex flex-row flex-wrap lg:flex-col gap-2.5 pt-1">
               <Link
@@ -111,11 +112,11 @@ export function Footer() {
         </div>
 
         <div className="mt-12 pt-8 border-t border-white/10 flex flex-col sm:flex-row items-center justify-between gap-4 text-[10px] text-[#8A7D69]">
-          <p>&copy; {new Date().getFullYear()} SuVoGa Academia. Todos los derechos reservados.</p>
+          <p>&copy; {new Date().getFullYear()} {brand.productName}. Todos los derechos reservados.</p>
           <div className="flex gap-4">
             <Link href="/admin" className="hover:underline hover:text-[#D4AF37]">Acceso Administrativo</Link>
             <span>|</span>
-            <span className="italic">SuVoGa OS 2.0 - High-Ticket Edition</span>
+            <span className="italic">Catálogo académico local</span>
           </div>
         </div>
       </div>

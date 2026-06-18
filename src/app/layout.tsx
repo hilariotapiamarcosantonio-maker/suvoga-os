@@ -4,6 +4,7 @@ import "./globals.css";
 import { brand } from "@/lib/brand";
 import { Footer } from "@/components/suvoga/Footer";
 import { Header } from "@/components/suvoga/Header";
+import { getSiteUrl } from "@/lib/site-url";
 
 const inter = Inter({ subsets: ["latin"], variable: "--font-sans" });
 const cormorant = Cormorant_Garamond({
@@ -13,9 +14,19 @@ const cormorant = Cormorant_Garamond({
 });
 
 export const metadata: Metadata = {
-  title: `${brand.productName} | Escuela premium de spa`,
-  description:
-    "SuVoGa OS organiza catalogo, cursos, inscripciones y calendario academico para una escuela de spa premium.",
+  metadataBase: new URL(getSiteUrl()),
+  title: `${brand.productName} | Masoterapia, estética y bienestar`,
+  description: brand.tagline,
+  alternates: {
+    canonical: "/",
+  },
+  openGraph: {
+    title: `${brand.productName} | Masoterapia, estetica y bienestar`,
+    description: brand.tagline,
+    url: "/",
+    siteName: brand.productName,
+    type: "website",
+  },
 };
 
 export default function RootLayout({

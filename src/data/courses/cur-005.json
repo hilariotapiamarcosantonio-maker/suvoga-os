@@ -1,0 +1,114 @@
+{
+  "courseUid": "taller-de-aparatologia-9-en-1",
+  "sourceId": "CUR-005",
+  "legacyIds": [
+    "CUR-005"
+  ],
+  "slug": "taller-de-aparatologia-9-en-1",
+  "title": "Taller de Aparatología 9 en 1",
+  "requiresOwnerReview": true,
+  "requiresLegalReview": true,
+  "pendingOwnerReview": true,
+  "publicationStatus": "published",
+  "sourceRaw": {
+    "heading": "### 📘 CUR-005 \\- Taller de Aparatología 9 en 1",
+    "markdown": "### 📘 CUR-005 \\- Taller de Aparatología 9 en 1\n\n* **Categoría Actual:** Estética\n\n**Lema:** Aprende, transforma y sana con tus manos   \n**Horario:** 2:00 PM a 5:00 PM  \n**Modalidad:** Presencial y Online  \n**Certificación:** Incluida\n\n### **Inversión**\n\n* **Inversión total:** $3,500  \n* **Reservación:** $1,000 (para asegurar el cupo)  \n  Primer dia de clases 2,500  \n  **Miembros de ASNaMaTeM: $2,000**\n\n**Temario:**\n\n**Manejo Profesional de Máquina 9 en 1**\n\n**Domina las técnicas más efectivas de la aparatología corporal reductiva y aprende a trabajar protocolos completos para moldear, reducir y reafirmar el cuerpo de forma segura y profesional.**\n\n**Un taller práctico diseñado para elevar tus resultados y ampliar tus servicios estéticos.**\n\n**✨ ¿QUÉ APRENDERÁS? • Manejo correcto de la máquina 9 en 1 • Protocolos reductivos y reafirmantes • Combinación de técnicas para mejores resultados • Indicaciones y contraindicaciones • Personalización de tratamientos corporales • Uso profesional enfocado en resultados visibles. INDICACIONES \\- CONTRAINDICACIONES- PROTOCOLOS DE CAVITACION \\- RADIOFRECUENCIA BIPOLAR, CUATRO POLAR, SEXTA POLAR, VACUMM, LIPOLASER, ULTRASONIDO, MARTILLO EN FRIO Y CALOR**\n\n**💰 INVERSIÓN RD$3,500**\n\n**🔒 Reservación: RD$1,000 (No reembolsable)**\n\n**📍 DIRIGIDO A: Esteticistas · Cosmetólogas · Terapeutas corporales · Emprendedoras del área estética**",
+    "lineStart": 205,
+    "lineEnd": 236
+  },
+  "publicCopy": {
+    "title": "Taller de Aparatología 9 en 1",
+    "subtitle": "Lema: Aprende, transforma y sana con tus manos",
+    "category": {
+      "value": "Estética",
+      "pendingOwnerReview": false
+    },
+    "description": {
+      "value": "Domina las técnicas más efectivas de la aparatología corporal reductiva y aprende a trabajar protocolos completos para moldear, reducir y reafirmar el cuerpo de forma segura y profesional.",
+      "pendingOwnerReview": false
+    },
+    "pricing": {
+      "publicPrice": {
+        "amount": 3500,
+        "currency": "DOP",
+        "raw": "Inversión total: $3,500",
+        "pendingOwnerReview": false
+      },
+      "memberPrice": {
+        "amount": 2000,
+        "currency": "DOP",
+        "raw": "Miembros de ASNaMaTeM: $2,000",
+        "pendingOwnerReview": false
+      },
+      "reservation": {
+        "amount": 1000,
+        "currency": "DOP",
+        "raw": "Reservación: $1,000 (para asegurar el cupo)",
+        "pendingOwnerReview": false
+      },
+      "paymentPlan": [
+        "Reservación: $1,000 (para asegurar el cupo)",
+        "Primer dia de clases 2,500",
+        "🔒 Reservación: RD$1,000 (No reembolsable)"
+      ],
+      "rawLines": [
+        "Inversión total: $3,500",
+        "Reservación: $1,000 (para asegurar el cupo)",
+        "Primer dia de clases 2,500",
+        "Miembros de ASNaMaTeM: $2,000",
+        "💰 INVERSIÓN RD$3,500",
+        "🔒 Reservación: RD$1,000 (No reembolsable)"
+      ],
+      "pendingOwnerReview": false
+    },
+    "schedule": {
+      "dateText": "Próxima fecha por anunciar",
+      "duration": {
+        "value": "",
+        "pendingOwnerReview": true
+      },
+      "modality": {
+        "value": "Modalidad: Presencial y Online",
+        "pendingOwnerReview": false
+      },
+      "rawLines": [
+        "Horario: 2:00 PM a 5:00 PM",
+        "Modalidad: Presencial y Online"
+      ],
+      "pendingOwnerReview": true
+    },
+    "objectives": [],
+    "profile": [
+      "📍 DIRIGIDO A: Esteticistas · Cosmetólogas · Terapeutas corporales · Emprendedoras del área estética"
+    ],
+    "requirements": [],
+    "syllabusMarkdown": "**Temario:**\n\n**Manejo Profesional de Máquina 9 en 1**\n\n**Domina las técnicas más efectivas de la aparatología corporal reductiva y aprende a trabajar protocolos completos para moldear, reducir y reafirmar el cuerpo de forma segura y profesional.**\n\n**Un taller práctico diseñado para elevar tus resultados y ampliar tus servicios estéticos.**\n\n**✨ ¿QUÉ APRENDERÁS? • Manejo correcto de la máquina 9 en 1 • Protocolos reductivos y reafirmantes • Combinación de técnicas para mejores resultados • Indicaciones y contraindicaciones • Personalización de tratamientos corporales • Uso profesional enfocado en resultados visibles. INDICACIONES \\- CONTRAINDICACIONES- PROTOCOLOS DE CAVITACION \\- RADIOFRECUENCIA BIPOLAR, CUATRO POLAR, SEXTA POLAR, VACUMM, LIPOLASER, ULTRASONIDO, MARTILLO EN FRIO Y CALOR**\n\n**💰 INVERSIÓN RD$3,500**\n\n**🔒 Reservación: RD$1,000 (No reembolsable)**\n\n**📍 DIRIGIDO A: Esteticistas · Cosmetólogas · Terapeutas corporales · Emprendedoras del área estética**",
+    "indications": [
+      "✨ ¿QUÉ APRENDERÁS? • Manejo correcto de la máquina 9 en 1 • Protocolos reductivos y reafirmantes • Combinación de técnicas para mejores resultados • Indicaciones y contraindicaciones • Personalización de tratamientos corporales • Uso profesional enfocado en resultados visibles. INDICACIONES - CONTRAINDICACIONES- PROTOCOLOS DE CAVITACION - RADIOFRECUENCIA BIPOLAR, CUATRO POLAR, SEXTA POLAR, VACUMM, LIPOLASER, ULTRASONIDO, MARTILLO EN FRIO Y CALOR",
+      "💰 INVERSIÓN RD$3,500",
+      "🔒 Reservación: RD$1,000 (No reembolsable)",
+      "📍 DIRIGIDO A: Esteticistas · Cosmetólogas · Terapeutas corporales · Emprendedoras del área estética"
+    ],
+    "contraindications": [
+      "✨ ¿QUÉ APRENDERÁS? • Manejo correcto de la máquina 9 en 1 • Protocolos reductivos y reafirmantes • Combinación de técnicas para mejores resultados • Indicaciones y contraindicaciones • Personalización de tratamientos corporales • Uso profesional enfocado en resultados visibles. INDICACIONES - CONTRAINDICACIONES- PROTOCOLOS DE CAVITACION - RADIOFRECUENCIA BIPOLAR, CUATRO POLAR, SEXTA POLAR, VACUMM, LIPOLASER, ULTRASONIDO, MARTILLO EN FRIO Y CALOR",
+      "💰 INVERSIÓN RD$3,500",
+      "🔒 Reservación: RD$1,000 (No reembolsable)",
+      "📍 DIRIGIDO A: Esteticistas · Cosmetólogas · Terapeutas corporales · Emprendedoras del área estética"
+    ],
+    "practices": [],
+    "materials": [],
+    "competencies": [],
+    "certifications": [
+      "Certificación: Incluida"
+    ],
+    "endorsements": [
+      "Miembros de ASNaMaTeM: $2,000"
+    ],
+    "facilitator": "Sugeidy Vólquez García",
+    "legalNotes": [
+      "✨ ¿QUÉ APRENDERÁS? • Manejo correcto de la máquina 9 en 1 • Protocolos reductivos y reafirmantes • Combinación de técnicas para mejores resultados • Indicaciones y contraindicaciones • Personalización de tratamientos corporales • Uso profesional enfocado en resultados visibles. INDICACIONES - CONTRAINDICACIONES- PROTOCOLOS DE CAVITACION - RADIOFRECUENCIA BIPOLAR, CUATRO POLAR, SEXTA POLAR, VACUMM, LIPOLASER, ULTRASONIDO, MARTILLO EN FRIO Y CALOR"
+    ],
+    "professionalNotes": [],
+    "normalizedMarkdown": "### 📘 CUR-005 \\- Taller de Aparatología 9 en 1\n\n* **Categoría Actual:** Estética\n\n**Lema:** Aprende, transforma y sana con tus manos\n**Horario:** 2:00 PM a 5:00 PM\n**Modalidad:** Presencial y Online\n**Certificación:** Incluida\n\n### **Inversión**\n\n* **Inversión total:** $3,500\n* **Reservación:** $1,000 (para asegurar el cupo)\n  Primer dia de clases 2,500\n  **Miembros de ASNaMaTeM: $2,000**\n\n**Temario:**\n\n**Manejo Profesional de Máquina 9 en 1**\n\n**Domina las técnicas más efectivas de la aparatología corporal reductiva y aprende a trabajar protocolos completos para moldear, reducir y reafirmar el cuerpo de forma segura y profesional.**\n\n**Un taller práctico diseñado para elevar tus resultados y ampliar tus servicios estéticos.**\n\n**✨ ¿QUÉ APRENDERÁS? • Manejo correcto de la máquina 9 en 1 • Protocolos reductivos y reafirmantes • Combinación de técnicas para mejores resultados • Indicaciones y contraindicaciones • Personalización de tratamientos corporales • Uso profesional enfocado en resultados visibles. INDICACIONES \\- CONTRAINDICACIONES- PROTOCOLOS DE CAVITACION \\- RADIOFRECUENCIA BIPOLAR, CUATRO POLAR, SEXTA POLAR, VACUMM, LIPOLASER, ULTRASONIDO, MARTILLO EN FRIO Y CALOR**\n\n**💰 INVERSIÓN RD$3,500**\n\n**🔒 Reservación: RD$1,000 (No reembolsable)**\n\n**📍 DIRIGIDO A: Esteticistas · Cosmetólogas · Terapeutas corporales · Emprendedoras del área estética**"
+  }
+}

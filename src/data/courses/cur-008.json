@@ -1,0 +1,121 @@
+{
+  "courseUid": "masaje-reductor-y-maderoterapia",
+  "sourceId": "CUR-008",
+  "legacyIds": [
+    "CUR-008",
+    "CUR-009"
+  ],
+  "slug": "masaje-reductor-y-maderoterapia",
+  "title": "Masaje reductor y maderoterapia",
+  "requiresOwnerReview": true,
+  "requiresLegalReview": true,
+  "pendingOwnerReview": true,
+  "publicationStatus": "published",
+  "sourceRaw": {
+    "heading": "### 📘 CUR-008 \\- Masaje reductor y maderoterapia",
+    "markdown": "### 📘 CUR-008 \\- Masaje reductor y maderoterapia\n\n### **Categoría Actual:** Especialidades\n\n* **Slogan:** Aprende • Aplica • Transforma  \n* **Objetivo:** Técnicas efectivas para moldear tu figura, reducir medidas, activar la circulación y mejorar la apariencia de la piel.\n\n### **Logística y Horario**\n\n*   \n* **Horario:** 9:00 AM a 12:30 PM\n\n### **Temario**\n\n### **Beneficios de la maderoterapia**\n\n### **Indicaciones \\- contraindicaciones de la maderoterapia**\n\n### **Uso de cada herramienta de madera**\n\n### **protocolos para la maderoterapia** \n\n### **Cuidado de las herramientas** \n\n### **Higienización de las herramientas** \n\n### **Cálculo de costo de servicio**\n\n### **Beneficios Clave**\n\n* Reduce medidas  \n* Activa la circulación  \n* Mejora la apariencia de la piel  \n* Relaja y tonifica\n\n### **Inversión y Reserva**\n\n* **Público General:** $3,000  \n* **Miembros de AsNaMaTeM:** $2,000  \n* **Reservación:** $1,000 (No reembolsable)",
+    "lineStart": 311,
+    "lineEnd": 351
+  },
+  "publicCopy": {
+    "title": "Masaje reductor y maderoterapia",
+    "subtitle": "Slogan: Aprende • Aplica • Transforma",
+    "category": {
+      "value": "Especialidades",
+      "pendingOwnerReview": false
+    },
+    "description": {
+      "value": "Objetivo: Técnicas efectivas para moldear tu figura, reducir medidas, activar la circulación y mejorar la apariencia de la piel.",
+      "pendingOwnerReview": false
+    },
+    "pricing": {
+      "publicPrice": {
+        "amount": 3000,
+        "currency": "DOP",
+        "raw": "Público General: $3,000",
+        "pendingOwnerReview": false
+      },
+      "memberPrice": {
+        "amount": 2000,
+        "currency": "DOP",
+        "raw": "Miembros de AsNaMaTeM: $2,000",
+        "pendingOwnerReview": false
+      },
+      "reservation": {
+        "amount": 1000,
+        "currency": "DOP",
+        "raw": "Reservación: $1,000 (No reembolsable)",
+        "pendingOwnerReview": false
+      },
+      "paymentPlan": [
+        "Reservación: $1,000 (No reembolsable)"
+      ],
+      "rawLines": [
+        "Público General: $3,000",
+        "Miembros de AsNaMaTeM: $2,000",
+        "Reservación: $1,000 (No reembolsable)"
+      ],
+      "pendingOwnerReview": false
+    },
+    "schedule": {
+      "dateText": "Próxima fecha por anunciar",
+      "duration": {
+        "value": "",
+        "pendingOwnerReview": true
+      },
+      "modality": {
+        "value": "",
+        "pendingOwnerReview": true
+      },
+      "rawLines": [
+        "Logística y Horario",
+        "Horario: 9:00 AM a 12:30 PM"
+      ],
+      "pendingOwnerReview": true
+    },
+    "objectives": [],
+    "profile": [],
+    "requirements": [],
+    "syllabusMarkdown": "### **Temario**\n\n### **Beneficios de la maderoterapia**\n\n### **Indicaciones \\- contraindicaciones de la maderoterapia**\n\n### **Uso de cada herramienta de madera**\n\n### **protocolos para la maderoterapia**\n\n### **Cuidado de las herramientas**\n\n### **Higienización de las herramientas**\n\n### **Cálculo de costo de servicio**\n\n### **Beneficios Clave**\n\n* Reduce medidas\n* Activa la circulación\n* Mejora la apariencia de la piel\n* Relaja y tonifica\n\n### **Inversión y Reserva**\n\n* **Público General:** $3,000\n* **Miembros de AsNaMaTeM:** $2,000\n* **Reservación:** $1,000 (No reembolsable)",
+    "indications": [
+      "Indicaciones - contraindicaciones de la maderoterapia",
+      "Uso de cada herramienta de madera",
+      "protocolos para la maderoterapia",
+      "Cuidado de las herramientas",
+      "Higienización de las herramientas",
+      "Cálculo de costo de servicio",
+      "Beneficios Clave",
+      "Reduce medidas",
+      "Activa la circulación",
+      "Mejora la apariencia de la piel",
+      "Relaja y tonifica",
+      "Inversión y Reserva",
+      "Público General: $3,000",
+      "Miembros de AsNaMaTeM: $2,000",
+      "Reservación: $1,000 (No reembolsable)"
+    ],
+    "contraindications": [],
+    "practices": [],
+    "materials": [],
+    "competencies": [],
+    "certifications": [],
+    "endorsements": [
+      "Miembros de AsNaMaTeM: $2,000"
+    ],
+    "facilitator": "Sugeidy Vólquez García",
+    "legalNotes": [
+      "Indicaciones - contraindicaciones de la maderoterapia"
+    ],
+    "professionalNotes": [],
+    "normalizedMarkdown": "### 📘 CUR-008 \\- Masaje reductor y maderoterapia\n\n### **Categoría Actual:** Especialidades\n\n* **Slogan:** Aprende • Aplica • Transforma\n* **Objetivo:** Técnicas efectivas para moldear tu figura, reducir medidas, activar la circulación y mejorar la apariencia de la piel.\n\n### **Logística y Horario**\n\n*\n* **Horario:** 9:00 AM a 12:30 PM\n\n### **Temario**\n\n### **Beneficios de la maderoterapia**\n\n### **Indicaciones \\- contraindicaciones de la maderoterapia**\n\n### **Uso de cada herramienta de madera**\n\n### **protocolos para la maderoterapia**\n\n### **Cuidado de las herramientas**\n\n### **Higienización de las herramientas**\n\n### **Cálculo de costo de servicio**\n\n### **Beneficios Clave**\n\n* Reduce medidas\n* Activa la circulación\n* Mejora la apariencia de la piel\n* Relaja y tonifica\n\n### **Inversión y Reserva**\n\n* **Público General:** $3,000\n* **Miembros de AsNaMaTeM:** $2,000\n* **Reservación:** $1,000 (No reembolsable)"
+  },
+  "archivedAliases": [
+    {
+      "legacyId": "CUR-009",
+      "courseUid": "madeoterapia",
+      "title": "Madeoterapia",
+      "reason": "Duplicado histórico/typo del catálogo anterior; se conserva solo como alias archivado de Maderoterapia.",
+      "publicationStatus": "archived"
+    }
+  ]
+}

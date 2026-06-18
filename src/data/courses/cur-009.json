@@ -1,0 +1,95 @@
+{
+  "courseUid": "taller-de-vacummterapia-corporal-estetico",
+  "sourceId": "CUR-009",
+  "legacyIds": [
+    "CUR-010"
+  ],
+  "slug": "taller-de-vacummterapia-corporal-estetico",
+  "title": "Taller de Vacummterapia Corporal Estetico",
+  "requiresOwnerReview": true,
+  "requiresLegalReview": true,
+  "pendingOwnerReview": true,
+  "publicationStatus": "published",
+  "sourceRaw": {
+    "heading": "### 📘 CUR-009 \\- Taller de Vacummterapia Corporal Estetico",
+    "markdown": "### 📘 CUR-009 \\- Taller de Vacummterapia Corporal Estetico\n\n* **Categoría Actual:** Estética\n\n### **Identidad y Título**\n\n* **Institución:** SuVoGa Escuelas de Masajes *(Formando Profesionales en Estética y Bienestar)*  \n* **Programa:** Taller Especializado: Protocolo de Vacuum Terapia Corporal  \n* **Enfoque:** Uso Profesional en Glúteos  \n* **Disponibilidad:** ¡Cupos Limitados\\!\n\n### **Logística y Horario**\n\n* **Fecha:** Sábado 23 de Mayo  \n* **Horario:** 2:00 PM a 5:00 PM\n\n### **Contenido Curricular (Aprende paso a paso)**\n\n* Protocolo y técnicas de glúteos, piernas, abdomen, espalda, brazos  \n* Manejo del equipo  \n* Indicaciones y contraindicaciones  \n* Recomendaciones post tratamiento  \n* Cómo ofreces el servicio de forma profesional *(Nota: escrito en el arte como \"Cómo ofreces\")*  \n* *Indicaciones \\- Contraindicaciones*\n\n### **Inversión y Reserva**\n\n* **Inversión total:** RD$3,000  \n* **Reservación:** RD$1,000 *(No reembolsable)*\n\n### **Contacto**\n\n* **Información y Reservas:** 📞 829-838-9185",
+    "lineStart": 352,
+    "lineEnd": 385
+  },
+  "publicCopy": {
+    "title": "Taller de Vacummterapia Corporal Estetico",
+    "subtitle": "Programa: Taller Especializado: Protocolo de Vacuum Terapia Corporal",
+    "category": {
+      "value": "Estética",
+      "pendingOwnerReview": false
+    },
+    "description": {
+      "value": "Institución: SuVoGa Escuelas de Masajes (Formando Profesionales en Estética y Bienestar)",
+      "pendingOwnerReview": false
+    },
+    "pricing": {
+      "publicPrice": {
+        "amount": 3000,
+        "currency": "DOP",
+        "raw": "Inversión total: RD$3,000",
+        "pendingOwnerReview": false
+      },
+      "memberPrice": null,
+      "reservation": {
+        "amount": 1000,
+        "currency": "DOP",
+        "raw": "Reservación: RD$1,000 (No reembolsable)",
+        "pendingOwnerReview": false
+      },
+      "paymentPlan": [
+        "Reservación: RD$1,000 (No reembolsable)",
+        "Información y Reservas: 📞 829-838-9185"
+      ],
+      "rawLines": [
+        "Inversión total: RD$3,000",
+        "Reservación: RD$1,000 (No reembolsable)",
+        "Información y Reservas: 📞 829-838-9185"
+      ],
+      "pendingOwnerReview": false
+    },
+    "schedule": {
+      "dateText": "Fecha: Sábado 23 de Mayo",
+      "duration": {
+        "value": "",
+        "pendingOwnerReview": true
+      },
+      "modality": {
+        "value": "",
+        "pendingOwnerReview": true
+      },
+      "rawLines": [
+        "Logística y Horario",
+        "Fecha: Sábado 23 de Mayo",
+        "Horario: 2:00 PM a 5:00 PM"
+      ],
+      "pendingOwnerReview": true
+    },
+    "objectives": [],
+    "profile": [],
+    "requirements": [],
+    "syllabusMarkdown": "### **Contenido Curricular (Aprende paso a paso)**\n\n* Protocolo y técnicas de glúteos, piernas, abdomen, espalda, brazos\n* Manejo del equipo\n* Indicaciones y contraindicaciones\n* Recomendaciones post tratamiento\n* Cómo ofreces el servicio de forma profesional *(Nota: escrito en el arte como \"Cómo ofreces\")*\n* *Indicaciones \\- Contraindicaciones*\n\n### **Inversión y Reserva**\n\n* **Inversión total:** RD$3,000\n* **Reservación:** RD$1,000 *(No reembolsable)*\n\n### **Contacto**\n\n* **Información y Reservas:** 📞 829-838-9185",
+    "indications": [
+      "Indicaciones y contraindicaciones",
+      "Recomendaciones post tratamiento",
+      "Cómo ofreces el servicio de forma profesional (Nota: escrito en el arte como \"Cómo ofreces\")"
+    ],
+    "contraindications": [],
+    "practices": [],
+    "materials": [],
+    "competencies": [],
+    "certifications": [],
+    "endorsements": [],
+    "facilitator": "Sugeidy Vólquez García",
+    "legalNotes": [
+      "Indicaciones y contraindicaciones",
+      "Indicaciones - Contraindicaciones"
+    ],
+    "professionalNotes": [],
+    "normalizedMarkdown": "### 📘 CUR-009 \\- Taller de Vacummterapia Corporal Estetico\n\n* **Categoría Actual:** Estética\n\n### **Identidad y Título**\n\n* **Institución:** SuVoGa Escuelas de Masajes *(Formando Profesionales en Estética y Bienestar)*\n* **Programa:** Taller Especializado: Protocolo de Vacuum Terapia Corporal\n* **Enfoque:** Uso Profesional en Glúteos\n* **Disponibilidad:** ¡Cupos Limitados\\!\n\n### **Logística y Horario**\n\n* **Fecha:** Sábado 23 de Mayo\n* **Horario:** 2:00 PM a 5:00 PM\n\n### **Contenido Curricular (Aprende paso a paso)**\n\n* Protocolo y técnicas de glúteos, piernas, abdomen, espalda, brazos\n* Manejo del equipo\n* Indicaciones y contraindicaciones\n* Recomendaciones post tratamiento\n* Cómo ofreces el servicio de forma profesional *(Nota: escrito en el arte como \"Cómo ofreces\")*\n* *Indicaciones \\- Contraindicaciones*\n\n### **Inversión y Reserva**\n\n* **Inversión total:** RD$3,000\n* **Reservación:** RD$1,000 *(No reembolsable)*\n\n### **Contacto**\n\n* **Información y Reservas:** 📞 829-838-9185"
+  }
+}

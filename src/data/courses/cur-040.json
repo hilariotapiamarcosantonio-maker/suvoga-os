@@ -1,0 +1,112 @@
+{
+  "courseUid": "taller-de-elaboracion-de-productos-capilares",
+  "sourceId": "CUR-040",
+  "legacyIds": [],
+  "slug": "taller-de-elaboracion-de-productos-capilares",
+  "title": "TALLER DE ELABORACIÓN DE PRODUCTOS CAPILARES",
+  "requiresOwnerReview": true,
+  "requiresLegalReview": true,
+  "pendingOwnerReview": true,
+  "publicationStatus": "published",
+  "sourceRaw": {
+    "heading": "### 📘 CUR-040-**TALLER DE ELABORACIÓN DE PRODUCTOS CAPILARES** ",
+    "markdown": "### 📘 CUR-040-**TALLER DE ELABORACIÓN DE PRODUCTOS CAPILARES** \n\n### **Modalidad:** Teórico – Práctico  **Duración:** 6 a 8 Horas  **Nivel:** Básico  **Facilitadora:** **Sugeidy Vólquez García**\n\n### **Inversión y Reserva**\n\n* ### **Miembros ASNaMaTeM:** RD$4,000\n\n* ### **Público General:** RD$5,000\n\n* ### **Reservación:** RD$1,000 *(No reembolsable Ni transferible a otro curso)* \n\n### **Temario del Taller**\n\n## **Módulo I. Introducción a la Cosmética Capilar**\n\n* ### Conceptos básicos de cosmetología capilar.\n\n* ### Estructura y funciones del cabello.\n\n* ### Tipos de cabello y necesidades específicas.\n\n* ### Normas de higiene, seguridad y buenas prácticas de manufactura.\n\n## **Módulo II. Materias Primas y Activos Cosméticos**\n\n* ### Agua destilada y aguas florales.\n\n* ### Tensioactivos y agentes limpiadores.\n\n* ### Aceites vegetales y mantecas naturales.\n\n* ### Extractos de plantas medicinales.\n\n* ### Proteínas, vitaminas y queratina hidrolizada.\n\n* ### Conservantes, fragancias y colorantes cosméticos.\n\n* ### Selección adecuada de ingredientes según el tipo de cabello.\n\n## **Módulo III. Elaboración de Productos de Limpieza Capilar**\n\n* ### Formulación y preparación de:\n\n  * ### Champú hidratante.\n\n  * ### Champú fortalecedor.\n\n  * ### Champú anticaspa.\n\n  * ### Champú para cabello graso.\n\n* ### Ajuste de viscosidad y pH.\n\n* ### Técnicas de mezclado y envasado.\n\n## **Módulo IV. Elaboración de Tratamientos Capilares**\n\n* ### Formulación y elaboración de:\n\n  * ### Acondicionador nutritivo.\n\n  * ### Mascarilla capilar reparadora.\n\n  * ### Crema para peinar.\n\n  * ### Leave-in hidratante.\n\n  * ### Sérum para puntas abiertas.\n\n  * ### Tónico estimulante para el crecimiento capilar.\n\n* ### Uso de activos naturales y aceites esenciales.\n\n## **Módulo V. Control de Calidad y Conservación**\n\n* ### Evaluación de textura, aroma y estabilidad.\n\n* ### Medición y ajuste del pH.\n\n* ### Conservación y vida útil de los productos.\n\n* ### Buenas prácticas de almacenamiento.\n\n## **Módulo VI. Empaque y Comercialización**\n\n* ### Selección de envases adecuados.\n\n* ### Diseño básico de etiquetas cosméticas.\n\n* ### Cálculo de costos y fijación de precios.\n\n* ### Estrategias de promoción y ventas.\n\n* ### Requisitos básicos para la comercialización de productos cosméticos artesanales.\n\n## **Práctica Final**\n\n### ✔ Elaboración de un champú personalizado.  ✔ Elaboración de una mascarilla capilar nutritiva.  ✔ Preparación de un sérum o tónico capilar.  ✔ Envasado, etiquetado y presentación de los productos terminados.\n\n### **Incluye**\n\n### ✅ Manual digital con formulaciones base.  ✅ Guía de materias primas y proveedores.  ✅ Recetario de productos capilares.  ✅ Certificado de participación.\n\n### ---\n\n### **SuVoGa Escuela y Centro de Masajes**\n\n### **Elaborado por:**  **Sugeidy Volquez – Directora de SuVoGa Escuela y Centro de Masajes**\n\n###",
+    "lineStart": 5793,
+    "lineEnd": 5903
+  },
+  "publicCopy": {
+    "title": "TALLER DE ELABORACIÓN DE PRODUCTOS CAPILARES",
+    "subtitle": "Miembros ASNaMaTeM: RD$4,000",
+    "category": {
+      "value": "",
+      "pendingOwnerReview": true
+    },
+    "description": {
+      "value": "Módulo I. Introducción a la Cosmética Capilar",
+      "pendingOwnerReview": false
+    },
+    "pricing": {
+      "publicPrice": {
+        "amount": 5000,
+        "currency": "DOP",
+        "raw": "Público General: RD$5,000",
+        "pendingOwnerReview": false
+      },
+      "memberPrice": {
+        "amount": 4000,
+        "currency": "DOP",
+        "raw": "Miembros ASNaMaTeM: RD$4,000",
+        "pendingOwnerReview": false
+      },
+      "reservation": {
+        "amount": 1000,
+        "currency": "DOP",
+        "raw": "Reservación: RD$1,000 (No reembolsable Ni transferible a otro curso)",
+        "pendingOwnerReview": false
+      },
+      "paymentPlan": [
+        "Reservación: RD$1,000 (No reembolsable Ni transferible a otro curso)"
+      ],
+      "rawLines": [
+        "Miembros ASNaMaTeM: RD$4,000",
+        "Público General: RD$5,000",
+        "Reservación: RD$1,000 (No reembolsable Ni transferible a otro curso)"
+      ],
+      "pendingOwnerReview": false
+    },
+    "schedule": {
+      "dateText": "Próxima fecha por anunciar",
+      "duration": {
+        "value": "Modalidad: Teórico – Práctico Duración: 6 a 8 Horas Nivel: Básico Facilitadora: Sugeidy Vólquez García",
+        "pendingOwnerReview": false
+      },
+      "modality": {
+        "value": "Modalidad: Teórico – Práctico Duración: 6 a 8 Horas Nivel: Básico Facilitadora: Sugeidy Vólquez García",
+        "pendingOwnerReview": false
+      },
+      "rawLines": [
+        "Modalidad: Teórico – Práctico Duración: 6 a 8 Horas Nivel: Básico Facilitadora: Sugeidy Vólquez García"
+      ],
+      "pendingOwnerReview": false
+    },
+    "objectives": [],
+    "profile": [],
+    "requirements": [
+      "Requisitos básicos para la comercialización de productos cosméticos artesanales."
+    ],
+    "syllabusMarkdown": "### **Temario del Taller**\n\n## **Módulo I. Introducción a la Cosmética Capilar**\n\n* ### Conceptos básicos de cosmetología capilar.\n\n* ### Estructura y funciones del cabello.\n\n* ### Tipos de cabello y necesidades específicas.\n\n* ### Normas de higiene, seguridad y buenas prácticas de manufactura.\n\n## **Módulo II. Materias Primas y Activos Cosméticos**\n\n* ### Agua destilada y aguas florales.\n\n* ### Tensioactivos y agentes limpiadores.\n\n* ### Aceites vegetales y mantecas naturales.\n\n* ### Extractos de plantas medicinales.\n\n* ### Proteínas, vitaminas y queratina hidrolizada.\n\n* ### Conservantes, fragancias y colorantes cosméticos.\n\n* ### Selección adecuada de ingredientes según el tipo de cabello.\n\n## **Módulo III. Elaboración de Productos de Limpieza Capilar**\n\n* ### Formulación y preparación de:\n\n  * ### Champú hidratante.\n\n  * ### Champú fortalecedor.\n\n  * ### Champú anticaspa.\n\n  * ### Champú para cabello graso.\n\n* ### Ajuste de viscosidad y pH.\n\n* ### Técnicas de mezclado y envasado.\n\n## **Módulo IV. Elaboración de Tratamientos Capilares**\n\n* ### Formulación y elaboración de:\n\n  * ### Acondicionador nutritivo.\n\n  * ### Mascarilla capilar reparadora.\n\n  * ### Crema para peinar.\n\n  * ### Leave-in hidratante.\n\n  * ### Sérum para puntas abiertas.\n\n  * ### Tónico estimulante para el crecimiento capilar.\n\n* ### Uso de activos naturales y aceites esenciales.\n\n## **Módulo V. Control de Calidad y Conservación**\n\n* ### Evaluación de textura, aroma y estabilidad.\n\n* ### Medición y ajuste del pH.\n\n* ### Conservación y vida útil de los productos.\n\n* ### Buenas prácticas de almacenamiento.\n\n## **Módulo VI. Empaque y Comercialización**\n\n* ### Selección de envases adecuados.\n\n* ### Diseño básico de etiquetas cosméticas.\n\n* ### Cálculo de costos y fijación de precios.\n\n* ### Estrategias de promoción y ventas.\n\n* ### Requisitos básicos para la comercialización de productos cosméticos artesanales.\n\n## **Práctica Final**\n\n### ✔ Elaboración de un champú personalizado.  ✔ Elaboración de una mascarilla capilar nutritiva.  ✔ Preparación de un sérum o tónico capilar.  ✔ Envasado, etiquetado y presentación de los productos terminados.\n\n### **Incluye**\n\n### ✅ Manual digital con formulaciones base.  ✅ Guía de materias primas y proveedores.  ✅ Recetario de productos capilares.  ✅ Certificado de participación.\n\n### ---\n\n### **SuVoGa Escuela y Centro de Masajes**",
+    "indications": [],
+    "contraindications": [],
+    "practices": [
+      "Normas de higiene, seguridad y buenas prácticas de manufactura.",
+      "Módulo II. Materias Primas y Activos Cosméticos",
+      "Agua destilada y aguas florales.",
+      "Tensioactivos y agentes limpiadores.",
+      "Aceites vegetales y mantecas naturales.",
+      "Extractos de plantas medicinales.",
+      "Proteínas, vitaminas y queratina hidrolizada.",
+      "Conservantes, fragancias y colorantes cosméticos.",
+      "Selección adecuada de ingredientes según el tipo de cabello."
+    ],
+    "materials": [
+      "Incluye",
+      "✅ Manual digital con formulaciones base. ✅ Guía de materias primas y proveedores. ✅ Recetario de productos capilares. ✅ Certificado de participación.",
+      "SuVoGa Escuela y Centro de Masajes",
+      "Elaborado por: Sugeidy Volquez – Directora de SuVoGa Escuela y Centro de Masajes"
+    ],
+    "competencies": [],
+    "certifications": [
+      "✅ Manual digital con formulaciones base. ✅ Guía de materias primas y proveedores. ✅ Recetario de productos capilares. ✅ Certificado de participación."
+    ],
+    "endorsements": [
+      "Miembros ASNaMaTeM: RD$4,000"
+    ],
+    "facilitator": "Sugeidy Vólquez García",
+    "legalNotes": [
+      "Extractos de plantas medicinales.",
+      "Medición y ajuste del pH."
+    ],
+    "professionalNotes": [],
+    "normalizedMarkdown": "### 📘 CUR-040-**TALLER DE ELABORACIÓN DE PRODUCTOS CAPILARES**\n\n### **Modalidad:** Teórico – Práctico  **Duración:** 6 a 8 Horas  **Nivel:** Básico  **Facilitadora:** **Sugeidy Vólquez García**\n\n### **Inversión y Reserva**\n\n* ### **Miembros ASNaMaTeM:** RD$4,000\n\n* ### **Público General:** RD$5,000\n\n* ### **Reservación:** RD$1,000 *(No reembolsable Ni transferible a otro curso)*\n\n### **Temario del Taller**\n\n## **Módulo I. Introducción a la Cosmética Capilar**\n\n* ### Conceptos básicos de cosmetología capilar.\n\n* ### Estructura y funciones del cabello.\n\n* ### Tipos de cabello y necesidades específicas.\n\n* ### Normas de higiene, seguridad y buenas prácticas de manufactura.\n\n## **Módulo II. Materias Primas y Activos Cosméticos**\n\n* ### Agua destilada y aguas florales.\n\n* ### Tensioactivos y agentes limpiadores.\n\n* ### Aceites vegetales y mantecas naturales.\n\n* ### Extractos de plantas medicinales.\n\n* ### Proteínas, vitaminas y queratina hidrolizada.\n\n* ### Conservantes, fragancias y colorantes cosméticos.\n\n* ### Selección adecuada de ingredientes según el tipo de cabello.\n\n## **Módulo III. Elaboración de Productos de Limpieza Capilar**\n\n* ### Formulación y preparación de:\n\n  * ### Champú hidratante.\n\n  * ### Champú fortalecedor.\n\n  * ### Champú anticaspa.\n\n  * ### Champú para cabello graso.\n\n* ### Ajuste de viscosidad y pH.\n\n* ### Técnicas de mezclado y envasado.\n\n## **Módulo IV. Elaboración de Tratamientos Capilares**\n\n* ### Formulación y elaboración de:\n\n  * ### Acondicionador nutritivo.\n\n  * ### Mascarilla capilar reparadora.\n\n  * ### Crema para peinar.\n\n  * ### Leave-in hidratante.\n\n  * ### Sérum para puntas abiertas.\n\n  * ### Tónico estimulante para el crecimiento capilar.\n\n* ### Uso de activos naturales y aceites esenciales.\n\n## **Módulo V. Control de Calidad y Conservación**\n\n* ### Evaluación de textura, aroma y estabilidad.\n\n* ### Medición y ajuste del pH.\n\n* ### Conservación y vida útil de los productos.\n\n* ### Buenas prácticas de almacenamiento.\n\n## **Módulo VI. Empaque y Comercialización**\n\n* ### Selección de envases adecuados.\n\n* ### Diseño básico de etiquetas cosméticas.\n\n* ### Cálculo de costos y fijación de precios.\n\n* ### Estrategias de promoción y ventas.\n\n* ### Requisitos básicos para la comercialización de productos cosméticos artesanales.\n\n## **Práctica Final**\n\n### ✔ Elaboración de un champú personalizado.  ✔ Elaboración de una mascarilla capilar nutritiva.  ✔ Preparación de un sérum o tónico capilar.  ✔ Envasado, etiquetado y presentación de los productos terminados.\n\n### **Incluye**\n\n### ✅ Manual digital con formulaciones base.  ✅ Guía de materias primas y proveedores.  ✅ Recetario de productos capilares.  ✅ Certificado de participación.\n\n### ---\n\n### **SuVoGa Escuela y Centro de Masajes**\n\n### **Elaborado por:**  **Sugeidy Volquez – Directora de SuVoGa Escuela y Centro de Masajes**\n\n###"
+  }
+}

@@ -1,0 +1,119 @@
+{
+  "courseUid": "taller-de-elaboracion-de-exfoliantes-sales-de-bano-y-bombas-de-bano",
+  "sourceId": "CUR-038",
+  "legacyIds": [],
+  "slug": "taller-de-elaboracion-de-exfoliantes-sales-de-bano-y-bombas-de-bano",
+  "title": "TALLER DE ELABORACIÓN DE EXFOLIANTES, SALES DE BAÑO Y BOMBAS DE BAÑO",
+  "requiresOwnerReview": true,
+  "requiresLegalReview": false,
+  "pendingOwnerReview": true,
+  "publicationStatus": "published",
+  "sourceRaw": {
+    "heading": "### 📘 CUR-038-**TALLER DE ELABORACIÓN DE EXFOLIANTES, SALES DE BAÑO Y BOMBAS DE BAÑO** ",
+    "markdown": "### 📘 CUR-038-**TALLER DE ELABORACIÓN DE EXFOLIANTES, SALES DE BAÑO Y BOMBAS DE BAÑO** \n\n**Modalidad:** Teórico – Práctico  \n **Duración:** 6 a 8 Horas  \n **Nivel:** Básico  \n **Facilitadora:** **Sugeidy Vólquez García**\n\n### **Inversión y Reserva**\n\n* ### **Miembros ASNaMaTeM:** RD$3000\n\n* ### **Público General:** RD$4000\n\n* ### **Reservación:** RD$1,000 *(No reembolsable Ni transferible a otro curso)* \n\n  ### **Temario del Taller**\n\n  ### **Módulo I. Introducción a la Cosmética Artesanal**\n\n* Concepto y beneficios de la cosmética natural.  \n* Normas de higiene y seguridad en la elaboración.  \n* Equipos, utensilios y materiales necesarios.  \n* Conservación y almacenamiento de productos cosméticos.\n\n  ### **Módulo II. Elaboración de Exfoliantes Corporales**\n\n* Beneficios de la exfoliación en la piel.  \n* Tipos de exfoliantes: físicos y naturales.  \n* Ingredientes exfoliantes más utilizados:  \n  * Azúcar  \n  * Sal marina  \n  * Café  \n  * Avena  \n  * Semillas molidas  \n* Elaboración práctica de exfoliantes:  \n  * Exfoliante de café y coco.  \n  * Exfoliante de azúcar con vainilla.  \n  * Exfoliante de avena y miel.\n\n  ### **Módulo III. Elaboración de Sales de Baño**\n\n* Propiedades terapéuticas de las sales minerales.  \n* Tipos de sales utilizadas:  \n  * Sal marina  \n  * Sal de Epsom  \n  * Sal rosada del Himalaya  \n* Uso de aceites esenciales y colorantes cosméticos.  \n* Elaboración práctica de:  \n  * Sales relajantes de lavanda.  \n  * Sales energizantes de cítricos.  \n  * Sales desintoxicantes con romero y menta.\n\n  ### **Módulo IV. Elaboración de Bombas de Baño**\n\n* Principios de efervescencia cosmética.  \n* Ingredientes básicos:  \n  * Bicarbonato de sodio.  \n  * Ácido cítrico.  \n  * Almidón de maíz.  \n  * Aceites vegetales.  \n  * Fragancias y colorantes.  \n* Técnicas de mezclado y moldeado.  \n* Elaboración práctica de:  \n  * Bombas de baño relajantes.  \n  * Bombas de baño aromaterapéuticas.  \n  * Bombas de baño decorativas con pétalos secos.\n\n  ### **Módulo V. Presentación y Comercialización**\n\n* Empaque creativo y etiquetado básico.  \n* Cálculo de costos y fijación de precios.  \n* Recomendaciones para la venta y promoción de productos artesanales.  \n* Ideas para crear kits de regalo y líneas de spa.\n\n  ### **Práctica Final**\n\n✔ Elaboración de un exfoliante corporal.  \n ✔ Elaboración de una mezcla de sales de baño.  \n ✔ Elaboración de dos bombas de baño efervescentes.  \n ✔ Empaque y presentación de los productos elaborados.\n\n---\n\n### **Incluye**\n\n✅ Manual digital del taller.  \n ✅ Material de apoyo y recetas base.  \n ✅ Certificado de participación.\n\n**Elaborado por:**  \n **Sugeidy Volquez – Directora de SuVoGa Escuela y Centro de Masajes**\n\n*",
+    "lineStart": 5612,
+    "lineEnd": 5705
+  },
+  "publicCopy": {
+    "title": "TALLER DE ELABORACIÓN DE EXFOLIANTES, SALES DE BAÑO Y BOMBAS DE BAÑO",
+    "subtitle": "Facilitadora: Sugeidy Vólquez García",
+    "category": {
+      "value": "",
+      "pendingOwnerReview": true
+    },
+    "description": {
+      "value": "Módulo I. Introducción a la Cosmética Artesanal",
+      "pendingOwnerReview": false
+    },
+    "pricing": {
+      "publicPrice": {
+        "amount": 4000,
+        "currency": "DOP",
+        "raw": "Público General: RD$4000",
+        "pendingOwnerReview": false
+      },
+      "memberPrice": {
+        "amount": 3000,
+        "currency": "DOP",
+        "raw": "Miembros ASNaMaTeM: RD$3000",
+        "pendingOwnerReview": false
+      },
+      "reservation": {
+        "amount": 1000,
+        "currency": "DOP",
+        "raw": "Reservación: RD$1,000 (No reembolsable Ni transferible a otro curso)",
+        "pendingOwnerReview": false
+      },
+      "paymentPlan": [
+        "Reservación: RD$1,000 (No reembolsable Ni transferible a otro curso)"
+      ],
+      "rawLines": [
+        "Miembros ASNaMaTeM: RD$3000",
+        "Público General: RD$4000",
+        "Reservación: RD$1,000 (No reembolsable Ni transferible a otro curso)"
+      ],
+      "pendingOwnerReview": false
+    },
+    "schedule": {
+      "dateText": "Próxima fecha por anunciar",
+      "duration": {
+        "value": "Duración: 6 a 8 Horas",
+        "pendingOwnerReview": false
+      },
+      "modality": {
+        "value": "Modalidad: Teórico – Práctico",
+        "pendingOwnerReview": false
+      },
+      "rawLines": [
+        "Modalidad: Teórico – Práctico",
+        "Duración: 6 a 8 Horas"
+      ],
+      "pendingOwnerReview": false
+    },
+    "objectives": [],
+    "profile": [],
+    "requirements": [],
+    "syllabusMarkdown": "### **Temario del Taller**\n\n  ### **Módulo I. Introducción a la Cosmética Artesanal**\n\n* Concepto y beneficios de la cosmética natural.\n* Normas de higiene y seguridad en la elaboración.\n* Equipos, utensilios y materiales necesarios.\n* Conservación y almacenamiento de productos cosméticos.\n\n  ### **Módulo II. Elaboración de Exfoliantes Corporales**\n\n* Beneficios de la exfoliación en la piel.\n* Tipos de exfoliantes: físicos y naturales.\n* Ingredientes exfoliantes más utilizados:\n  * Azúcar\n  * Sal marina\n  * Café\n  * Avena\n  * Semillas molidas\n* Elaboración práctica de exfoliantes:\n  * Exfoliante de café y coco.\n  * Exfoliante de azúcar con vainilla.\n  * Exfoliante de avena y miel.\n\n  ### **Módulo III. Elaboración de Sales de Baño**\n\n* Propiedades terapéuticas de las sales minerales.\n* Tipos de sales utilizadas:\n  * Sal marina\n  * Sal de Epsom\n  * Sal rosada del Himalaya\n* Uso de aceites esenciales y colorantes cosméticos.\n* Elaboración práctica de:\n  * Sales relajantes de lavanda.\n  * Sales energizantes de cítricos.\n  * Sales desintoxicantes con romero y menta.\n\n  ### **Módulo IV. Elaboración de Bombas de Baño**\n\n* Principios de efervescencia cosmética.\n* Ingredientes básicos:\n  * Bicarbonato de sodio.\n  * Ácido cítrico.\n  * Almidón de maíz.\n  * Aceites vegetales.\n  * Fragancias y colorantes.\n* Técnicas de mezclado y moldeado.\n* Elaboración práctica de:\n  * Bombas de baño relajantes.\n  * Bombas de baño aromaterapéuticas.\n  * Bombas de baño decorativas con pétalos secos.\n\n  ### **Módulo V. Presentación y Comercialización**\n\n* Empaque creativo y etiquetado básico.\n* Cálculo de costos y fijación de precios.\n* Recomendaciones para la venta y promoción de productos artesanales.\n* Ideas para crear kits de regalo y líneas de spa.\n\n  ### **Práctica Final**\n\n✔ Elaboración de un exfoliante corporal.\n ✔ Elaboración de una mezcla de sales de baño.\n ✔ Elaboración de dos bombas de baño efervescentes.\n ✔ Empaque y presentación de los productos elaborados.\n\n---\n\n### **Incluye**\n\n✅ Manual digital del taller.\n ✅ Material de apoyo y recetas base.\n ✅ Certificado de participación.",
+    "indications": [],
+    "contraindications": [],
+    "practices": [
+      "Elaboración práctica de exfoliantes:",
+      "Exfoliante de café y coco.",
+      "Exfoliante de azúcar con vainilla.",
+      "Exfoliante de avena y miel.",
+      "### Módulo III. Elaboración de Sales de Baño",
+      "Propiedades terapéuticas de las sales minerales.",
+      "Tipos de sales utilizadas:",
+      "Sal marina",
+      "Sal de Epsom",
+      "Sal rosada del Himalaya",
+      "Uso de aceites esenciales y colorantes cosméticos.",
+      "Elaboración práctica de:",
+      "Sales relajantes de lavanda.",
+      "Sales energizantes de cítricos.",
+      "Sales desintoxicantes con romero y menta.",
+      "### Módulo IV. Elaboración de Bombas de Baño",
+      "Principios de efervescencia cosmética.",
+      "Ingredientes básicos:"
+    ],
+    "materials": [
+      "Incluye",
+      "✅ Manual digital del taller.",
+      "✅ Material de apoyo y recetas base.",
+      "✅ Certificado de participación.",
+      "Elaborado por:",
+      "Sugeidy Volquez – Directora de SuVoGa Escuela y Centro de Masajes"
+    ],
+    "competencies": [],
+    "certifications": [
+      "✅ Certificado de participación."
+    ],
+    "endorsements": [
+      "Miembros ASNaMaTeM: RD$3000"
+    ],
+    "facilitator": "Sugeidy Vólquez García",
+    "legalNotes": [],
+    "professionalNotes": [],
+    "normalizedMarkdown": "### 📘 CUR-038-**TALLER DE ELABORACIÓN DE EXFOLIANTES, SALES DE BAÑO Y BOMBAS DE BAÑO**\n\n**Modalidad:** Teórico – Práctico\n **Duración:** 6 a 8 Horas\n **Nivel:** Básico\n **Facilitadora:** **Sugeidy Vólquez García**\n\n### **Inversión y Reserva**\n\n* ### **Miembros ASNaMaTeM:** RD$3000\n\n* ### **Público General:** RD$4000\n\n* ### **Reservación:** RD$1,000 *(No reembolsable Ni transferible a otro curso)*\n\n  ### **Temario del Taller**\n\n  ### **Módulo I. Introducción a la Cosmética Artesanal**\n\n* Concepto y beneficios de la cosmética natural.\n* Normas de higiene y seguridad en la elaboración.\n* Equipos, utensilios y materiales necesarios.\n* Conservación y almacenamiento de productos cosméticos.\n\n  ### **Módulo II. Elaboración de Exfoliantes Corporales**\n\n* Beneficios de la exfoliación en la piel.\n* Tipos de exfoliantes: físicos y naturales.\n* Ingredientes exfoliantes más utilizados:\n  * Azúcar\n  * Sal marina\n  * Café\n  * Avena\n  * Semillas molidas\n* Elaboración práctica de exfoliantes:\n  * Exfoliante de café y coco.\n  * Exfoliante de azúcar con vainilla.\n  * Exfoliante de avena y miel.\n\n  ### **Módulo III. Elaboración de Sales de Baño**\n\n* Propiedades terapéuticas de las sales minerales.\n* Tipos de sales utilizadas:\n  * Sal marina\n  * Sal de Epsom\n  * Sal rosada del Himalaya\n* Uso de aceites esenciales y colorantes cosméticos.\n* Elaboración práctica de:\n  * Sales relajantes de lavanda.\n  * Sales energizantes de cítricos.\n  * Sales desintoxicantes con romero y menta.\n\n  ### **Módulo IV. Elaboración de Bombas de Baño**\n\n* Principios de efervescencia cosmética.\n* Ingredientes básicos:\n  * Bicarbonato de sodio.\n  * Ácido cítrico.\n  * Almidón de maíz.\n  * Aceites vegetales.\n  * Fragancias y colorantes.\n* Técnicas de mezclado y moldeado.\n* Elaboración práctica de:\n  * Bombas de baño relajantes.\n  * Bombas de baño aromaterapéuticas.\n  * Bombas de baño decorativas con pétalos secos.\n\n  ### **Módulo V. Presentación y Comercialización**\n\n* Empaque creativo y etiquetado básico.\n* Cálculo de costos y fijación de precios.\n* Recomendaciones para la venta y promoción de productos artesanales.\n* Ideas para crear kits de regalo y líneas de spa.\n\n  ### **Práctica Final**\n\n✔ Elaboración de un exfoliante corporal.\n ✔ Elaboración de una mezcla de sales de baño.\n ✔ Elaboración de dos bombas de baño efervescentes.\n ✔ Empaque y presentación de los productos elaborados.\n\n---\n\n### **Incluye**\n\n✅ Manual digital del taller.\n ✅ Material de apoyo y recetas base.\n ✅ Certificado de participación.\n\n**Elaborado por:**\n **Sugeidy Volquez – Directora de SuVoGa Escuela y Centro de Masajes**\n\n*"
+  }
+}

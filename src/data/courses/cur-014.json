@@ -1,0 +1,91 @@
+{
+  "courseUid": "taller-de-elaboracion-de-productos-de-spa",
+  "sourceId": "CUR-014",
+  "legacyIds": [
+    "CUR-015"
+  ],
+  "slug": "taller-de-elaboracion-de-productos-de-spa",
+  "title": "Taller de Elaboración de Productos de Spa",
+  "requiresOwnerReview": true,
+  "requiresLegalReview": false,
+  "pendingOwnerReview": true,
+  "publicationStatus": "published",
+  "sourceRaw": {
+    "heading": "### 📘 CUR-014 \\-  Taller de Elaboración de Productos de Spa",
+    "markdown": "### 📘 CUR-014 \\-  Taller de Elaboración de Productos de Spa\n\n* ### **Organizadores:** ASNaMaTeM & SuVoGa Escuela de Masajes\n\n* ### **Eslogan inicial:** Te invitan a vivir una experiencia transformadora\n\n* ### **Programa:** Taller Completo de Bienestar Natural\n\n* ### **Ejes temáticos:** Jabones Artesanales • Cremas • Velas de Masaje • Aromaterapia\n\n### **Logística y Horario**\n\n* ### **Fecha:** \n\n* ### **Horario:** 9:30 AM a 4:00 PM\n\n### **Contenido Curricular (Aprenderás a crear)**\n\n* ### Jabones terapéuticos naturales- aclarante- hidratante-antiacne- hipoalergenico. \n\n* ### Cremas hidratantes profesionales\n\n* ### Velas de masaje relajantes\n\n* ### Uso práctico de la aromaterapia\n\n* Exfoliantes Cremoso, Jabonoso, Seco  \n* Sales de baño\n\n### **Inversión y Reserva**\n\n* ### **Miembros ASNaMaTeM:** GRATIS\n\n* ### **Público General:** RD$5,000\n\n* ### **Reservación:** RD$1,000 *(No reembolsable)* \\---\n\n###",
+    "lineStart": 1036,
+    "lineEnd": 1074
+  },
+  "publicCopy": {
+    "title": "Taller de Elaboración de Productos de Spa",
+    "subtitle": "Eslogan inicial: Te invitan a vivir una experiencia transformadora",
+    "category": {
+      "value": "",
+      "pendingOwnerReview": true
+    },
+    "description": {
+      "value": "Organizadores: ASNaMaTeM & SuVoGa Escuela de Masajes",
+      "pendingOwnerReview": false
+    },
+    "pricing": {
+      "publicPrice": {
+        "amount": 5000,
+        "currency": "DOP",
+        "raw": "Público General: RD$5,000",
+        "pendingOwnerReview": false
+      },
+      "memberPrice": null,
+      "reservation": {
+        "amount": 1000,
+        "currency": "DOP",
+        "raw": "Reservación: RD$1,000 (No reembolsable) ---",
+        "pendingOwnerReview": false
+      },
+      "paymentPlan": [
+        "Reservación: RD$1,000 (No reembolsable) ---"
+      ],
+      "rawLines": [
+        "Público General: RD$5,000",
+        "Reservación: RD$1,000 (No reembolsable) ---"
+      ],
+      "pendingOwnerReview": false
+    },
+    "schedule": {
+      "dateText": "Próxima fecha por anunciar",
+      "duration": {
+        "value": "",
+        "pendingOwnerReview": true
+      },
+      "modality": {
+        "value": "",
+        "pendingOwnerReview": true
+      },
+      "rawLines": [
+        "Logística y Horario",
+        "Fecha:",
+        "Horario: 9:30 AM a 4:00 PM"
+      ],
+      "pendingOwnerReview": true
+    },
+    "objectives": [],
+    "profile": [],
+    "requirements": [
+      "Eslogan inicial: Te invitan a vivir una experiencia transformadora"
+    ],
+    "syllabusMarkdown": "### **Contenido Curricular (Aprenderás a crear)**\n\n* ### Jabones terapéuticos naturales- aclarante- hidratante-antiacne- hipoalergenico.\n\n* ### Cremas hidratantes profesionales\n\n* ### Velas de masaje relajantes\n\n* ### Uso práctico de la aromaterapia\n\n* Exfoliantes Cremoso, Jabonoso, Seco\n* Sales de baño\n\n### **Inversión y Reserva**\n\n* ### **Miembros ASNaMaTeM:** GRATIS\n\n* ### **Público General:** RD$5,000\n\n* ### **Reservación:** RD$1,000 *(No reembolsable)* \\---\n\n###",
+    "indications": [],
+    "contraindications": [],
+    "practices": [],
+    "materials": [],
+    "competencies": [],
+    "certifications": [],
+    "endorsements": [
+      "Organizadores: ASNaMaTeM & SuVoGa Escuela de Masajes",
+      "Miembros ASNaMaTeM: GRATIS"
+    ],
+    "facilitator": "Sugeidy Vólquez García",
+    "legalNotes": [],
+    "professionalNotes": [],
+    "normalizedMarkdown": "### 📘 CUR-014 \\-  Taller de Elaboración de Productos de Spa\n\n* ### **Organizadores:** ASNaMaTeM & SuVoGa Escuela de Masajes\n\n* ### **Eslogan inicial:** Te invitan a vivir una experiencia transformadora\n\n* ### **Programa:** Taller Completo de Bienestar Natural\n\n* ### **Ejes temáticos:** Jabones Artesanales • Cremas • Velas de Masaje • Aromaterapia\n\n### **Logística y Horario**\n\n* ### **Fecha:**\n\n* ### **Horario:** 9:30 AM a 4:00 PM\n\n### **Contenido Curricular (Aprenderás a crear)**\n\n* ### Jabones terapéuticos naturales- aclarante- hidratante-antiacne- hipoalergenico.\n\n* ### Cremas hidratantes profesionales\n\n* ### Velas de masaje relajantes\n\n* ### Uso práctico de la aromaterapia\n\n* Exfoliantes Cremoso, Jabonoso, Seco\n* Sales de baño\n\n### **Inversión y Reserva**\n\n* ### **Miembros ASNaMaTeM:** GRATIS\n\n* ### **Público General:** RD$5,000\n\n* ### **Reservación:** RD$1,000 *(No reembolsable)* \\---\n\n###"
+  }
+}

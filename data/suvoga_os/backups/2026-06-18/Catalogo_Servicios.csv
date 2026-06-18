@@ -1,0 +1,26 @@
+ID_Servicio,Nombre,Tipo (Curso o Spa),Precio_Total,Monto_Anticipo,Cupos_Totales,category,description
+CUR-001,Master en Drenaje Linfático ,Curso,5000,1000,12,General,"Programa formativo de bienestar y técnica aplicada, creado para desarrollar habilidades profesionales con acompañamiento cercano."
+CUR-002,Taller De Drenaje Linfatico Post Operatorio,Curso,0,1000,12,General,"Programa formativo de bienestar y técnica aplicada, creado para desarrollar habilidades profesionales con acompañamiento cercano."
+CUR-003,Diplomado de Masaje Corporal,Curso,0,1000,12,Diplomado,"Formación integral: Ética, Anatomía, Relajante, Deep Tissue, Drenaje Linfático, Maderoterapia, Ventosas y Piedras Calientes. 8 clases"
+CUR-004,Masaje Corporal Avanzado,Curso,0,1000,12,General,"Programa formativo de bienestar y técnica aplicada, creado para desarrollar habilidades profesionales con acompañamiento cercano."
+CUR-005,Taller de Aparatología 9 en 1,Curso,0,1000,12,Estética,Uso profesional de equipos para reducción y tonificación
+CUR-006,Taller de Ondas de Choques,Curso,0,1000,12,Estética,Tratamiento de alta tecnología para celulitis y dolores
+CUR-007,Taller de Radiofrecuencia Indiba,Curso,0,1000,12,Estética,Tecnología proiónica para regeneración celular y reafirmación
+CUR-008,Maderoterapia,Curso,0,1000,12,Especialidades,Técnica milenaria con herramientas de madera para celulitis y grasa localizada. Taller
+CUR-009,Madeoterapia,Curso,0,1000,12,Especialidades,Técnica milenaria con herramientas de madera para celulitis y grasa localizada. Taller
+CUR-010,Taller de Vacummterapia,Curso,0,1000,12,Estética,Técnica de succión para levantamiento de glúteos y drenaje
+CUR-011,Curso de Masaje Terapéutico,Curso,0,1000,12,General,"Programa formativo de bienestar y técnica aplicada, creado para desarrollar habilidades profesionales con acompañamiento cercano."
+CUR-012,Curso Taller de Limpieza Facial Básica y Profunda,Curso,0,1000,12,Facial,"Protocolos de higiene cutánea, extracción y nutrición facial"
+CUR-013,"Taller de Terapias Alternativas (Vino, chocolate, barro, café)",Curso,0,1000,12,Terapias Alternativas,"Chocolaterapia, Vinoterapia y Fangoterapia aplicada"
+CUR-014,Taller de Kinesiotape,Curso,0,1000,12,General,"Programa formativo de bienestar y técnica aplicada, creado para desarrollar habilidades profesionales con acompañamiento cercano."
+CUR-015,Taller Elaboración de Productos de Spa,Curso,0,1000,12,Emprendimiento,Química cosmética básica para productos de spa
+CUR-016,Taller de Velas de Masajes y Aromaterapia,Curso,0,1000,12,Emprendimiento,Creación de velas de soja y parafinas con aceites esenciales
+CUR-017,Taller de Desintoxicación Iónica,Curso,0,1000,12,General,"Programa formativo de bienestar y técnica aplicada, creado para desarrollar habilidades profesionales con acompañamiento cercano."
+CUR-018,Taller de Manejo de Máquina G5,Curso,0,1000,12,General,"Programa formativo de bienestar y técnica aplicada, creado para desarrollar habilidades profesionales con acompañamiento cercano."
+CUR-019,Taller de Drenaje Brasileño,Curso,0,1000,12,Estética,Técnica manual de moldeado corporal con resultados inmediatos
+CUR-020,Taller Manejo de Complicaciones Post Quirúrgicas,Curso,0,1000,12,Estética,Protocolos post-operatorios para recuperación rápida y reducción de inflamación
+CUR-021,Taller de Terapia de Alineación Estructura Ósea,Curso,0,1000,12,Terapias Alternativas,Ajustes estructurales básicos para mejorar la postura
+CUR-022,Taller de Drenaje Linfático Facial,Curso,0,1000,12,General,"Programa formativo de bienestar y técnica aplicada, creado para desarrollar habilidades profesionales con acompañamiento cercano."
+CUR-023,Taller de Masaje Desestructurante,Curso,0,1000,12,Talleres Prácticos,"Combo de 5 técnicas: Relajante, Descontracturante, Piedras Calientes, Ventosas y Parafina. Taller"
+CUR-024,Taller de Depilación con Cera,Curso,0,1000,12,General,"Programa formativo de bienestar y técnica aplicada, creado para desarrollar habilidades profesionales con acompañamiento cercano."
+CUR-025,Curso Reflexología Podal,Curso,0,1000,12,Especialidades,Técnica de masaje en puntos específicos de los pies para mejorar la salud general. 6 clases

@@ -34,7 +34,7 @@ function formatDop(value: number) {
 }
 
 function priceLabel(value: number) {
-  return value > 0 ? formatDop(value) : "A consultar";
+  return value > 0 ? formatDop(value) : "";
 }
 
 function typeIcon(type: string) {
@@ -139,6 +139,8 @@ export function CourseCatalogClient() {
           const courseIdNum = parseInt(course.idServicio.replace("CUR-", ""), 10);
           const ext = (!isNaN(courseIdNum) && courseIdNum >= 18 && courseIdNum <= 25) ? "svg" : "png";
           const cardImageUrl = course.imagen_url || `/images/courses/${course.idServicio.toLowerCase()}.${ext}`;
+          const courseHref = `/curso/${course.slug || course.idServicio}`;
+          const hasPublicPrice = course.precioTotal > 0;
 
           return (
             <motion.article
@@ -164,11 +166,13 @@ export function CourseCatalogClient() {
                 />
                 
                 {/* Badge Overlay */}
-                <div className="absolute top-4 left-4 flex gap-2">
-                  <span className="rounded-full bg-[#0D3B22]/85 backdrop-blur-sm border border-[#D4AF37]/30 px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.16em] text-white">
-                    {course.category || "General"}
-                  </span>
-                </div>
+                {course.category ? (
+                  <div className="absolute top-4 left-4 flex gap-2">
+                    <span className="rounded-full bg-[#0D3B22]/85 backdrop-blur-sm border border-[#D4AF37]/30 px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.16em] text-white">
+                      {course.category}
+                    </span>
+                  </div>
+                ) : null}
                 
                 {/* Icon Overlay */}
                 <div className="absolute top-4 right-4">
@@ -181,7 +185,7 @@ export function CourseCatalogClient() {
               {/* Card Body */}
               <div className="flex flex-col flex-grow p-4 sm:p-5">
                 <Link
-                  href={`/curso/${course.idServicio}`}
+                  href={courseHref}
                   className="block rounded-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#D4AF37]/70 focus-visible:ring-offset-2 focus-visible:ring-offset-white"
                 >
                   <h3 className="suvoga-serif text-lg sm:text-xl font-semibold leading-tight text-[#0D3B22] transition-colors hover:text-[#145332]">
@@ -194,15 +198,17 @@ export function CourseCatalogClient() {
                 </p>
 
                 <div className="mt-5 space-y-4">
-                  <div className="grid grid-cols-2 gap-2 text-xs">
-                    <div className="rounded-xl border border-[#0D3B22]/10 bg-[#0D3B22]/[0.03] p-2 sm:p-3 sm:rounded-2xl">
-                      <p className="text-[9px] sm:text-[10px] font-semibold uppercase tracking-[0.14em] text-[#6B6048]">
-                        Precio
-                      </p>
-                      <p className="mt-1 font-semibold text-[#0D3B22] text-xs sm:text-sm">
-                        {priceLabel(course.precioTotal)}
-                      </p>
-                    </div>
+                  <div className={`grid gap-2 text-xs ${hasPublicPrice ? "grid-cols-2" : "grid-cols-1"}`}>
+                    {hasPublicPrice ? (
+                      <div className="rounded-xl border border-[#0D3B22]/10 bg-[#0D3B22]/[0.03] p-2 sm:p-3 sm:rounded-2xl">
+                        <p className="text-[9px] sm:text-[10px] font-semibold uppercase tracking-[0.14em] text-[#6B6048]">
+                          Precio
+                        </p>
+                        <p className="mt-1 font-semibold text-[#0D3B22] text-xs sm:text-sm">
+                          {priceLabel(course.precioTotal)}
+                        </p>
+                      </div>
+                    ) : null}
                     <div className="rounded-xl border border-[#D4AF37]/25 bg-[#FDFBF7] p-2 sm:p-3 sm:rounded-2xl">
                       <p className="text-[9px] sm:text-[10px] font-semibold uppercase tracking-[0.14em] text-[#8D7530]">
                         Anticipo
@@ -220,7 +226,7 @@ export function CourseCatalogClient() {
                     </span>
                     <span className="inline-flex items-center gap-1.5 font-medium">
                       <CalendarDays className="h-4 w-4 text-[#0D3B22]" />
-                      Abierto
+                      {course.fechaTexto || "Próxima fecha por anunciar"}
                     </span>
                   </div>
 
@@ -233,7 +239,7 @@ export function CourseCatalogClient() {
                       Inscribirse hoy
                     </button>
                     <Link
-                      href={`/curso/${course.idServicio}`}
+                      href={courseHref}
                       className="inline-flex h-10 w-full items-center justify-center rounded-2xl text-xs sm:text-sm font-semibold text-[#0D3B22] underline underline-offset-4 decoration-[#D4AF37]/50 hover:text-[#145332] hover:decoration-[#D4AF37] transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#D4AF37]/70 focus-visible:ring-offset-2 focus-visible:ring-offset-[#FDFBF7]"
                     >
                       Ver Detalles

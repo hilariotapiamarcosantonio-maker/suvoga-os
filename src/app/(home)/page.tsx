@@ -2,6 +2,7 @@ import { Leaf, Sparkles } from "lucide-react";
 import { CourseCatalogClient } from "@/components/suvoga/CourseCatalogClient";
 import { SocialProofSection } from "@/components/suvoga/SocialProofSection";
 import { suvogaCourses } from "@/data/courses";
+import { brand } from "@/lib/brand";
 
 const featuredCourses = suvogaCourses.slice(0, 3);
 
@@ -13,14 +14,14 @@ export default function HomePage() {
           <div className="max-w-3xl">
             <div className="inline-flex items-center gap-2 rounded-full border border-[#D4AF37]/30 bg-white/5 px-4 py-2 text-xs font-semibold uppercase tracking-[0.18em] text-[#D4AF37] backdrop-blur-sm">
               <Leaf className="h-4 w-4" />
-              SuVoGa Escuela de Masajes
+              {brand.productName}
             </div>
             <h1 className="suvoga-serif mt-7 text-5xl font-semibold leading-[0.95] tracking-normal text-white sm:text-6xl lg:text-7xl">
-              Formacion premium para una practica de spa consciente.
+              Formación profesional en masoterapia, estética y bienestar.
             </h1>
             <p className="mt-6 max-w-2xl text-base leading-8 text-[#EAE2D0] sm:text-lg">
-              Cursos de masaje, estetica corporal y terapias de bienestar en
-              una experiencia educativa serena, tecnica y profundamente humana.
+              Cursos de masaje, estética corporal y terapias de bienestar en
+              una experiencia educativa serena, técnica y profundamente humana.
             </p>
             <div className="mt-10 grid gap-3 sm:grid-cols-3">
               {[
@@ -87,7 +88,7 @@ export default function HomePage() {
           </div>
           <p className="max-w-xl text-sm leading-7 text-[#4E6658]">
             Una seleccion pensada para estudiantes que buscan tecnica,
-            presencia y herramientas reales para ejercer en bienestar y spa.
+            presencia y herramientas reales para ejercer en bienestar.
           </p>
         </div>
 

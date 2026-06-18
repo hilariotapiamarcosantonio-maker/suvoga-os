@@ -1,0 +1,96 @@
+{
+  "courseUid": "curso-de-masaje-terapeutico",
+  "sourceId": "CUR-010",
+  "legacyIds": [
+    "CUR-011"
+  ],
+  "slug": "curso-de-masaje-terapeutico",
+  "title": "Curso de Masaje Terapéutico",
+  "requiresOwnerReview": true,
+  "requiresLegalReview": true,
+  "pendingOwnerReview": true,
+  "publicationStatus": "published",
+  "sourceRaw": {
+    "heading": "### 📘 CUR-10 \\- Curso de Masaje Terapéutico",
+    "markdown": "### 📘 CUR-10 \\- Curso de Masaje Terapéutico\n\n* **Categoría Actual:** General  \n* Duracion 4 clases  \n* inversion: 5,000 pesos  \n* Reservacion 1000 no reembolsables  \n* Primera clase 4,000  \n* Miembros de asnamastem 4,000 \n\n\n**Masaje Terapéutico Básico**\n\n**Concepto de Masaje Terapéutico**\n\n**Beneficios, Indicaciones y Contraindicaciones**\n\n**Técnicas manuales**\n\n**Masaje Terapéutico con Ventosas**\n\n**Masaje con piedras Calientes**\n\n**Tratamiento con Martillo de percusión**\n\n**Masaje Terapéutico con Tens**\n\n**Tratamiento con pen de Acupuntura**\n\n**Terapia con Parafina**\n\n**Tratamiento con Vendaje neuromuscular**\n\n**Masaje con pindas**\n\n**Chocolaterapia y Vinoterapia**\n\n**Fango Terapia**\n\n**Crioterapia**",
+    "lineStart": 386,
+    "lineEnd": 425
+  },
+  "publicCopy": {
+    "title": "Curso de Masaje Terapéutico",
+    "subtitle": "Miembros de asnamastem 4,000",
+    "category": {
+      "value": "General",
+      "pendingOwnerReview": false
+    },
+    "description": {
+      "value": "Beneficios, Indicaciones y Contraindicaciones",
+      "pendingOwnerReview": false
+    },
+    "pricing": {
+      "publicPrice": {
+        "amount": 5000,
+        "currency": "DOP",
+        "raw": "inversion: 5,000 pesos",
+        "pendingOwnerReview": false
+      },
+      "memberPrice": {
+        "amount": 4000,
+        "currency": "DOP",
+        "raw": "Miembros de asnamastem 4,000",
+        "pendingOwnerReview": false
+      },
+      "reservation": {
+        "amount": 1000,
+        "currency": "DOP",
+        "raw": "Reservacion 1000 no reembolsables",
+        "pendingOwnerReview": false
+      },
+      "paymentPlan": [
+        "Reservacion 1000 no reembolsables",
+        "Primera clase 4,000"
+      ],
+      "rawLines": [
+        "inversion: 5,000 pesos",
+        "Reservacion 1000 no reembolsables",
+        "Primera clase 4,000",
+        "Miembros de asnamastem 4,000"
+      ],
+      "pendingOwnerReview": false
+    },
+    "schedule": {
+      "dateText": "Próxima fecha por anunciar",
+      "duration": {
+        "value": "Duracion 4 clases",
+        "pendingOwnerReview": false
+      },
+      "modality": {
+        "value": "",
+        "pendingOwnerReview": true
+      },
+      "rawLines": [
+        "Duracion 4 clases"
+      ],
+      "pendingOwnerReview": true
+    },
+    "objectives": [],
+    "profile": [],
+    "requirements": [],
+    "syllabusMarkdown": "### 📘 CUR-10 \\- Curso de Masaje Terapéutico\n\n* **Categoría Actual:** General\n* Duracion 4 clases\n* inversion: 5,000 pesos\n* Reservacion 1000 no reembolsables\n* Primera clase 4,000\n* Miembros de asnamastem 4,000\n\n**Masaje Terapéutico Básico**\n\n**Concepto de Masaje Terapéutico**\n\n**Beneficios, Indicaciones y Contraindicaciones**\n\n**Técnicas manuales**\n\n**Masaje Terapéutico con Ventosas**\n\n**Masaje con piedras Calientes**\n\n**Tratamiento con Martillo de percusión**\n\n**Masaje Terapéutico con Tens**\n\n**Tratamiento con pen de Acupuntura**\n\n**Terapia con Parafina**\n\n**Tratamiento con Vendaje neuromuscular**\n\n**Masaje con pindas**\n\n**Chocolaterapia y Vinoterapia**\n\n**Fango Terapia**\n\n**Crioterapia**",
+    "indications": [],
+    "contraindications": [],
+    "practices": [],
+    "materials": [],
+    "competencies": [],
+    "certifications": [],
+    "endorsements": [
+      "Miembros de asnamastem 4,000"
+    ],
+    "facilitator": "Sugeidy Vólquez García",
+    "legalNotes": [
+      "Beneficios, Indicaciones y Contraindicaciones"
+    ],
+    "professionalNotes": [],
+    "normalizedMarkdown": "### 📘 CUR-10 \\- Curso de Masaje Terapéutico\n\n* **Categoría Actual:** General\n* Duracion 4 clases\n* inversion: 5,000 pesos\n* Reservacion 1000 no reembolsables\n* Primera clase 4,000\n* Miembros de asnamastem 4,000\n\n**Masaje Terapéutico Básico**\n\n**Concepto de Masaje Terapéutico**\n\n**Beneficios, Indicaciones y Contraindicaciones**\n\n**Técnicas manuales**\n\n**Masaje Terapéutico con Ventosas**\n\n**Masaje con piedras Calientes**\n\n**Tratamiento con Martillo de percusión**\n\n**Masaje Terapéutico con Tens**\n\n**Tratamiento con pen de Acupuntura**\n\n**Terapia con Parafina**\n\n**Tratamiento con Vendaje neuromuscular**\n\n**Masaje con pindas**\n\n**Chocolaterapia y Vinoterapia**\n\n**Fango Terapia**\n\n**Crioterapia**"
+  }
+}

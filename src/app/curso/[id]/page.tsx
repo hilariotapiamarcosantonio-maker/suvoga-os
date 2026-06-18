@@ -1,5 +1,6 @@
+import type { Metadata } from "next";
 import Link from "next/link";
-import { notFound } from "next/navigation";
+import { notFound, permanentRedirect } from "next/navigation";
 import {
   ArrowLeft,
   Award,
@@ -15,7 +16,7 @@ import {
   BookOpen,
   Quote,
 } from "lucide-react";
-import { suvogaCourses } from "@/data/courses";
+import { findSuvogaCourseByIdentifier, suvogaCourses } from "@/data/courses";
 import { CourseLandingSignup } from "@/components/suvoga/CourseLandingSignup";
 import { CourseHeroCTA } from "@/components/suvoga/CourseHeroCTA";
 import { studentTestimonials } from "@/data/testimonials";
@@ -23,6 +24,7 @@ import { graduatesList } from "@/data/graduates";
 import { contactInfo } from "@/data/contact";
 import { MessageCircle } from "lucide-react";
 import { Instagram } from "@/components/suvoga/BrandIcons";
+import type { SuvogaServicio } from "@/lib/crm-data/get-suvoga-data";
 
 
 type CoursePageProps = {
@@ -47,7 +49,7 @@ function formatDop(value: number) {
 }
 
 function priceLabel(value: number) {
-  return value > 0 ? formatDop(value) : "A consultar";
+  return value > 0 ? formatDop(value) : "";
 }
 
 function durationLabel(description: string) {
@@ -56,31 +58,52 @@ function durationLabel(description: string) {
 }
 
 function findCourse(id: string) {
-  const decodedId = decodeURIComponent(id);
+  return findSuvogaCourseByIdentifier(id);
+}
 
-  return suvogaCourses.find(
-    (course) => course.idServicio.toLowerCase() === decodedId.toLowerCase()
-  );
+function normalizeRouteIdentifier(identifier: string) {
+  return decodeURIComponent(identifier).trim().toLowerCase();
+}
+
+function canonicalCoursePath(course: SuvogaServicio) {
+  return `/curso/${course.slug || course.idServicio}`;
+}
+
+function isCanonicalCourseRequest(identifier: string, course: SuvogaServicio) {
+  return normalizeRouteIdentifier(identifier) === normalizeRouteIdentifier(course.slug || course.idServicio);
 }
 
 export function generateStaticParams() {
   return suvogaCourses.map((course) => ({
-    id: course.idServicio,
+    id: course.slug || course.idServicio,
   }));
 }
 
-export function generateMetadata({ params }: CoursePageProps) {
+export function generateMetadata({ params }: CoursePageProps): Metadata {
   const course = findCourse(params.id);
 
   if (!course) {
     return {
-      title: "Curso no encontrado | SuVoGa",
+      title: "Curso no encontrado | SuVoGa Academia",
     };
   }
 
+  const canonicalPath = canonicalCoursePath(course);
+  const isCanonical = isCanonicalCourseRequest(params.id, course);
+
   return {
-    title: `${course.nombre} | SuVoGa Escuela de Masajes`,
+    title: `${course.nombre} | SuVoGa Academia`,
     description: course.description,
+    alternates: {
+      canonical: canonicalPath,
+    },
+    openGraph: {
+      title: `${course.nombre} | SuVoGa Academia`,
+      description: course.description,
+      url: canonicalPath,
+      type: "article",
+    },
+    robots: isCanonical ? { index: true, follow: true } : { index: false, follow: true },
   };
 }
 
@@ -89,6 +112,10 @@ export default function CoursePage({ params }: CoursePageProps) {
 
   if (!course) {
     notFound();
+  }
+
+  if (!isCanonicalCourseRequest(params.id, course)) {
+    permanentRedirect(canonicalCoursePath(course));
   }
 
   const duration = durationLabel(course.description);
@@ -103,6 +130,7 @@ export default function CoursePage({ params }: CoursePageProps) {
   const includesList = course.incluye && course.incluye.length > 0 ? course.incluye : [];
   const forWhoList = course.para_quien_es && course.para_quien_es.length > 0 ? course.para_quien_es : [];
   const whatYouWillLearnList = course.que_aprenderas && course.que_aprenderas.length > 0 ? course.que_aprenderas : learningItems;
+  const hasPublicPrice = course.precioTotal > 0;
 
   // Find related testimonials or graduates for trust section
   const relatedTestimonial = studentTestimonials.find(
@@ -135,10 +163,12 @@ export default function CoursePage({ params }: CoursePageProps) {
             <div className="space-y-5 lg:col-span-7">
               {/* Badges Row */}
               <div className="flex flex-wrap gap-2 items-center">
-                <span className="inline-flex items-center gap-1.5 rounded-full border border-[#D4AF37]/40 bg-[#0D3B22]/60 px-3 py-1 text-[10px] sm:text-xs font-semibold uppercase tracking-[0.16em] text-[#D4AF37] backdrop-blur-sm">
-                  <Sparkles className="h-3 w-3 sm:h-3.5 sm:w-3.5" />
-                  {course.category}
-                </span>
+                {course.category ? (
+                  <span className="inline-flex items-center gap-1.5 rounded-full border border-[#D4AF37]/40 bg-[#0D3B22]/60 px-3 py-1 text-[10px] sm:text-xs font-semibold uppercase tracking-[0.16em] text-[#D4AF37] backdrop-blur-sm">
+                    <Sparkles className="h-3 w-3 sm:h-3.5 sm:w-3.5" />
+                    {course.category}
+                  </span>
+                ) : null}
                 {course.nivel && (
                   <span className="inline-flex items-center gap-1 rounded-full border border-white/20 bg-white/5 px-3 py-1 text-[10px] sm:text-xs font-semibold uppercase tracking-[0.16em] text-white backdrop-blur-sm">
                     <Award className="h-3 w-3 sm:h-3.5 sm:w-3.5 text-[#D4AF37]" />
@@ -190,11 +220,13 @@ export default function CoursePage({ params }: CoursePageProps) {
               </div>
 
               {/* Investment & Availability Highlights */}
-              <div className="grid grid-cols-3 gap-2 sm:gap-4 border-t border-b border-white/10 py-4 my-4 max-w-xl text-center sm:text-left">
-                <div>
+              <div className={`grid gap-2 sm:gap-4 border-t border-b border-white/10 py-4 my-4 max-w-xl text-center sm:text-left ${hasPublicPrice ? "grid-cols-3" : "grid-cols-2"}`}>
+                {hasPublicPrice ? (
+                  <div>
                   <span className="text-[9px] sm:text-[10px] font-semibold uppercase tracking-[0.16em] text-[#D4AF37]">Inversión</span>
-                  <p className="mt-0.5 text-base font-bold text-white sm:text-2xl">{priceLabel(course.precioTotal)}</p>
-                </div>
+                    <p className="mt-0.5 text-base font-bold text-white sm:text-2xl">{priceLabel(course.precioTotal)}</p>
+                  </div>
+                ) : null}
                 <div>
                   <span className="text-[9px] sm:text-[10px] font-semibold uppercase tracking-[0.16em] text-[#D4AF37]">Anticipo</span>
                   <p className="mt-0.5 text-base font-bold text-white sm:text-2xl">{formatDop(course.montoAnticipo)}</p>

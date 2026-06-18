@@ -1,0 +1,122 @@
+{
+  "courseUid": "taller-de-ondas-de-choques-aplicado-a-la-estetica",
+  "sourceId": "CUR-006",
+  "legacyIds": [
+    "CUR-006"
+  ],
+  "slug": "taller-de-ondas-de-choques-aplicado-a-la-estetica",
+  "title": "Taller de Ondas de Choques Aplicado a la Estetica",
+  "requiresOwnerReview": true,
+  "requiresLegalReview": true,
+  "pendingOwnerReview": true,
+  "publicationStatus": "published",
+  "sourceRaw": {
+    "heading": "### 📘 CUR-006 \\- Taller de Ondas de Choques Aplicado a la Estetica",
+    "markdown": "### 📘 CUR-006 \\- Taller de Ondas de Choques Aplicado a la Estetica\n\n* **Categoría Actual:** Estética\n\nAplicado a la Estética\n\nAPRENDE • APLICA • TRANSFORMA\n\nTécnicas avanzadas para tratar celulitis, flacidez, grasa localizada, fibrosis y mejorar la calidad de la piel.\n\nINDICACIONES- CONTRAINDICACIONES- BENEFICIOS\n\n### **TECNICAS Y PROTOCOLOS PARA TRABAJAR :**\n\n* Reducción de  celulitis  \n* Moldea y tonifica  \n* Mejora la circulación  \n* Reafirma y regenera  \n* postquirurgico estético \n\n### **FECHA Y HORARIO**\n\n* **2:00 PM A 5:00 PM**\n\n### **INVERSIÓN**\n\n* **INVERSIÓN:** $3,500  \n* **MIEMBROS DE AsNaMaTeM:** $2,500  \n* **RESERVACIÓN:** $1,000 NO REEMBOLSABLE\n\n---",
+    "lineStart": 237,
+    "lineEnd": 268
+  },
+  "publicCopy": {
+    "title": "Taller de Ondas de Choques Aplicado a la Estetica",
+    "subtitle": "Aplicado a la Estética",
+    "category": {
+      "value": "Estética",
+      "pendingOwnerReview": false
+    },
+    "description": {
+      "value": "Técnicas avanzadas para tratar celulitis, flacidez, grasa localizada, fibrosis y mejorar la calidad de la piel.",
+      "pendingOwnerReview": false
+    },
+    "pricing": {
+      "publicPrice": {
+        "amount": 3500,
+        "currency": "DOP",
+        "raw": "INVERSIÓN: $3,500",
+        "pendingOwnerReview": false
+      },
+      "memberPrice": {
+        "amount": 2500,
+        "currency": "DOP",
+        "raw": "MIEMBROS DE AsNaMaTeM: $2,500",
+        "pendingOwnerReview": false
+      },
+      "reservation": {
+        "amount": 1000,
+        "currency": "DOP",
+        "raw": "RESERVACIÓN: $1,000 NO REEMBOLSABLE",
+        "pendingOwnerReview": false
+      },
+      "paymentPlan": [
+        "RESERVACIÓN: $1,000 NO REEMBOLSABLE"
+      ],
+      "rawLines": [
+        "INVERSIÓN: $3,500",
+        "MIEMBROS DE AsNaMaTeM: $2,500",
+        "RESERVACIÓN: $1,000 NO REEMBOLSABLE"
+      ],
+      "pendingOwnerReview": false
+    },
+    "schedule": {
+      "dateText": "FECHA Y HORARIO",
+      "duration": {
+        "value": "",
+        "pendingOwnerReview": true
+      },
+      "modality": {
+        "value": "",
+        "pendingOwnerReview": true
+      },
+      "rawLines": [
+        "FECHA Y HORARIO"
+      ],
+      "pendingOwnerReview": true
+    },
+    "objectives": [],
+    "profile": [],
+    "requirements": [],
+    "syllabusMarkdown": "### 📘 CUR-006 \\- Taller de Ondas de Choques Aplicado a la Estetica\n\n* **Categoría Actual:** Estética\n\nAplicado a la Estética\n\nAPRENDE • APLICA • TRANSFORMA\n\nTécnicas avanzadas para tratar celulitis, flacidez, grasa localizada, fibrosis y mejorar la calidad de la piel.\n\nINDICACIONES- CONTRAINDICACIONES- BENEFICIOS\n\n### **TECNICAS Y PROTOCOLOS PARA TRABAJAR :**\n\n* Reducción de  celulitis\n* Moldea y tonifica\n* Mejora la circulación\n* Reafirma y regenera\n* postquirurgico estético\n\n### **FECHA Y HORARIO**\n\n* **2:00 PM A 5:00 PM**\n\n### **INVERSIÓN**\n\n* **INVERSIÓN:** $3,500\n* **MIEMBROS DE AsNaMaTeM:** $2,500\n* **RESERVACIÓN:** $1,000 NO REEMBOLSABLE\n\n---",
+    "indications": [
+      "INDICACIONES- CONTRAINDICACIONES- BENEFICIOS",
+      "TECNICAS Y PROTOCOLOS PARA TRABAJAR :",
+      "Reducción de celulitis",
+      "Moldea y tonifica",
+      "Mejora la circulación",
+      "Reafirma y regenera",
+      "postquirurgico estético",
+      "FECHA Y HORARIO",
+      "2:00 PM A 5:00 PM",
+      "INVERSIÓN",
+      "INVERSIÓN: $3,500",
+      "MIEMBROS DE AsNaMaTeM: $2,500",
+      "RESERVACIÓN: $1,000 NO REEMBOLSABLE"
+    ],
+    "contraindications": [
+      "INDICACIONES- CONTRAINDICACIONES- BENEFICIOS",
+      "TECNICAS Y PROTOCOLOS PARA TRABAJAR :",
+      "Reducción de celulitis",
+      "Moldea y tonifica",
+      "Mejora la circulación",
+      "Reafirma y regenera",
+      "postquirurgico estético",
+      "FECHA Y HORARIO",
+      "2:00 PM A 5:00 PM",
+      "INVERSIÓN",
+      "INVERSIÓN: $3,500",
+      "MIEMBROS DE AsNaMaTeM: $2,500",
+      "RESERVACIÓN: $1,000 NO REEMBOLSABLE"
+    ],
+    "practices": [],
+    "materials": [],
+    "competencies": [],
+    "certifications": [],
+    "endorsements": [
+      "MIEMBROS DE AsNaMaTeM: $2,500"
+    ],
+    "facilitator": "Sugeidy Vólquez García",
+    "legalNotes": [
+      "INDICACIONES- CONTRAINDICACIONES- BENEFICIOS"
+    ],
+    "professionalNotes": [],
+    "normalizedMarkdown": "### 📘 CUR-006 \\- Taller de Ondas de Choques Aplicado a la Estetica\n\n* **Categoría Actual:** Estética\n\nAplicado a la Estética\n\nAPRENDE • APLICA • TRANSFORMA\n\nTécnicas avanzadas para tratar celulitis, flacidez, grasa localizada, fibrosis y mejorar la calidad de la piel.\n\nINDICACIONES- CONTRAINDICACIONES- BENEFICIOS\n\n### **TECNICAS Y PROTOCOLOS PARA TRABAJAR :**\n\n* Reducción de  celulitis\n* Moldea y tonifica\n* Mejora la circulación\n* Reafirma y regenera\n* postquirurgico estético\n\n### **FECHA Y HORARIO**\n\n* **2:00 PM A 5:00 PM**\n\n### **INVERSIÓN**\n\n* **INVERSIÓN:** $3,500\n* **MIEMBROS DE AsNaMaTeM:** $2,500\n* **RESERVACIÓN:** $1,000 NO REEMBOLSABLE\n\n---"
+  }
+}

@@ -1,0 +1,106 @@
+{
+  "courseUid": "master-en-drenaje-linfatico-curso-avanzado",
+  "sourceId": "CUR-001",
+  "legacyIds": [
+    "CUR-001"
+  ],
+  "slug": "master-en-drenaje-linfatico-curso-avanzado",
+  "title": "Máster en Drenaje Linfático: Curso Avanzado",
+  "requiresOwnerReview": true,
+  "requiresLegalReview": true,
+  "pendingOwnerReview": true,
+  "publicationStatus": "published",
+  "sourceRaw": {
+    "heading": "### 📘 CUR-001 \\- Máster en Drenaje Linfático: Curso Avanzado ",
+    "markdown": "### 📘 CUR-001 \\- Máster en Drenaje Linfático: Curso Avanzado \n\nConviértete en especialista certificada en drenaje linfático pre- post-operatorio.  \n6 Clases.  \n70 horas sincrona y asincrona.  \n5 cupos presenciales y 12 cupos online  \nGoogle Meets para clases online  \nPrecio total: 10,000  \nReservación: 1,000  \nPrimer dia de clases 3,000  \nTercer dia clase 3,000  \nQuinto dia clases 3,000\n\nReservación no reembolsable, ni transferible a otro curso.\n\nLA reservación se descuenta del precio total.  \nTemario: \n\n✅Concepto de drenaje  \n✅Historia del drenaje  \n✅Signos vitales  \n✅Indicaciones del drenaje   \n✅Contraindicaciones Relativas y Absoluta  \n✅Complicaciones en un cirugía estética   \n✅Manejo de complicaciones De un post quirúrgico Tratamientos utilizados   \n✅Secuencia de drenaje linfático   \n✅Técnicas de drenaje pre y post operatorio   \n✅Cuidado y Manejo del Dren Hemovac   \n✅Cura de heridas  \n✅Aparatologia   \n✅Postura de fija   \n✅Servicio a domicilio\n\nIncluye Certificado es Avalado por la Asociación Nacional de Masajistas, Terapeutas manuales y Afines y Manual\n\nInversión público $10,000 Reservación $1,000 mínimo 5 días antes de iniciar la clase   \n1er día de clase $3000  \n3ra clase $ 3000  \n5ta clase $3000  \n Duración 6 Clases\n\nCertificado Avalado por la Asociación Nacional de Masajistas AsNaMaTeM",
+    "lineStart": 7,
+    "lineEnd": 50
+  },
+  "publicCopy": {
+    "title": "Máster en Drenaje Linfático: Curso Avanzado",
+    "subtitle": "70 horas sincrona y asincrona.",
+    "category": {
+      "value": "",
+      "pendingOwnerReview": true
+    },
+    "description": {
+      "value": "Conviértete en especialista certificada en drenaje linfático pre- post-operatorio.",
+      "pendingOwnerReview": false
+    },
+    "pricing": {
+      "publicPrice": {
+        "amount": 10000,
+        "currency": "DOP",
+        "raw": "Precio total: 10,000",
+        "pendingOwnerReview": false
+      },
+      "memberPrice": null,
+      "reservation": {
+        "amount": 1000,
+        "currency": "DOP",
+        "raw": "Reservación: 1,000",
+        "pendingOwnerReview": false
+      },
+      "paymentPlan": [
+        "Reservación: 1,000",
+        "Primer dia de clases 3,000",
+        "Tercer dia clase 3,000",
+        "Quinto dia clases 3,000",
+        "Inversión público $10,000 Reservación $1,000 mínimo 5 días antes de iniciar la clase",
+        "1er día de clase $3000",
+        "3ra clase $ 3000",
+        "5ta clase $3000"
+      ],
+      "rawLines": [
+        "Precio total: 10,000",
+        "Reservación: 1,000",
+        "Primer dia de clases 3,000",
+        "Tercer dia clase 3,000",
+        "Quinto dia clases 3,000",
+        "Inversión público $10,000 Reservación $1,000 mínimo 5 días antes de iniciar la clase",
+        "1er día de clase $3000",
+        "3ra clase $ 3000",
+        "5ta clase $3000"
+      ],
+      "pendingOwnerReview": false
+    },
+    "schedule": {
+      "dateText": "Próxima fecha por anunciar",
+      "duration": {
+        "value": "Duración 6 Clases",
+        "pendingOwnerReview": false
+      },
+      "modality": {
+        "value": "",
+        "pendingOwnerReview": true
+      },
+      "rawLines": [
+        "Duración 6 Clases"
+      ],
+      "pendingOwnerReview": true
+    },
+    "objectives": [],
+    "profile": [],
+    "requirements": [],
+    "syllabusMarkdown": "Temario:\n\n✅Concepto de drenaje\n✅Historia del drenaje\n✅Signos vitales\n✅Indicaciones del drenaje\n✅Contraindicaciones Relativas y Absoluta\n✅Complicaciones en un cirugía estética\n✅Manejo de complicaciones De un post quirúrgico Tratamientos utilizados\n✅Secuencia de drenaje linfático\n✅Técnicas de drenaje pre y post operatorio\n✅Cuidado y Manejo del Dren Hemovac\n✅Cura de heridas\n✅Aparatologia\n✅Postura de fija\n✅Servicio a domicilio",
+    "indications": [],
+    "contraindications": [],
+    "practices": [],
+    "materials": [],
+    "competencies": [],
+    "certifications": [
+      "Incluye Certificado es Avalado por la Asociación Nacional de Masajistas, Terapeutas manuales y Afines y Manual",
+      "Certificado Avalado por la Asociación Nacional de Masajistas AsNaMaTeM"
+    ],
+    "endorsements": [
+      "Incluye Certificado es Avalado por la Asociación Nacional de Masajistas, Terapeutas manuales y Afines y Manual",
+      "Certificado Avalado por la Asociación Nacional de Masajistas AsNaMaTeM"
+    ],
+    "facilitator": "Sugeidy Vólquez García",
+    "legalNotes": [
+      "✅Contraindicaciones Relativas y Absoluta"
+    ],
+    "professionalNotes": [],
+    "normalizedMarkdown": "### 📘 CUR-001 \\- Máster en Drenaje Linfático: Curso Avanzado\n\nConviértete en especialista certificada en drenaje linfático pre- post-operatorio.\n6 Clases.\n70 horas sincrona y asincrona.\n5 cupos presenciales y 12 cupos online\nGoogle Meets para clases online\nPrecio total: 10,000\nReservación: 1,000\nPrimer dia de clases 3,000\nTercer dia clase 3,000\nQuinto dia clases 3,000\n\nReservación no reembolsable, ni transferible a otro curso.\n\nLA reservación se descuenta del precio total.\nTemario:\n\n✅Concepto de drenaje\n✅Historia del drenaje\n✅Signos vitales\n✅Indicaciones del drenaje\n✅Contraindicaciones Relativas y Absoluta\n✅Complicaciones en un cirugía estética\n✅Manejo de complicaciones De un post quirúrgico Tratamientos utilizados\n✅Secuencia de drenaje linfático\n✅Técnicas de drenaje pre y post operatorio\n✅Cuidado y Manejo del Dren Hemovac\n✅Cura de heridas\n✅Aparatologia\n✅Postura de fija\n✅Servicio a domicilio\n\nIncluye Certificado es Avalado por la Asociación Nacional de Masajistas, Terapeutas manuales y Afines y Manual\n\nInversión público $10,000 Reservación $1,000 mínimo 5 días antes de iniciar la clase\n1er día de clase $3000\n3ra clase $ 3000\n5ta clase $3000\n Duración 6 Clases\n\nCertificado Avalado por la Asociación Nacional de Masajistas AsNaMaTeM"
+  }
+}

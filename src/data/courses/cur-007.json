@@ -1,0 +1,118 @@
+{
+  "courseUid": "taller-de-radiofrecuencia-indiba",
+  "sourceId": "CUR-007",
+  "legacyIds": [
+    "CUR-007"
+  ],
+  "slug": "taller-de-radiofrecuencia-indiba",
+  "title": "Taller de Radiofrecuencia Indiba",
+  "requiresOwnerReview": true,
+  "requiresLegalReview": true,
+  "pendingOwnerReview": true,
+  "publicationStatus": "published",
+  "sourceRaw": {
+    "heading": "### 📘 CUR-007 \\- Taller de Radiofrecuencia Indiba",
+    "markdown": "### 📘 CUR-007 \\- Taller de Radiofrecuencia Indiba\n\n* **Categoría Actual:** Estética  \n* **Lemas:** \\* ¡Lleva tu carrera al siguiente nivel\\!  \n  * ¡Últimos cupos\\! No te quedes fuera  \n  * Tecnología avanzada que transforma resultados  \n  * Regenera • Reafirma • Alivia • Transforma  \n  * Resultados desde las primeras sesiones\n\n  ### **¿Qué Aprenderás?**\n\n* Fundamentos de la Radiofrecuencia INDIBA  \n* Principios de bioestimulación celular  \n* Protocolos faciales y corporales  \n* Indicaciones y contraindicaciones  \n* Técnicas para dolor, inflamación, flacidez y más  \n* Práctica guiada con equipos profesionales  \n* Resultados clínicos y casos reales\n\n  ### **Beneficios que te Destacan**\n\n* Aumenta tus ingresos  \n* Ofrece tratamientos de alto nivel  \n* Destácate de la competencia  \n* Certificado de participación\n\n  ### **Logística y Modalidad**\n\n* **Fecha:**   \n* **Horario:**   \n* **Modalidad:** Presencial y Online\n\n  ### **Inversión**\n\n* **Público General:** RD$4,000  \n* **Miembros ASNAMATEM:** RD$3,000  \n* **Reserva:** RD$1,000 (y asegura tu lugar ahora mismo)  \n*",
+    "lineStart": 269,
+    "lineEnd": 310
+  },
+  "publicCopy": {
+    "title": "Taller de Radiofrecuencia Indiba",
+    "subtitle": "Lemas: \\ ¡Lleva tu carrera al siguiente nivel\\!",
+    "category": {
+      "value": "Estética",
+      "pendingOwnerReview": false
+    },
+    "description": {
+      "value": "Tecnología avanzada que transforma resultados",
+      "pendingOwnerReview": false
+    },
+    "pricing": {
+      "publicPrice": {
+        "amount": 4000,
+        "currency": "DOP",
+        "raw": "Público General: RD$4,000",
+        "pendingOwnerReview": false
+      },
+      "memberPrice": {
+        "amount": 3000,
+        "currency": "DOP",
+        "raw": "Miembros ASNAMATEM: RD$3,000",
+        "pendingOwnerReview": false
+      },
+      "reservation": {
+        "amount": 1000,
+        "currency": "DOP",
+        "raw": "Reserva: RD$1,000 (y asegura tu lugar ahora mismo)",
+        "pendingOwnerReview": false
+      },
+      "paymentPlan": [
+        "Reserva: RD$1,000 (y asegura tu lugar ahora mismo)"
+      ],
+      "rawLines": [
+        "Público General: RD$4,000",
+        "Miembros ASNAMATEM: RD$3,000",
+        "Reserva: RD$1,000 (y asegura tu lugar ahora mismo)"
+      ],
+      "pendingOwnerReview": false
+    },
+    "schedule": {
+      "dateText": "Próxima fecha por anunciar",
+      "duration": {
+        "value": "",
+        "pendingOwnerReview": true
+      },
+      "modality": {
+        "value": "Logística y Modalidad",
+        "pendingOwnerReview": false
+      },
+      "rawLines": [
+        "### Logística y Modalidad",
+        "Fecha:",
+        "Horario:",
+        "Modalidad: Presencial y Online"
+      ],
+      "pendingOwnerReview": true
+    },
+    "objectives": [],
+    "profile": [],
+    "requirements": [],
+    "syllabusMarkdown": "### **¿Qué Aprenderás?**\n\n* Fundamentos de la Radiofrecuencia INDIBA\n* Principios de bioestimulación celular\n* Protocolos faciales y corporales\n* Indicaciones y contraindicaciones\n* Técnicas para dolor, inflamación, flacidez y más\n* Práctica guiada con equipos profesionales\n* Resultados clínicos y casos reales\n\n  ### **Beneficios que te Destacan**\n\n* Aumenta tus ingresos\n* Ofrece tratamientos de alto nivel\n* Destácate de la competencia\n* Certificado de participación\n\n  ### **Logística y Modalidad**\n\n* **Fecha:**\n* **Horario:**\n* **Modalidad:** Presencial y Online\n\n  ### **Inversión**\n\n* **Público General:** RD$4,000\n* **Miembros ASNAMATEM:** RD$3,000\n* **Reserva:** RD$1,000 (y asegura tu lugar ahora mismo)\n*",
+    "indications": [
+      "Indicaciones y contraindicaciones",
+      "Técnicas para dolor, inflamación, flacidez y más"
+    ],
+    "contraindications": [],
+    "practices": [
+      "Práctica guiada con equipos profesionales",
+      "Resultados clínicos y casos reales",
+      "### Beneficios que te Destacan",
+      "Aumenta tus ingresos",
+      "Ofrece tratamientos de alto nivel",
+      "Destácate de la competencia",
+      "Certificado de participación",
+      "### Logística y Modalidad",
+      "Fecha:",
+      "Horario:",
+      "Modalidad: Presencial y Online",
+      "### Inversión",
+      "Público General: RD$4,000",
+      "Miembros ASNAMATEM: RD$3,000",
+      "Reserva: RD$1,000 (y asegura tu lugar ahora mismo)"
+    ],
+    "materials": [],
+    "competencies": [],
+    "certifications": [
+      "Certificado de participación"
+    ],
+    "endorsements": [
+      "Miembros ASNAMATEM: RD$3,000"
+    ],
+    "facilitator": "Sugeidy Vólquez García",
+    "legalNotes": [
+      "Indicaciones y contraindicaciones"
+    ],
+    "professionalNotes": [],
+    "normalizedMarkdown": "### 📘 CUR-007 \\- Taller de Radiofrecuencia Indiba\n\n* **Categoría Actual:** Estética\n* **Lemas:** \\* ¡Lleva tu carrera al siguiente nivel\\!\n  * ¡Últimos cupos\\! No te quedes fuera\n  * Tecnología avanzada que transforma resultados\n  * Regenera • Reafirma • Alivia • Transforma\n  * Resultados desde las primeras sesiones\n\n  ### **¿Qué Aprenderás?**\n\n* Fundamentos de la Radiofrecuencia INDIBA\n* Principios de bioestimulación celular\n* Protocolos faciales y corporales\n* Indicaciones y contraindicaciones\n* Técnicas para dolor, inflamación, flacidez y más\n* Práctica guiada con equipos profesionales\n* Resultados clínicos y casos reales\n\n  ### **Beneficios que te Destacan**\n\n* Aumenta tus ingresos\n* Ofrece tratamientos de alto nivel\n* Destácate de la competencia\n* Certificado de participación\n\n  ### **Logística y Modalidad**\n\n* **Fecha:**\n* **Horario:**\n* **Modalidad:** Presencial y Online\n\n  ### **Inversión**\n\n* **Público General:** RD$4,000\n* **Miembros ASNAMATEM:** RD$3,000\n* **Reserva:** RD$1,000 (y asegura tu lugar ahora mismo)\n*"
+  }
+}

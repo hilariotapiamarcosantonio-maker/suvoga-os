@@ -1,0 +1,118 @@
+{
+  "courseUid": "taller-de-elaboracion-de-piezas-en-resina",
+  "sourceId": "CUR-039",
+  "legacyIds": [],
+  "slug": "taller-de-elaboracion-de-piezas-en-resina",
+  "title": "TALLER DE ELABORACIÓN DE PIEZAS EN RESINA",
+  "requiresOwnerReview": true,
+  "requiresLegalReview": false,
+  "pendingOwnerReview": true,
+  "publicationStatus": "published",
+  "sourceRaw": {
+    "heading": "### 📘 CUR-039- **TALLER DE ELABORACIÓN DE PIEZAS EN RESINA** ",
+    "markdown": "### 📘 CUR-039- **TALLER DE ELABORACIÓN DE PIEZAS EN RESINA** \n\n### **Modalidad:** Teórico – Práctico  **Duración:** 6 a 8 Horas  **Nivel:** Básico  **Facilitadora:** **Sugeidy Vólquez García**\n\n### **Inversión y Reserva**\n\n* ### **Miembros ASNaMaTeM:** 3000\n\n* ### **Público General:** RD$4000\n\n* ### **Reservación:** RD$1,000 *(No reembolsable Ni transferible a otro curso)* \n\n  ## **Temario del Taller**\n\n  ### **Módulo I. Introducción al Arte en Resina**\n\n* Concepto y aplicaciones de la resina artesanal.  \n* Tipos de resina y sus características.  \n* Normas de seguridad e higiene durante el proceso de elaboración.  \n* Herramientas, materiales y equipos de trabajo.\n\n  ### **Módulo II. Materiales y Preparación de la Resina**\n\n* Componentes de la resina y endurecedor.  \n* Proporciones adecuadas de mezcla.  \n* Tiempo de trabajo, curado y secado.  \n* Técnicas para evitar burbujas e imperfecciones.\n\n  ### **Módulo III. Técnicas de Diseño y Decoración**\n\n* Uso de pigmentos, tintas y colorantes.  \n* Inclusiones decorativas:  \n  * Flores secas.  \n  * Escarcha y brillantina.  \n  * Piedras, conchas y elementos naturales.  \n  * Letras, fotografías y figuras pequeñas.  \n* Efectos especiales:  \n  * Efecto mármol.  \n  * Efecto cristal.  \n  * Efecto geoda.  \n  * Efecto transparente y encapsulado.\n\n  ### **Módulo IV. Elaboración de Piezas en Resina**\n\n**Práctica de elaboración de:**\n\n* Llaveros personalizados.  \n* Dijes y accesorios.  \n* Portavasos decorativos.  \n* Bandejas pequeñas.  \n* Marcapáginas.  \n* Imanes decorativos.  \n* Letras y nombres personalizados.\n\n  ### **Módulo V. Acabado y Pulido**\n\n* Desmolde correcto de las piezas.  \n* Técnicas de lijado y pulido.  \n* Aplicación de brillo y selladores.  \n* Colocación de herrajes y accesorios.\n\n  ### **Módulo VI. Empaque y Comercialización**\n\n* Presentación atractiva del producto.  \n* Etiquetado y cuidados de las piezas en resina.  \n* Cálculo de costos y fijación de precios.  \n* Estrategias básicas de venta y promoción en redes sociales.\n\n  ## **Práctica Final**\n\n✔ Elaboración de varias piezas decorativas en resina.  \n ✔ Aplicación de técnicas de coloración y encapsulado.  \n ✔ Acabado, pulido y presentación de las piezas elaboradas.\n\n### **Incluye**\n\n✅ Manual digital del taller.  \n ✅ Guía de proveedores y materiales.  \n ✅ Certificado de participación.\n\n---\n\n**Elaborado por:**  \n **Sugeidy Volquez – Directora de SuVoGa Escuela y Centro de Masajes**\n\n###",
+    "lineStart": 5706,
+    "lineEnd": 5792
+  },
+  "publicCopy": {
+    "title": "TALLER DE ELABORACIÓN DE PIEZAS EN RESINA",
+    "subtitle": "Miembros ASNaMaTeM: 3000",
+    "category": {
+      "value": "",
+      "pendingOwnerReview": true
+    },
+    "description": {
+      "value": "Concepto y aplicaciones de la resina artesanal.",
+      "pendingOwnerReview": false
+    },
+    "pricing": {
+      "publicPrice": {
+        "amount": 4000,
+        "currency": "DOP",
+        "raw": "Público General: RD$4000",
+        "pendingOwnerReview": false
+      },
+      "memberPrice": {
+        "amount": 3000,
+        "currency": "DOP",
+        "raw": "Miembros ASNaMaTeM: 3000",
+        "pendingOwnerReview": false
+      },
+      "reservation": {
+        "amount": 1000,
+        "currency": "DOP",
+        "raw": "Reservación: RD$1,000 (No reembolsable Ni transferible a otro curso)",
+        "pendingOwnerReview": false
+      },
+      "paymentPlan": [
+        "Reservación: RD$1,000 (No reembolsable Ni transferible a otro curso)"
+      ],
+      "rawLines": [
+        "Miembros ASNaMaTeM: 3000",
+        "Público General: RD$4000",
+        "Reservación: RD$1,000 (No reembolsable Ni transferible a otro curso)"
+      ],
+      "pendingOwnerReview": false
+    },
+    "schedule": {
+      "dateText": "Próxima fecha por anunciar",
+      "duration": {
+        "value": "Modalidad: Teórico – Práctico Duración: 6 a 8 Horas Nivel: Básico Facilitadora: Sugeidy Vólquez García",
+        "pendingOwnerReview": false
+      },
+      "modality": {
+        "value": "Modalidad: Teórico – Práctico Duración: 6 a 8 Horas Nivel: Básico Facilitadora: Sugeidy Vólquez García",
+        "pendingOwnerReview": false
+      },
+      "rawLines": [
+        "Modalidad: Teórico – Práctico Duración: 6 a 8 Horas Nivel: Básico Facilitadora: Sugeidy Vólquez García"
+      ],
+      "pendingOwnerReview": false
+    },
+    "objectives": [],
+    "profile": [],
+    "requirements": [],
+    "syllabusMarkdown": "## **Temario del Taller**\n\n  ### **Módulo I. Introducción al Arte en Resina**\n\n* Concepto y aplicaciones de la resina artesanal.\n* Tipos de resina y sus características.\n* Normas de seguridad e higiene durante el proceso de elaboración.\n* Herramientas, materiales y equipos de trabajo.\n\n  ### **Módulo II. Materiales y Preparación de la Resina**\n\n* Componentes de la resina y endurecedor.\n* Proporciones adecuadas de mezcla.\n* Tiempo de trabajo, curado y secado.\n* Técnicas para evitar burbujas e imperfecciones.\n\n  ### **Módulo III. Técnicas de Diseño y Decoración**\n\n* Uso de pigmentos, tintas y colorantes.\n* Inclusiones decorativas:\n  * Flores secas.\n  * Escarcha y brillantina.\n  * Piedras, conchas y elementos naturales.\n  * Letras, fotografías y figuras pequeñas.\n* Efectos especiales:\n  * Efecto mármol.\n  * Efecto cristal.\n  * Efecto geoda.\n  * Efecto transparente y encapsulado.\n\n  ### **Módulo IV. Elaboración de Piezas en Resina**\n\n**Práctica de elaboración de:**\n\n* Llaveros personalizados.\n* Dijes y accesorios.\n* Portavasos decorativos.\n* Bandejas pequeñas.\n* Marcapáginas.\n* Imanes decorativos.\n* Letras y nombres personalizados.\n\n  ### **Módulo V. Acabado y Pulido**\n\n* Desmolde correcto de las piezas.\n* Técnicas de lijado y pulido.\n* Aplicación de brillo y selladores.\n* Colocación de herrajes y accesorios.\n\n  ### **Módulo VI. Empaque y Comercialización**\n\n* Presentación atractiva del producto.\n* Etiquetado y cuidados de las piezas en resina.\n* Cálculo de costos y fijación de precios.\n* Estrategias básicas de venta y promoción en redes sociales.\n\n  ## **Práctica Final**\n\n✔ Elaboración de varias piezas decorativas en resina.\n ✔ Aplicación de técnicas de coloración y encapsulado.\n ✔ Acabado, pulido y presentación de las piezas elaboradas.\n\n### **Incluye**\n\n✅ Manual digital del taller.\n ✅ Guía de proveedores y materiales.\n ✅ Certificado de participación.\n\n---",
+    "indications": [],
+    "contraindications": [],
+    "practices": [
+      "Práctica de elaboración de:",
+      "Llaveros personalizados.",
+      "Dijes y accesorios.",
+      "Portavasos decorativos.",
+      "Bandejas pequeñas.",
+      "Marcapáginas.",
+      "Imanes decorativos.",
+      "Letras y nombres personalizados.",
+      "### Módulo V. Acabado y Pulido",
+      "Desmolde correcto de las piezas.",
+      "Técnicas de lijado y pulido.",
+      "Aplicación de brillo y selladores.",
+      "Colocación de herrajes y accesorios.",
+      "### Módulo VI. Empaque y Comercialización",
+      "Presentación atractiva del producto.",
+      "Etiquetado y cuidados de las piezas en resina.",
+      "Cálculo de costos y fijación de precios.",
+      "Estrategias básicas de venta y promoción en redes sociales."
+    ],
+    "materials": [
+      "Incluye",
+      "✅ Manual digital del taller.",
+      "✅ Guía de proveedores y materiales.",
+      "✅ Certificado de participación.",
+      "Elaborado por:",
+      "Sugeidy Volquez – Directora de SuVoGa Escuela y Centro de Masajes"
+    ],
+    "competencies": [],
+    "certifications": [
+      "✅ Certificado de participación."
+    ],
+    "endorsements": [
+      "Miembros ASNaMaTeM: 3000"
+    ],
+    "facilitator": "Sugeidy Vólquez García",
+    "legalNotes": [],
+    "professionalNotes": [],
+    "normalizedMarkdown": "### 📘 CUR-039- **TALLER DE ELABORACIÓN DE PIEZAS EN RESINA**\n\n### **Modalidad:** Teórico – Práctico  **Duración:** 6 a 8 Horas  **Nivel:** Básico  **Facilitadora:** **Sugeidy Vólquez García**\n\n### **Inversión y Reserva**\n\n* ### **Miembros ASNaMaTeM:** 3000\n\n* ### **Público General:** RD$4000\n\n* ### **Reservación:** RD$1,000 *(No reembolsable Ni transferible a otro curso)*\n\n  ## **Temario del Taller**\n\n  ### **Módulo I. Introducción al Arte en Resina**\n\n* Concepto y aplicaciones de la resina artesanal.\n* Tipos de resina y sus características.\n* Normas de seguridad e higiene durante el proceso de elaboración.\n* Herramientas, materiales y equipos de trabajo.\n\n  ### **Módulo II. Materiales y Preparación de la Resina**\n\n* Componentes de la resina y endurecedor.\n* Proporciones adecuadas de mezcla.\n* Tiempo de trabajo, curado y secado.\n* Técnicas para evitar burbujas e imperfecciones.\n\n  ### **Módulo III. Técnicas de Diseño y Decoración**\n\n* Uso de pigmentos, tintas y colorantes.\n* Inclusiones decorativas:\n  * Flores secas.\n  * Escarcha y brillantina.\n  * Piedras, conchas y elementos naturales.\n  * Letras, fotografías y figuras pequeñas.\n* Efectos especiales:\n  * Efecto mármol.\n  * Efecto cristal.\n  * Efecto geoda.\n  * Efecto transparente y encapsulado.\n\n  ### **Módulo IV. Elaboración de Piezas en Resina**\n\n**Práctica de elaboración de:**\n\n* Llaveros personalizados.\n* Dijes y accesorios.\n* Portavasos decorativos.\n* Bandejas pequeñas.\n* Marcapáginas.\n* Imanes decorativos.\n* Letras y nombres personalizados.\n\n  ### **Módulo V. Acabado y Pulido**\n\n* Desmolde correcto de las piezas.\n* Técnicas de lijado y pulido.\n* Aplicación de brillo y selladores.\n* Colocación de herrajes y accesorios.\n\n  ### **Módulo VI. Empaque y Comercialización**\n\n* Presentación atractiva del producto.\n* Etiquetado y cuidados de las piezas en resina.\n* Cálculo de costos y fijación de precios.\n* Estrategias básicas de venta y promoción en redes sociales.\n\n  ## **Práctica Final**\n\n✔ Elaboración de varias piezas decorativas en resina.\n ✔ Aplicación de técnicas de coloración y encapsulado.\n ✔ Acabado, pulido y presentación de las piezas elaboradas.\n\n### **Incluye**\n\n✅ Manual digital del taller.\n ✅ Guía de proveedores y materiales.\n ✅ Certificado de participación.\n\n---\n\n**Elaborado por:**\n **Sugeidy Volquez – Directora de SuVoGa Escuela y Centro de Masajes**\n\n###"
+  }
+}

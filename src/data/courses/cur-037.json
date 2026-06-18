@@ -1,0 +1,121 @@
+{
+  "courseUid": "taller-de-elaboracion-de-cremas-cosmeticas",
+  "sourceId": "CUR-037",
+  "legacyIds": [],
+  "slug": "taller-de-elaboracion-de-cremas-cosmeticas",
+  "title": "TALLER DE ELABORACIÓN DE CREMAS COSMÉTICAS",
+  "requiresOwnerReview": true,
+  "requiresLegalReview": false,
+  "pendingOwnerReview": true,
+  "publicationStatus": "published",
+  "sourceRaw": {
+    "heading": "### 📘 CUR-037-TALLER DE ELABORACIÓN DE CREMAS COSMÉTICAS",
+    "markdown": "### 📘 CUR-037-TALLER DE ELABORACIÓN DE CREMAS COSMÉTICAS\n\nCosmética Natural para el Cuidado y Bienestar de la Piel  \n **Avalado por la Asociación Nacional de Masajistas Terapeutas Manuales y Afines (ASNAMATEM)**\n\n**Modalidad:** Teórico – Práctico  \n **Duración:** 6 a 8 Horas  \n **Nivel:** Básico  \n **Facilitadora:** **Sugeidy Vólquez García**\n\n### **Inversión y Reserva**\n\n* ### **Miembros ASNaMaTeM:** 3000\n\n* ### **Público General:** RD$4000\n\n* ### **Reservación:** RD$1,000 *(No reembolsable Ni transferible a otro curso)* \n\n🎯 OBJETIVO GENERAL\n\nCapacitar a los participantes en la elaboración artesanal de cremas cosméticas utilizando ingredientes naturales, activos funcionales y técnicas básicas de formulación para el cuidado e hidratación de la piel.\n\n📚 TEMARIO DEL TALLER  \nMÓDULO I. INTRODUCCIÓN A LA COSMÉTICA NATURAL\n\n* Conceptos básicos de cosmética artesanal.  \n* Beneficios de las cremas naturales.  \n* Higiene y buenas prácticas de manufactura.\n\nMÓDULO II. MATERIAS PRIMAS Y ACTIVOS COSMÉTICOS\n\n* Aceites vegetales y mantecas.  \n* Emulsionantes y conservantes.  \n* Aloe vera, colágeno, vitamina E y extractos naturales.  \n* Fragancias y colorantes cosméticos.\n\nMÓDULO III. ELABORACIÓN DE CREMAS\n\n* Preparación de la fase acuosa y oleosa.  \n* Técnicas básicas de emulsificación.  \n* Incorporación de activos cosméticos.  \n* Envasado y conservación del producto.\n\nMÓDULO IV. PRÁCTICAS COSMÉTICAS\n\nElaboración de:\n\n🧴 Crema hidratante corporal.  \n 🧴Crema anti celulitis   \n 🧴 Crema Aclarante  \n 🧴 Crema reafirmante con activos naturales.\n\nMÓDULO V. EMPRENDIMIENTO COSMÉTICO\n\n* Cálculo de costos.  \n* Etiquetado básico.  \n* Presentación y comercialización del producto.\n\n👐 PRÁCTICA SUPERVISADA\n\n✅ Elaboración de diferentes tipos de cremas.  \n ✅ Aplicación de técnicas de emulsificación.  \n ✅ Envasado y etiquetado profesional.  \n ✅ Cálculo de costos de producción.\n\n📖 MATERIALES INCLUIDOS\n\n✅ Manual digital ilustrado.  \n ✅ Recetario de fórmulas cosméticas.  \n ✅ Material didáctico de apoyo.  \n ✅ Certificado de participación y aprobación.\n\n🏅 CERTIFICACIÓN\n\n**Certificado de Participación y Aprobación**\n\nAvalado por la **Asociación Nacional de Masajistas Terapeutas Manuales y Afines (ASNAMATEM)** y **SuVoGa Escuela y Centro de Masajes**.\n\n**Elaborado por:**\n\nSugeidy Vólquez García\n\n**Directora de SuVoGa Escuela y Centro de Masajes**\n\n💚✨ *\"Aprende, crea y emprende en el apasionante mundo de la cosmética natural.\"*",
+    "lineStart": 5526,
+    "lineEnd": 5611
+  },
+  "publicCopy": {
+    "title": "TALLER DE ELABORACIÓN DE CREMAS COSMÉTICAS",
+    "subtitle": "Avalado por la Asociación Nacional de Masajistas Terapeutas Manuales y Afines (ASNAMATEM)",
+    "category": {
+      "value": "",
+      "pendingOwnerReview": true
+    },
+    "description": {
+      "value": "Cosmética Natural para el Cuidado y Bienestar de la Piel",
+      "pendingOwnerReview": false
+    },
+    "pricing": {
+      "publicPrice": {
+        "amount": 4000,
+        "currency": "DOP",
+        "raw": "Público General: RD$4000",
+        "pendingOwnerReview": false
+      },
+      "memberPrice": {
+        "amount": 3000,
+        "currency": "DOP",
+        "raw": "Miembros ASNaMaTeM: 3000",
+        "pendingOwnerReview": false
+      },
+      "reservation": {
+        "amount": 1000,
+        "currency": "DOP",
+        "raw": "Reservación: RD$1,000 (No reembolsable Ni transferible a otro curso)",
+        "pendingOwnerReview": false
+      },
+      "paymentPlan": [
+        "Reservación: RD$1,000 (No reembolsable Ni transferible a otro curso)"
+      ],
+      "rawLines": [
+        "Miembros ASNaMaTeM: 3000",
+        "Público General: RD$4000",
+        "Reservación: RD$1,000 (No reembolsable Ni transferible a otro curso)"
+      ],
+      "pendingOwnerReview": false
+    },
+    "schedule": {
+      "dateText": "Próxima fecha por anunciar",
+      "duration": {
+        "value": "Duración: 6 a 8 Horas",
+        "pendingOwnerReview": false
+      },
+      "modality": {
+        "value": "Modalidad: Teórico – Práctico",
+        "pendingOwnerReview": false
+      },
+      "rawLines": [
+        "Modalidad: Teórico – Práctico",
+        "Duración: 6 a 8 Horas"
+      ],
+      "pendingOwnerReview": false
+    },
+    "objectives": [
+      "🎯 OBJETIVO GENERAL",
+      "Capacitar a los participantes en la elaboración artesanal de cremas cosméticas utilizando ingredientes naturales, activos funcionales y técnicas básicas de formulación para el cuidado e hidratación de la piel.",
+      "📚 TEMARIO DEL TALLER"
+    ],
+    "profile": [],
+    "requirements": [],
+    "syllabusMarkdown": "📚 TEMARIO DEL TALLER\nMÓDULO I. INTRODUCCIÓN A LA COSMÉTICA NATURAL\n\n* Conceptos básicos de cosmética artesanal.\n* Beneficios de las cremas naturales.\n* Higiene y buenas prácticas de manufactura.\n\nMÓDULO II. MATERIAS PRIMAS Y ACTIVOS COSMÉTICOS\n\n* Aceites vegetales y mantecas.\n* Emulsionantes y conservantes.\n* Aloe vera, colágeno, vitamina E y extractos naturales.\n* Fragancias y colorantes cosméticos.\n\nMÓDULO III. ELABORACIÓN DE CREMAS\n\n* Preparación de la fase acuosa y oleosa.\n* Técnicas básicas de emulsificación.\n* Incorporación de activos cosméticos.\n* Envasado y conservación del producto.\n\nMÓDULO IV. PRÁCTICAS COSMÉTICAS\n\nElaboración de:\n\n🧴 Crema hidratante corporal.\n 🧴Crema anti celulitis\n 🧴 Crema Aclarante\n 🧴 Crema reafirmante con activos naturales.\n\nMÓDULO V. EMPRENDIMIENTO COSMÉTICO\n\n* Cálculo de costos.\n* Etiquetado básico.\n* Presentación y comercialización del producto.\n\n👐 PRÁCTICA SUPERVISADA\n\n✅ Elaboración de diferentes tipos de cremas.\n ✅ Aplicación de técnicas de emulsificación.\n ✅ Envasado y etiquetado profesional.\n ✅ Cálculo de costos de producción.",
+    "indications": [],
+    "contraindications": [],
+    "practices": [
+      "Higiene y buenas prácticas de manufactura.",
+      "MÓDULO II. MATERIAS PRIMAS Y ACTIVOS COSMÉTICOS",
+      "Aceites vegetales y mantecas.",
+      "Emulsionantes y conservantes.",
+      "Aloe vera, colágeno, vitamina E y extractos naturales.",
+      "Fragancias y colorantes cosméticos."
+    ],
+    "materials": [
+      "📖 MATERIALES INCLUIDOS",
+      "✅ Manual digital ilustrado.",
+      "✅ Recetario de fórmulas cosméticas.",
+      "✅ Material didáctico de apoyo.",
+      "✅ Certificado de participación y aprobación.",
+      "🏅 CERTIFICACIÓN",
+      "Certificado de Participación y Aprobación",
+      "Avalado por la Asociación Nacional de Masajistas Terapeutas Manuales y Afines (ASNAMATEM) y SuVoGa Escuela y Centro de Masajes.",
+      "Elaborado por:",
+      "Sugeidy Vólquez García",
+      "Directora de SuVoGa Escuela y Centro de Masajes",
+      "💚✨ \"Aprende, crea y emprende en el apasionante mundo de la cosmética natural.\""
+    ],
+    "competencies": [],
+    "certifications": [
+      "✅ Certificado de participación y aprobación.",
+      "🏅 CERTIFICACIÓN",
+      "Certificado de Participación y Aprobación"
+    ],
+    "endorsements": [
+      "Avalado por la Asociación Nacional de Masajistas Terapeutas Manuales y Afines (ASNAMATEM)",
+      "Miembros ASNaMaTeM: 3000",
+      "Avalado por la Asociación Nacional de Masajistas Terapeutas Manuales y Afines (ASNAMATEM) y SuVoGa Escuela y Centro de Masajes."
+    ],
+    "facilitator": "Sugeidy Vólquez García",
+    "legalNotes": [],
+    "professionalNotes": [],
+    "normalizedMarkdown": "### 📘 CUR-037-TALLER DE ELABORACIÓN DE CREMAS COSMÉTICAS\n\nCosmética Natural para el Cuidado y Bienestar de la Piel\n **Avalado por la Asociación Nacional de Masajistas Terapeutas Manuales y Afines (ASNAMATEM)**\n\n**Modalidad:** Teórico – Práctico\n **Duración:** 6 a 8 Horas\n **Nivel:** Básico\n **Facilitadora:** **Sugeidy Vólquez García**\n\n### **Inversión y Reserva**\n\n* ### **Miembros ASNaMaTeM:** 3000\n\n* ### **Público General:** RD$4000\n\n* ### **Reservación:** RD$1,000 *(No reembolsable Ni transferible a otro curso)*\n\n🎯 OBJETIVO GENERAL\n\nCapacitar a los participantes en la elaboración artesanal de cremas cosméticas utilizando ingredientes naturales, activos funcionales y técnicas básicas de formulación para el cuidado e hidratación de la piel.\n\n📚 TEMARIO DEL TALLER\nMÓDULO I. INTRODUCCIÓN A LA COSMÉTICA NATURAL\n\n* Conceptos básicos de cosmética artesanal.\n* Beneficios de las cremas naturales.\n* Higiene y buenas prácticas de manufactura.\n\nMÓDULO II. MATERIAS PRIMAS Y ACTIVOS COSMÉTICOS\n\n* Aceites vegetales y mantecas.\n* Emulsionantes y conservantes.\n* Aloe vera, colágeno, vitamina E y extractos naturales.\n* Fragancias y colorantes cosméticos.\n\nMÓDULO III. ELABORACIÓN DE CREMAS\n\n* Preparación de la fase acuosa y oleosa.\n* Técnicas básicas de emulsificación.\n* Incorporación de activos cosméticos.\n* Envasado y conservación del producto.\n\nMÓDULO IV. PRÁCTICAS COSMÉTICAS\n\nElaboración de:\n\n🧴 Crema hidratante corporal.\n 🧴Crema anti celulitis\n 🧴 Crema Aclarante\n 🧴 Crema reafirmante con activos naturales.\n\nMÓDULO V. EMPRENDIMIENTO COSMÉTICO\n\n* Cálculo de costos.\n* Etiquetado básico.\n* Presentación y comercialización del producto.\n\n👐 PRÁCTICA SUPERVISADA\n\n✅ Elaboración de diferentes tipos de cremas.\n ✅ Aplicación de técnicas de emulsificación.\n ✅ Envasado y etiquetado profesional.\n ✅ Cálculo de costos de producción.\n\n📖 MATERIALES INCLUIDOS\n\n✅ Manual digital ilustrado.\n ✅ Recetario de fórmulas cosméticas.\n ✅ Material didáctico de apoyo.\n ✅ Certificado de participación y aprobación.\n\n🏅 CERTIFICACIÓN\n\n**Certificado de Participación y Aprobación**\n\nAvalado por la **Asociación Nacional de Masajistas Terapeutas Manuales y Afines (ASNAMATEM)** y **SuVoGa Escuela y Centro de Masajes**.\n\n**Elaborado por:**\n\nSugeidy Vólquez García\n\n**Directora de SuVoGa Escuela y Centro de Masajes**\n\n💚✨ *\"Aprende, crea y emprende en el apasionante mundo de la cosmética natural.\"*"
+  }
+}

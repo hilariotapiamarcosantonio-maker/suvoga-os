@@ -18,11 +18,12 @@ function formatDop(value: number) {
 }
 
 function priceLabel(value: number) {
-  return value > 0 ? formatDop(value) : "A consultar";
+  return value > 0 ? formatDop(value) : "";
 }
 
 export function CourseLandingSignup({ course }: CourseLandingSignupProps) {
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const hasPublicPrice = course.precioTotal > 0;
 
   return (
     <>
@@ -30,14 +31,16 @@ export function CourseLandingSignup({ course }: CourseLandingSignupProps) {
         <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[#8D7530]">
           Separar cupo
         </p>
-        <div className="mt-5 rounded-2xl border border-[#0D3B22]/10 bg-[#FDFBF7] p-4">
+        {hasPublicPrice ? (
+          <div className="mt-5 rounded-2xl border border-[#0D3B22]/10 bg-[#FDFBF7] p-4">
           <p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-[#6B6048]">
             Inversión
           </p>
           <p className="suvoga-serif mt-2 text-4xl font-semibold leading-none text-[#0D3B22]">
             {priceLabel(course.precioTotal)}
           </p>
-        </div>
+          </div>
+        ) : null}
 
         <div className="mt-4 space-y-3 text-sm">
           <div className="flex items-center justify-between gap-4 rounded-2xl border border-[#D4AF37]/20 bg-[#FDFBF7] px-4 py-3">
@@ -61,9 +64,11 @@ export function CourseLandingSignup({ course }: CourseLandingSignupProps) {
           <div className="flex items-center justify-between gap-4 rounded-2xl border border-[#D4AF37]/20 bg-[#FDFBF7] px-4 py-3">
             <span className="inline-flex items-center gap-2 text-[#4E6658]">
               <CalendarDays className="h-4 w-4 text-[#C5A028]" />
-              Estado
+              Fecha
             </span>
-            <strong className="text-[#0D3B22]">Inscripción abierta</strong>
+            <strong className="text-[#0D3B22] text-right">
+              {course.fechaTexto || "Próxima fecha por anunciar"}
+            </strong>
           </div>
         </div>
 
@@ -77,7 +82,7 @@ export function CourseLandingSignup({ course }: CourseLandingSignupProps) {
         </button>
 
         <p className="mt-4 text-center text-xs leading-5 text-[#6B6048]">
-          Tu solicitud se guarda en SuVoGa OS para que el equipo confirme cupo y
+          Tu solicitud se guarda en SuVoGa Academia para que el equipo confirme cupo y
           anticipo.
         </p>
       </aside>
