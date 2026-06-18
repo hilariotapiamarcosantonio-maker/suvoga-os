@@ -14,11 +14,13 @@ export type ContactConfig = {
   horario: string;
 };
 
+import { buildWhatsAppLink, suvogaContact } from "@/lib/suvoga-contact";
+
 export const contactInfo: ContactConfig = {
   whatsapp: {
-    label: "WhatsApp oficial próximamente",
-    link: "https://wa.me/18090000000", // Will be replaced with real number link
-    displayValue: "+1 (809) 000-0000",
+    label: "Escríbenos por WhatsApp",
+    link: buildWhatsAppLink(),
+    displayValue: suvogaContact.phoneDisplay,
   },
   instagram: {
     label: "Instagram oficial próximamente",
@@ -35,7 +37,7 @@ export const contactInfo: ContactConfig = {
     link: "https://facebook.com/suvoga.academia.placeholder",
     displayValue: "SuVoGa Academia",
   },
-  correo: "contacto@suvoga.com",
+  correo: suvogaContact.email,
   ubicacion: "Santo Domingo, República Dominicana",
   horario: "Lunes a Sábado: 9:00 AM - 6:00 PM (Hora Local)",
 };

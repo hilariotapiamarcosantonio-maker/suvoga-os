@@ -1,7 +1,8 @@
 import Link from "next/link";
-import { Mail } from "lucide-react";
+import { Mail, MessageCircle } from "lucide-react";
 import { contactInfo } from "@/data/contact";
 import { brand } from "@/lib/brand";
+import { buildWhatsAppLink, suvogaContact } from "@/lib/suvoga-contact";
 
 const navLinks = [
   { label: "Inicio", href: "/" },
@@ -23,13 +24,24 @@ export function Footer() {
           <div className="space-y-4">
             <h3 className="suvoga-serif text-2xl font-semibold text-white">{brand.productName}</h3>
             <p className="max-w-xs text-xs leading-relaxed text-[#EAE2D0]">{brand.tagline}</p>
-            <a
-              href={`mailto:${contactInfo.correo}`}
-              className="inline-flex items-center gap-2 rounded-xl border border-[#D4AF37]/25 bg-white/5 px-3.5 py-2 text-xs font-semibold text-[#D4AF37] transition-colors hover:bg-white/10"
-            >
-              <Mail className="h-4 w-4" />
-              {contactInfo.correo}
-            </a>
+            <div className="flex flex-col gap-2.5">
+              <a
+                href={`mailto:${contactInfo.correo}`}
+                className="inline-flex min-h-11 items-center gap-2 rounded-xl border border-[#D4AF37]/25 bg-white/5 px-3.5 py-2 text-xs font-semibold text-[#D4AF37] transition-colors hover:bg-white/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#D4AF37]/70"
+              >
+                <Mail className="h-4 w-4" />
+                {contactInfo.correo}
+              </a>
+              <a
+                href={buildWhatsAppLink()}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex min-h-11 items-center gap-2 rounded-xl border border-[#D4AF37]/25 bg-white/5 px-3.5 py-2 text-xs font-semibold text-[#D4AF37] transition-colors hover:bg-white/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#D4AF37]/70"
+              >
+                <MessageCircle className="h-4 w-4 text-[#25D366]" />
+                {suvogaContact.phoneDisplay}
+              </a>
+            </div>
           </div>
 
           {/* Navigation */}
@@ -58,7 +70,7 @@ export function Footer() {
               reserva del anticipo correspondiente.
             </p>
             <p className="text-[11px] leading-relaxed text-[#8A7D69]">
-              Nuestros canales oficiales de WhatsApp e Instagram se habilitarán próximamente.
+              Nuestro canal oficial de Instagram se habilitará próximamente.
             </p>
           </div>
         </div>

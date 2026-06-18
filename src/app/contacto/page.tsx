@@ -5,6 +5,7 @@ import { ContactForm } from "@/components/suvoga/ContactForm";
 import { SectionHeading } from "@/components/suvoga/SectionHeading";
 import { Reveal } from "@/components/suvoga/Reveal";
 import { SuvogaWhatsAppButton } from "@/components/suvoga/SuvogaWhatsAppButton";
+import { buildWhatsAppLink, suvogaContact } from "@/lib/suvoga-contact";
 
 export const metadata: Metadata = {
   title: "Contacto y orientación | SuVoGa Academia",
@@ -79,13 +80,20 @@ export default function ContactoPage() {
               </span>
             </a>
 
-            <div className="mt-4 flex items-start gap-3 rounded-2xl border border-[#D4AF37]/20 bg-[#0D3B22]/[0.03] p-5">
-              <MessageCircle className="mt-0.5 h-5 w-5 shrink-0 text-[#C5A028]" />
-              <p className="text-xs leading-6 text-[#4E6658]">
-                Nuestros canales oficiales de WhatsApp e Instagram se habilitarán muy pronto.
-                Mientras tanto, el formulario es la vía directa para recibir orientación.
-              </p>
-            </div>
+            <a
+              href={buildWhatsAppLink()}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="group mt-4 flex items-center gap-4 rounded-2xl border border-[#D4AF37]/25 bg-white p-5 shadow-sm transition-all hover:-translate-y-0.5 hover:border-[#D4AF37]/60 hover:shadow-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0D3B22]/70 focus-visible:ring-offset-2"
+            >
+              <span className="inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-[#0D3B22] text-[#25D366]">
+                <MessageCircle className="h-5 w-5" />
+              </span>
+              <span className="min-w-0">
+                <span className="block text-sm font-semibold text-[#0D3B22]">WhatsApp</span>
+                <span className="block truncate text-xs text-[#6B6048]">{suvogaContact.phoneDisplay}</span>
+              </span>
+            </a>
           </div>
         </Reveal>
 

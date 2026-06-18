@@ -44,7 +44,7 @@ import {
   priceLabel,
   youTubeId,
 } from "@/lib/course-presentation";
-import { buildCourseWhatsAppMessage } from "@/lib/whatsapp";
+import { buildCourseWhatsAppMessage } from "@/lib/suvoga-contact";
 
 type CoursePageProps = {
   params: { id: string };
