@@ -2,8 +2,8 @@ import Link from "next/link";
 import { ArrowRight, CalendarDays, Clock3, Layers } from "lucide-react";
 import type { SuvogaServicio } from "@/lib/crm-data/get-suvoga-data";
 import {
-  cleanLabeledValue,
   courseCategory,
+  courseDurationText,
   courseHref,
   courseImage,
   courseModality,
@@ -33,7 +33,7 @@ export function CourseCard({ course, featured = false }: CourseCardProps) {
   const eyebrow = identity?.eyebrow ?? courseCategory(course);
   const primaryBenefit = identity?.primaryBenefit;
   const modality = courseModality(course);
-  const duration = cleanLabeledValue(course.duracion) || "Según calendario";
+  const duration = courseDurationText(course.duracion) || "Según calendario";
   const hasPublicPrice = course.precioTotal > 0;
 
   // Pending covers have no unique local art → force the editorial fallback

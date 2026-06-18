@@ -36,7 +36,7 @@ import { CourseCover } from "@/components/suvoga/CourseCover";
 import { getCourseVisualIdentity } from "@/data/course-visual-identities";
 import { COURSE_VISUAL_FAMILIES } from "@/data/course-visual-families";
 import {
-  cleanLabeledValue,
+  courseDurationText,
   cleanList,
   cleanText,
   courseCategory,
@@ -162,7 +162,7 @@ export default function CoursePage({ params }: CoursePageProps) {
   const descriptionParagraph =
     !rawDescription || /^dirigido a/i.test(rawDescription) ? objective : rawDescription;
 
-  const duration = cleanLabeledValue(course.duracion);
+  const duration = courseDurationText(course.duracion);
   const modality = courseModality(course);
   const category = courseCategory(course);
   const hasPublicPrice = course.precioTotal > 0;

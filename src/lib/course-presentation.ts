@@ -32,6 +32,29 @@ export function cleanLabeledValue(value?: string) {
 // project's TypeScript target does not support).
 const LEADING_GLYPHS = "*✅✔✨•📖🎓💰🔒💚🍇🍫☕🧖🏅📘👐🔒🎗";
 
+// Markers that, in the contaminated `duracion` field, signal where the real
+// duration text ends and other (misclassified) data begins.
+const DURATION_CONTAMINANTS = /\b(nivel|modalidad|facilitador|elaborado|inversi[oó]n|precio|anticipo|reservaci[oó]n|miembros)\b/i;
+
+/**
+ * Extract a clean, display-safe duration from the (sometimes contaminated)
+ * `duracion` field — e.g. "Modalidad: Teórico Duración: 6 a 8 Horas Nivel:
+ * Básico Facilitadora: ..." -> "6 a 8 Horas". Never mutates the source data.
+ * Returns "" when no real duration phrase is present, so callers can omit the
+ * field rather than render leaked facilitator/price text in the hero or card.
+ */
+export function courseDurationText(value?: string) {
+  if (!value) return "";
+  const raw = `${value}`;
+  const match = raw.match(/duraci[oó]n:?\s*(.+)/i);
+  if (!match) return "";
+  // Cut at the first contaminant marker that follows the duration.
+  const cut = match[1].split(DURATION_CONTAMINANTS)[0];
+  const text = cleanText(cut).replace(/[–\-,;:]\s*$/, "").trim();
+  if (!text || isAuthorityOrPricingNoise(text)) return "";
+  return text;
+}
+
 /** Strip markdown emphasis and bullet markers for clean display. */
 export function cleanText(value?: string) {
   if (!value) return "";
