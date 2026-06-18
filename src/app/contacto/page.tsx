@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
-import { Clock, Mail, MapPin, MessageCircle } from "lucide-react";
-import { Instagram } from "@/components/suvoga/BrandIcons";
+import { Mail, MessageCircle } from "lucide-react";
 import { contactInfo } from "@/data/contact";
 import { ContactForm } from "@/components/suvoga/ContactForm";
 import { SectionHeading } from "@/components/suvoga/SectionHeading";
@@ -9,7 +8,7 @@ import { Reveal } from "@/components/suvoga/Reveal";
 export const metadata: Metadata = {
   title: "Contacto y orientación | SuVoGa Academia",
   description:
-    "Solicita orientación académica en SuVoGa Academia. Escríbenos por WhatsApp, Instagram o correo y te ayudamos a elegir tu formación.",
+    "Solicita orientación académica en SuVoGa Academia. Cuéntanos tu objetivo y te ayudamos a elegir tu formación en masoterapia, estética y bienestar.",
   alternates: { canonical: "/contacto" },
   openGraph: {
     title: "Contacto y orientación | SuVoGa Academia",
@@ -39,30 +38,6 @@ const faqs = [
 ];
 
 export default function ContactoPage() {
-  const channels = [
-    {
-      icon: MessageCircle,
-      label: contactInfo.whatsapp.label,
-      value: contactInfo.whatsapp.displayValue,
-      href: contactInfo.whatsapp.link,
-      external: true,
-    },
-    {
-      icon: Instagram,
-      label: contactInfo.instagram.label,
-      value: contactInfo.instagram.displayValue,
-      href: contactInfo.instagram.link,
-      external: true,
-    },
-    {
-      icon: Mail,
-      label: "Correo electrónico",
-      value: contactInfo.correo,
-      href: `mailto:${contactInfo.correo}`,
-      external: false,
-    },
-  ];
-
   return (
     <main className="bg-[#FDFBF7] text-[#0D3B22]">
       <section className="border-b border-[#D4AF37]/20 bg-gradient-to-br from-[#072515] to-[#124026] text-[#FDFBF7]">
@@ -74,52 +49,41 @@ export default function ContactoPage() {
             Hablemos de tu formación
           </h1>
           <p className="mt-5 max-w-2xl text-base leading-8 text-[#EAE2D0]">
-            ¿Tienes dudas sobre un programa, fechas o formas de pago? Te
-            orientamos para que elijas con confianza.
+            ¿Tienes dudas sobre un programa, fechas o formas de pago? Cuéntanos qué
+            buscas y te orientamos para que elijas con confianza.
           </p>
         </div>
       </section>
 
-      <section className="mx-auto grid max-w-7xl gap-10 px-4 py-16 sm:px-6 lg:grid-cols-2 lg:px-8 lg:py-20">
-        {/* Channels + logistics */}
+      <section className="mx-auto grid max-w-7xl gap-10 px-4 py-16 sm:px-6 lg:grid-cols-[0.85fr_1.15fr] lg:px-8 lg:py-20">
+        {/* Intro + email */}
         <Reveal>
           <div>
-            <SectionHeading eyebrow="Canales directos" title="Escríbenos" />
-            <div className="mt-8 space-y-4">
-              {channels.map((channel) => (
-                <a
-                  key={channel.label}
-                  href={channel.href}
-                  target={channel.external ? "_blank" : undefined}
-                  rel={channel.external ? "noopener noreferrer" : undefined}
-                  className="group flex items-center gap-4 rounded-2xl border border-[#D4AF37]/25 bg-white p-5 shadow-sm transition-all hover:-translate-y-0.5 hover:border-[#D4AF37]/60 hover:shadow-md"
-                >
-                  <span className="inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-[#0D3B22]/5 text-[#C5A028]">
-                    <channel.icon className="h-5 w-5" />
-                  </span>
-                  <span className="min-w-0">
-                    <span className="block text-sm font-semibold text-[#0D3B22]">{channel.label}</span>
-                    <span className="block truncate text-xs text-[#6B6048]">{channel.value}</span>
-                  </span>
-                </a>
-              ))}
-            </div>
+            <SectionHeading
+              eyebrow="Orientación académica"
+              title="Estamos para ayudarte"
+              description="Completa el formulario con tu consulta y nuestro equipo te responderá para guiarte en la elección de tu programa."
+            />
 
-            <div className="mt-6 grid gap-4 rounded-2xl border border-[#D4AF37]/20 bg-white p-5 shadow-sm sm:grid-cols-2">
-              <div className="flex items-start gap-3">
-                <MapPin className="mt-0.5 h-5 w-5 shrink-0 text-[#C5A028]" />
-                <div>
-                  <p className="text-xs font-semibold uppercase tracking-[0.12em] text-[#8D7530]">Ubicación</p>
-                  <p className="mt-1 text-sm text-[#4E6658]">{contactInfo.ubicacion}</p>
-                </div>
-              </div>
-              <div className="flex items-start gap-3">
-                <Clock className="mt-0.5 h-5 w-5 shrink-0 text-[#C5A028]" />
-                <div>
-                  <p className="text-xs font-semibold uppercase tracking-[0.12em] text-[#8D7530]">Horario</p>
-                  <p className="mt-1 text-sm text-[#4E6658]">{contactInfo.horario}</p>
-                </div>
-              </div>
+            <a
+              href={`mailto:${contactInfo.correo}`}
+              className="group mt-8 flex items-center gap-4 rounded-2xl border border-[#D4AF37]/25 bg-white p-5 shadow-sm transition-all hover:-translate-y-0.5 hover:border-[#D4AF37]/60 hover:shadow-md"
+            >
+              <span className="inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-[#0D3B22]/5 text-[#C5A028]">
+                <Mail className="h-5 w-5" />
+              </span>
+              <span className="min-w-0">
+                <span className="block text-sm font-semibold text-[#0D3B22]">Correo electrónico</span>
+                <span className="block truncate text-xs text-[#6B6048]">{contactInfo.correo}</span>
+              </span>
+            </a>
+
+            <div className="mt-4 flex items-start gap-3 rounded-2xl border border-[#D4AF37]/20 bg-[#0D3B22]/[0.03] p-5">
+              <MessageCircle className="mt-0.5 h-5 w-5 shrink-0 text-[#C5A028]" />
+              <p className="text-xs leading-6 text-[#4E6658]">
+                Nuestros canales oficiales de WhatsApp e Instagram se habilitarán muy pronto.
+                Mientras tanto, el formulario es la vía directa para recibir orientación.
+              </p>
             </div>
           </div>
         </Reveal>
@@ -147,7 +111,7 @@ export default function ContactoPage() {
                 <details className="group rounded-2xl border border-[#D4AF37]/25 bg-white p-5 shadow-sm">
                   <summary className="flex cursor-pointer list-none items-center justify-between gap-4 text-sm font-semibold text-[#0D3B22]">
                     {faq.q}
-                    <span className="text-[#C5A028] transition-transform group-open:rotate-45">+</span>
+                    <span className="text-lg leading-none text-[#C5A028] transition-transform group-open:rotate-45">+</span>
                   </summary>
                   <p className="mt-3 text-sm leading-7 text-[#4E6658]">{faq.a}</p>
                 </details>

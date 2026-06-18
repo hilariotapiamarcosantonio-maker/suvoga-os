@@ -63,11 +63,13 @@ export function CourseCard({ course, featured = false }: CourseCardProps) {
             <dt className="sr-only">Duración</dt>
             <dd className="truncate">{duration}</dd>
           </div>
-          <div className="flex items-center gap-2">
-            <Layers className="h-4 w-4 shrink-0 text-[#C5A028]" />
-            <dt className="sr-only">Modalidad</dt>
-            <dd className="truncate">{modality}</dd>
-          </div>
+          {modality !== "Por definir" ? (
+            <div className="flex items-center gap-2">
+              <Layers className="h-4 w-4 shrink-0 text-[#C5A028]" />
+              <dt className="sr-only">Modalidad</dt>
+              <dd className="truncate">{modality}</dd>
+            </div>
+          ) : null}
           <div className="flex items-center gap-2">
             <CalendarDays className="h-4 w-4 shrink-0 text-[#C5A028]" />
             <dt className="sr-only">Próxima fecha</dt>

@@ -130,6 +130,23 @@ export default function CoursePage({ params }: CoursePageProps) {
   const certifications = cleanList(pc.certifications);
   const facilitator = cleanText(pc.facilitator);
 
+  // Hero subtitle: only show a genuinely descriptive line, never a stray
+  // price/condition fragment captured during extraction.
+  const heroSubtitle = (() => {
+    const s = cleanText(course.subtitulo_premium);
+    if (!s || s.length < 14) return "";
+    if (/miembros|asnamastem|asnamatem|inversi[oó]n|anticipo|reservaci[oó]n|rd\$|\b\d{3,}\b/i.test(s)) {
+      return "";
+    }
+    return s;
+  })();
+
+  // Description paragraph: avoid leading with the "Dirigido a:" audience line
+  // (already shown under "Para quién es"); prefer the real objective sentence.
+  const rawDescription = cleanText(pc.description.value);
+  const descriptionParagraph =
+    !rawDescription || /^dirigido a/i.test(rawDescription) ? objective : rawDescription;
+
   const duration = cleanLabeledValue(course.duracion);
   const modality = courseModality(course);
   const category = courseCategory(course);
@@ -189,9 +206,9 @@ export default function CoursePage({ params }: CoursePageProps) {
               <h1 className="suvoga-serif mt-5 text-3xl font-semibold leading-tight text-white sm:text-5xl">
                 {course.nombre}
               </h1>
-              {course.subtitulo_premium ? (
+              {heroSubtitle ? (
                 <p className="mt-4 max-w-xl text-sm leading-7 text-[#EAE2D0] sm:text-base">
-                  {cleanText(course.subtitulo_premium)}
+                  {heroSubtitle}
                 </p>
               ) : null}
 
@@ -202,10 +219,12 @@ export default function CoursePage({ params }: CoursePageProps) {
                     {duration}
                   </span>
                 ) : null}
-                <span className="inline-flex items-center gap-2">
-                  <Layers className="h-4 w-4 text-[#D4AF37]" />
-                  {modality}
-                </span>
+                {modality !== "Por definir" ? (
+                  <span className="inline-flex items-center gap-2">
+                    <Layers className="h-4 w-4 text-[#D4AF37]" />
+                    {modality}
+                  </span>
+                ) : null}
                 <span className="inline-flex items-center gap-2">
                   <CalendarDays className="h-4 w-4 text-[#D4AF37]" />
                   {course.fechaTexto || "Próxima fecha por anunciar"}
@@ -258,8 +277,8 @@ export default function CoursePage({ params }: CoursePageProps) {
           {/* Descripción */}
           <article id="descripcion" className={sectionClass}>
             <SectionTitle icon={Target} eyebrow="El programa" title="Descripción" />
-            <p className="mt-5 text-base leading-8 text-[#4E6658]">{cleanText(pc.description.value) || objective}</p>
-            {objective && objective !== cleanText(pc.description.value) ? (
+            <p className="mt-5 text-base leading-8 text-[#4E6658]">{descriptionParagraph}</p>
+            {objective && objective !== descriptionParagraph ? (
               <div className="mt-6 rounded-2xl border border-[#D4AF37]/25 bg-white p-5 shadow-sm">
                 <p className="text-xs font-semibold uppercase tracking-[0.14em] text-[#8D7530]">Objetivo</p>
                 <p className="mt-2 text-sm leading-7 text-[#4E6658]">{objective}</p>

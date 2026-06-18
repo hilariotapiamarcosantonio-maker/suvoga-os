@@ -1,6 +1,5 @@
 import Link from "next/link";
 import { ArrowRight, MessageCircle } from "lucide-react";
-import { contactInfo } from "@/data/contact";
 
 type SiteCTAProps = {
   title?: string;
@@ -37,7 +36,7 @@ export function SiteCTA({
               Solicitar orientación
             </Link>
           </div>
-          <p className="mt-4 text-[11px] text-[#8A7D69]">{contactInfo.horario}</p>
+          <p className="mt-4 text-[11px] text-[#8A7D69]">Grupos reducidos · Cupos limitados</p>
         </div>
       </div>
     </section>

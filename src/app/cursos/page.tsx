@@ -21,9 +21,9 @@ export const metadata: Metadata = {
 const categories = Array.from(new Set(suvogaCourses.map(courseCategory))).sort((a, b) =>
   a.localeCompare(b, "es")
 );
-const modalities = Array.from(new Set(suvogaCourses.map(courseModality))).sort((a, b) =>
-  a.localeCompare(b, "es")
-);
+const modalities = Array.from(new Set(suvogaCourses.map(courseModality)))
+  .filter((m) => m !== "Por definir")
+  .sort((a, b) => a.localeCompare(b, "es"));
 
 type CoursesPageProps = {
   searchParams?: { categoria?: string };
