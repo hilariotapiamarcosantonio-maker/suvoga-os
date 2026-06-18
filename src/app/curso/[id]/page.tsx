@@ -32,6 +32,9 @@ import { CoursePdfResource } from "@/components/suvoga/CoursePdfResource";
 import { YouTubeLiteEmbed } from "@/components/suvoga/YouTubeLiteEmbed";
 import { SuvogaWhatsAppButton } from "@/components/suvoga/SuvogaWhatsAppButton";
 import { FacilitatorCard } from "@/components/suvoga/FacilitatorCard";
+import { CourseCover } from "@/components/suvoga/CourseCover";
+import { getCourseVisualIdentity } from "@/data/course-visual-identities";
+import { COURSE_VISUAL_FAMILIES } from "@/data/course-visual-families";
 import {
   cleanLabeledValue,
   cleanList,
@@ -131,7 +134,16 @@ export default function CoursePage({ params }: CoursePageProps) {
   const indications = cleanList(pc.indications, "indications");
   const contraindications = cleanList(pc.contraindications, "contraindications");
   const certifications = cleanList(pc.certifications, "certifications");
+  const endorsements = cleanList(pc.endorsements, "endorsements");
   const facilitator = cleanText(pc.facilitator);
+
+  // --- Visual identity (family, eyebrow, confirmed benefit, cover) ------------
+  const identity = getCourseVisualIdentity(record.sourceId);
+  const family = identity?.family ?? "masoterapia";
+  const familyName = identity ? COURSE_VISUAL_FAMILIES[family].publicName : null;
+  const heroEyebrow = identity?.eyebrow ?? null;
+  const primaryBenefit = identity?.primaryBenefit ?? null;
+  const heroLocalSrc = identity?.coverStatus === "pending" ? undefined : courseImage(course);
 
   // Hero subtitle: only show a genuinely descriptive line, never a stray
   // price/condition fragment captured during extraction.
@@ -167,6 +179,7 @@ export default function CoursePage({ params }: CoursePageProps) {
   if (practices.length || materials.length) sections.push({ id: "practicas", label: "Prácticas" });
   sections.push({ id: "inversion", label: "Inversión" });
   if (certifications.length || facilitator) sections.push({ id: "certificacion", label: "Certificación" });
+  if (endorsements.length) sections.push({ id: "avales", label: "Avales" });
   const verifiedFacilitatorProfile = pc.facilitatorProfile?.verified ? pc.facilitatorProfile : null;
   if (verifiedFacilitatorProfile) sections.push({ id: "facilitadora", label: "Facilitadora" });
   if (hasVideo || hasPdf) sections.push({ id: "recursos", label: "Recursos" });
@@ -192,7 +205,7 @@ export default function CoursePage({ params }: CoursePageProps) {
               <div className="flex flex-wrap items-center gap-2">
                 <span className="inline-flex items-center gap-1.5 rounded-full border border-[#D4AF37]/40 bg-[#0D3B22]/60 px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.16em] text-[#F4E6BE]">
                   <Sparkles className="h-3.5 w-3.5" />
-                  {category}
+                  {familyName ?? category}
                 </span>
                 {course.certificado_incluido ? (
                   <span className="inline-flex items-center gap-1 rounded-full border border-white/20 bg-white/5 px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.16em] text-white">
@@ -208,11 +221,21 @@ export default function CoursePage({ params }: CoursePageProps) {
                 ) : null}
               </div>
 
-              <h1 className="suvoga-serif mt-5 text-3xl font-semibold leading-tight text-white sm:text-5xl">
+              {heroEyebrow ? (
+                <p className="mt-5 text-xs font-semibold uppercase tracking-[0.2em] text-[#D4AF37]">
+                  {heroEyebrow}
+                </p>
+              ) : null}
+              <h1 className="suvoga-serif mt-2 text-3xl font-semibold leading-tight text-white sm:text-5xl">
                 {course.nombre}
               </h1>
+              {primaryBenefit ? (
+                <p className="mt-4 max-w-xl text-base font-medium leading-7 text-[#F4E6BE] sm:text-lg">
+                  {primaryBenefit}
+                </p>
+              ) : null}
               {heroSubtitle ? (
-                <p className="mt-4 max-w-xl text-sm leading-7 text-[#EAE2D0] sm:text-base">
+                <p className="mt-3 max-w-xl text-sm leading-7 text-[#EAE2D0] sm:text-base">
                   {heroSubtitle}
                 </p>
               ) : null}
@@ -262,10 +285,17 @@ export default function CoursePage({ params }: CoursePageProps) {
 
             <div className="relative">
               <div className="overflow-hidden rounded-[2rem] border border-[#D4AF37]/35 bg-[#0D3B22]/40 p-2.5 shadow-2xl shadow-black/45">
-                <img
-                  src={courseImage(course)}
-                  alt={course.nombre}
-                  className="aspect-[4/3] w-full rounded-[1.75rem] object-cover"
+                <CourseCover
+                  family={family}
+                  alt={identity?.coverAlt ?? course.nombre}
+                  eyebrow={heroEyebrow ?? undefined}
+                  remoteUrl={identity?.coverImageUrl}
+                  remoteThumbUrl={identity?.coverThumbnailUrl}
+                  localSrc={heroLocalSrc}
+                  focalPosition={identity?.focalPosition}
+                  variant="hero"
+                  priority
+                  className="aspect-[4/3] w-full overflow-hidden rounded-[1.75rem]"
                 />
               </div>
             </div>
@@ -426,6 +456,18 @@ export default function CoursePage({ params }: CoursePageProps) {
                   </p>
                 </div>
               ) : null}
+            </article>
+          ) : null}
+
+          {/* Avales — confirmed institutional endorsements only */}
+          {endorsements.length ? (
+            <article id="avales" className={sectionClass}>
+              <SectionTitle icon={ShieldCheck} eyebrow="Respaldo institucional" title="Avales" />
+              <div className="mt-5">
+                <InfoCard icon={BadgeCheck} title="Este programa cuenta con">
+                  <BulletList items={endorsements} />
+                </InfoCard>
+              </div>
             </article>
           ) : null}
 

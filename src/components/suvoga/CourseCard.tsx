@@ -10,6 +10,9 @@ import {
   formatDop,
   priceLabel,
 } from "@/lib/course-presentation";
+import { getCourseVisualIdentity } from "@/data/course-visual-identities";
+import { COURSE_VISUAL_FAMILIES } from "@/data/course-visual-families";
+import { CourseCover } from "./CourseCover";
 
 type CourseCardProps = {
   course: SuvogaServicio;
@@ -18,27 +21,42 @@ type CourseCardProps = {
 
 /**
  * Compact catalog card. Shows only summary fields and links to the full
- * program page by slug — never the full course content.
+ * program page by slug — never the full course content. Uses the per-course
+ * visual identity for a family eyebrow, a confirmed primary benefit, and a
+ * premium cover (remote thumbnail → local image → editorial fallback).
  */
 export function CourseCard({ course, featured = false }: CourseCardProps) {
   const href = courseHref(course);
-  const category = courseCategory(course);
+  const identity = getCourseVisualIdentity(course.sourceId || course.idServicio);
+  const family = identity?.family;
+  const familyName = family ? COURSE_VISUAL_FAMILIES[family].publicName : courseCategory(course);
+  const eyebrow = identity?.eyebrow ?? courseCategory(course);
+  const primaryBenefit = identity?.primaryBenefit;
   const modality = courseModality(course);
   const duration = cleanLabeledValue(course.duracion) || "Según calendario";
   const hasPublicPrice = course.precioTotal > 0;
 
+  // Pending covers have no unique local art → force the editorial fallback
+  // instead of repeating the shared placeholder image.
+  const localSrc = identity?.coverStatus === "pending" ? undefined : courseImage(course);
+
   return (
     <article className="group flex h-full flex-col overflow-hidden rounded-3xl border border-[#D4AF37]/30 bg-white text-[#0D3B22] shadow-sm shadow-[#0D3B22]/5 transition-all duration-300 hover:-translate-y-1 hover:border-[#D4AF37]/70 hover:shadow-xl hover:shadow-[#D4AF37]/15">
       <Link href={href} className="relative block aspect-[16/10] w-full overflow-hidden">
-        <img
-          src={courseImage(course)}
-          alt={course.nombre}
-          loading="lazy"
-          className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+        <CourseCover
+          family={family ?? "masoterapia"}
+          alt={identity?.coverAlt ?? course.nombre}
+          eyebrow={eyebrow}
+          remoteUrl={identity?.coverImageUrl}
+          remoteThumbUrl={identity?.coverThumbnailUrl}
+          localSrc={localSrc}
+          focalPosition={identity?.focalPosition}
+          variant="card"
+          className="h-full w-full transition-transform duration-500 group-hover:scale-105"
         />
-        <span className="absolute inset-0 bg-gradient-to-t from-[#0D3B22]/55 via-transparent to-transparent" />
+        <span className="pointer-events-none absolute inset-0 bg-gradient-to-t from-[#0D3B22]/55 via-transparent to-transparent" />
         <span className="absolute left-3 top-3 rounded-full border border-[#D4AF37]/40 bg-[#0D3B22]/85 px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.16em] text-[#F4E6BE] backdrop-blur-sm">
-          {category}
+          {familyName}
         </span>
         {featured ? (
           <span className="absolute right-3 top-3 rounded-full bg-[#D4AF37] px-3 py-1 text-[10px] font-bold uppercase tracking-[0.16em] text-[#0D3B22]">
@@ -52,10 +70,14 @@ export function CourseCard({ course, featured = false }: CourseCardProps) {
           href={href}
           className="rounded-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#D4AF37]/70"
         >
-          <h3 className="suvoga-serif text-lg font-semibold leading-snug text-[#0D3B22] transition-colors group-hover:text-[#145332]">
+          <h3 className="suvoga-serif line-clamp-2 text-lg font-semibold leading-snug text-[#0D3B22] transition-colors group-hover:text-[#145332]">
             {course.nombre}
           </h3>
         </Link>
+
+        {primaryBenefit ? (
+          <p className="mt-2 line-clamp-2 text-xs leading-5 text-[#4E6658]">{primaryBenefit}</p>
+        ) : null}
 
         <dl className="mt-4 space-y-2 text-xs text-[#4E6658]">
           <div className="flex items-center gap-2">
