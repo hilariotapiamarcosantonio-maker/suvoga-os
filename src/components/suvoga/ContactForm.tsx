@@ -42,70 +42,87 @@ export function ContactForm() {
     setSent(true);
   }
 
+  const fieldClass =
+    "h-12 w-full rounded-2xl border border-[#D4AF37]/35 bg-white px-4 text-sm text-[#0D3B22] outline-none transition-all placeholder:text-[#9A927F] focus-visible:border-[#0D3B22] focus-visible:ring-2 focus-visible:ring-[#0D3B22]/70";
+
   return (
     <form onSubmit={handleSubmit} className="space-y-4">
       <div className="grid gap-4 sm:grid-cols-2">
-        <label className="block">
-          <span className="mb-1.5 block text-[10px] font-semibold uppercase tracking-[0.16em] text-[#8D7530]">
+        <div>
+          <label htmlFor="contact-nombre" className="mb-1.5 block text-[10px] font-semibold uppercase tracking-[0.16em] text-[#8D7530]">
             Nombre completo
-          </span>
+          </label>
           <input
+            id="contact-nombre"
+            name="nombre"
             value={nombre}
             onChange={(e) => setNombre(e.target.value)}
             required
             autoComplete="name"
-            className="h-12 w-full rounded-2xl border border-[#D4AF37]/35 bg-white px-4 text-sm text-[#0D3B22] outline-none transition-all placeholder:text-[#9A927F] focus:border-[#0D3B22] focus:ring-1 focus:ring-[#0D3B22]"
+            className={fieldClass}
           />
-        </label>
-        <label className="block">
-          <span className="mb-1.5 block text-[10px] font-semibold uppercase tracking-[0.16em] text-[#8D7530]">
+        </div>
+        <div>
+          <label htmlFor="contact-medio" className="mb-1.5 block text-[10px] font-semibold uppercase tracking-[0.16em] text-[#8D7530]">
             WhatsApp o correo
-          </span>
+          </label>
           <input
+            id="contact-medio"
+            name="contacto"
             value={contacto}
             onChange={(e) => setContacto(e.target.value)}
             required
-            className="h-12 w-full rounded-2xl border border-[#D4AF37]/35 bg-white px-4 text-sm text-[#0D3B22] outline-none transition-all placeholder:text-[#9A927F] focus:border-[#0D3B22] focus:ring-1 focus:ring-[#0D3B22]"
+            autoComplete="email"
+            className={fieldClass}
           />
-        </label>
+        </div>
       </div>
 
-      <label className="block">
-        <span className="mb-1.5 block text-[10px] font-semibold uppercase tracking-[0.16em] text-[#8D7530]">
+      <div>
+        <label htmlFor="contact-interes" className="mb-1.5 block text-[10px] font-semibold uppercase tracking-[0.16em] text-[#8D7530]">
           ¿En qué te ayudamos?
-        </span>
+        </label>
         <select
+          id="contact-interes"
+          name="interes"
           value={interes}
           onChange={(e) => setInteres(e.target.value)}
-          className="h-12 w-full rounded-2xl border border-[#D4AF37]/35 bg-white px-4 text-sm text-[#0D3B22] outline-none focus:border-[#0D3B22] focus:ring-1 focus:ring-[#0D3B22]"
+          className={fieldClass}
         >
           {interests.map((option) => (
             <option key={option} value={option}>{option}</option>
           ))}
         </select>
-      </label>
+      </div>
 
-      <label className="block">
-        <span className="mb-1.5 block text-[10px] font-semibold uppercase tracking-[0.16em] text-[#8D7530]">
+      <div>
+        <label htmlFor="contact-mensaje" className="mb-1.5 block text-[10px] font-semibold uppercase tracking-[0.16em] text-[#8D7530]">
           Tu mensaje
-        </span>
+        </label>
         <textarea
+          id="contact-mensaje"
+          name="mensaje"
           value={mensaje}
           onChange={(e) => setMensaje(e.target.value)}
           required
           rows={4}
-          className="w-full rounded-2xl border border-[#D4AF37]/35 bg-white px-4 py-3 text-sm text-[#0D3B22] outline-none transition-all placeholder:text-[#9A927F] focus:border-[#0D3B22] focus:ring-1 focus:ring-[#0D3B22]"
+          className={`w-full rounded-2xl border border-[#D4AF37]/35 bg-white px-4 py-3 text-sm text-[#0D3B22] outline-none transition-all placeholder:text-[#9A927F] focus-visible:border-[#0D3B22] focus-visible:ring-2 focus-visible:ring-[#0D3B22]/70`}
         />
-      </label>
+      </div>
 
       <button
         type="submit"
         disabled={!canSubmit}
-        className="inline-flex h-12 w-full items-center justify-center gap-2 rounded-2xl bg-[#0D3B22] px-5 text-sm font-semibold text-[#FDFBF7] transition-colors hover:bg-[#145332] disabled:cursor-not-allowed disabled:bg-[#0D3B22]/40"
+        aria-disabled={!canSubmit}
+        className="inline-flex h-12 w-full items-center justify-center gap-2 rounded-2xl bg-[#0D3B22] px-5 text-sm font-semibold text-[#FDFBF7] transition-colors hover:bg-[#145332] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0D3B22]/70 focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:bg-[#0D3B22]/40"
       >
         <Send className="h-4 w-4" />
         Enviar mensaje
       </button>
+
+      <p role="status" aria-live="polite" className="sr-only">
+        {sent ? "Mensaje preparado y aplicación de correo abierta." : ""}
+      </p>
 
       {sent ? (
         <p className="rounded-2xl border border-[#0D3B22]/15 bg-[#0D3B22]/[0.04] px-4 py-3 text-center text-xs leading-relaxed text-[#4E6658]">

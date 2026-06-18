@@ -27,11 +27,18 @@ export function cleanLabeledValue(value?: string) {
   return text;
 }
 
+// Leading glyphs observed in the source documents that should be stripped
+// before display (avoids the Unicode property-escape regex flag, which this
+// project's TypeScript target does not support).
+const LEADING_GLYPHS = "*✅✔✨•📖🎓💰🔒💚🍇🍫☕🧖🏅📘👐🔒🎗";
+
 /** Strip markdown emphasis and bullet markers for clean display. */
 export function cleanText(value?: string) {
   if (!value) return "";
+  const escaped = LEADING_GLYPHS.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+  const leadingPattern = new RegExp(`^[${escaped}\\s]+`);
   return value
-    .replace(/^[*✅✔🎗️✨•\s]+/, "")
+    .replace(leadingPattern, "")
     .replace(/\*\*/g, "")
     .replace(/\*/g, "")
     .trim();
@@ -193,19 +200,137 @@ export function isNoiseLine(value: string) {
   return false;
 }
 
-/** Remove header/noise lines and duplicates from an extracted list. */
-export function cleanList(items?: string[]) {
+// ---------------------------------------------------------------------------
+// Authority / pricing / marketing noise filter
+//
+// The source `publicCopy` arrays were extracted from raw course documents
+// and sometimes mix in content that belongs to a different part of the
+// course record: the facilitator's name and title, pricing figures,
+// promotional copy, administrative section headers, or schedule details.
+// Showing that text under "Competencias", "Materiales", "Beneficios",
+// "Temario" or "Resultados" misrepresents who created/teaches the course and
+// inflates content that is not actually a learning outcome.
+//
+// IMPORTANT — this filter never edits the underlying data:
+//   - `src/data/courses/*.json` and `sourceRaw` are not touched.
+//   - It only decides whether a given line is rendered inside a specific
+//     result list, based on which field it is destined for (`context`).
+//   - A line legitimately describing certification/avales IS allowed through
+//     when the context itself is "certifications" or "endorsements" — those
+//     are this content's rightful home. The same line is blocked when it
+//     would otherwise render under competencies/materials/benefits/topics.
+//
+// Rule set (documented per acceptance criteria):
+//   1. FACILITATOR_NAME    — the facilitator's proper name, in any spelling
+//                            variant seen in the source data ("Sugeidy
+//                            Vólquez García" / "Sugeidy Volquez").
+//   2. FACILITATOR_TITLE   — her role/title ("Directora de SuVoGa...").
+//   3. AUTHORSHIP_PREFIX   — "Elaborado por:", "Impartido por:", "Dictado
+//                            por:" lines (authorship, not a competency).
+//   4. FACILITATOR_LABEL   — a line that is literally the label
+//                            "Facilitador(a):" with or without the name.
+//   5. ADMIN_HEADER        — administrative/document headers that leaked
+//                            into a list ("CUR-003", "Categoría Actual:",
+//                            "Beneficios del Diplomado", "Fecha y horario").
+//   6. PRICING_LANGUAGE    — explicit price/anticipo/reservation figures
+//                            (allowed only when context === "pricing", i.e.
+//                            the payment-plan list itself).
+//   7. PROMOTIONAL_LANGUAGE— marketing/emotional copy ("Transforma
+//                            ingredientes...", "Aumenta tus ingresos...").
+//   8. AVAL_CLAIM          — an institutional endorsement/certification
+//                            claim ("Avalado por ASNAMATEM...", "Miembros
+//                            ASNaMaTeM: $X"). Allowed only when context is
+//                            "certifications" or "endorsements" or "pricing".
+// ---------------------------------------------------------------------------
+
+export type CourseListContext =
+  | "competencies"
+  | "materials"
+  | "benefits"
+  | "topics"
+  | "results"
+  | "indications"
+  | "contraindications"
+  | "profile"
+  | "requirements"
+  | "certifications"
+  | "endorsements"
+  | "pricing"
+  | "default";
+
+const FACILITATOR_NAME = /sugeidy\s+v[oó]lquez(\s+garc[ií]a)?/i;
+const FACILITATOR_TITLE = /\b(directora|fundadora)\s+de\s+suvoga\b/i;
+const AUTHORSHIP_PREFIX = /^\s*(elaborado|impartido|dictado)\s+por\b/i;
+const FACILITATOR_LABEL = /^\s*facilitador(a)?\s*:/i;
+const ADMIN_HEADER = /^(cur-\d{3}\b|categor[ií]a actual\s*:?$|beneficios del diplomado\s*:?$|fecha y horario\s*:?$|t[eé]cnicas y protocolos para trabajar\s*:?$|\d{1,2}:\d{2}\s*(am|pm)\s*a\s*\d{1,2}:\d{2}\s*(am|pm)$)/i;
+const PRICING_LANGUAGE = /(rd\$|us\$\s?\d|\$\s?\d{2,}|precio\s*:|inversi[oó]n\s*:?\s*(rd\$|\$|\d)|anticipo\s*:|reservaci[oó]n\s*:|miembros?\s+(de\s+)?asnama(s)?tem\s*:?\s*(rd\$|\$|\d))/i;
+const PROMOTIONAL_LANGUAGE = /(transforma ingredientes|experiencia(s)? exclusiva|oportunidad de (emprender|negocio)|aumenta tus ingresos|experiencia transformadora|beneficios que te destacan|formando profesionales)/i;
+const AVAL_CLAIM = /\b(avalad[oa]\s+por|aval(es)?\s+de|certificaci[oó]n\s+avalada)\b/i;
+
+/**
+ * Detect a line that belongs to authorship, the facilitator's identity,
+ * pricing, marketing, or an administrative header — content that should
+ * never render as a competency, material, benefit, topic, or result, even
+ * though it remains untouched in the source JSON. See rule set above.
+ */
+export function isAuthorityOrPricingNoise(
+  value: string,
+  context: CourseListContext = "default"
+) {
+  const text = cleanText(value);
+  if (!text) return false;
+  if (FACILITATOR_NAME.test(text)) return true;
+  if (FACILITATOR_TITLE.test(text)) return true;
+  if (AUTHORSHIP_PREFIX.test(text)) return true;
+  if (FACILITATOR_LABEL.test(text)) return true;
+  if (ADMIN_HEADER.test(text)) return true;
+  if (context !== "pricing" && PRICING_LANGUAGE.test(text)) return true;
+  if (PROMOTIONAL_LANGUAGE.test(text)) return true;
+  if (
+    AVAL_CLAIM.test(text) &&
+    context !== "certifications" &&
+    context !== "endorsements" &&
+    context !== "pricing"
+  ) {
+    return true;
+  }
+  return false;
+}
+
+/**
+ * Remove header/noise lines, duplicates, and misclassified
+ * authorship/pricing/marketing content from an extracted list. `context`
+ * identifies which section the list is being rendered into, so a line can
+ * be allowed in its rightful section (e.g. an aval mention inside
+ * "certifications") while still being blocked everywhere else.
+ */
+export function cleanList(items?: string[], context: CourseListContext = "default") {
   if (!items?.length) return [];
   const seen = new Set<string>();
   const out: string[] = [];
-  for (const raw of items) {
-    if (isNoiseLine(raw)) continue;
+
+  const pushIfValid = (raw: string) => {
+    if (isNoiseLine(raw)) return;
+    if (isAuthorityOrPricingNoise(raw, context)) return;
     const text = cleanText(raw);
+    if (!text) return;
     const key = normalizeForCompare(text);
-    if (seen.has(key)) continue;
+    if (seen.has(key)) return;
     seen.add(key);
     out.push(text);
+  };
+
+  for (const raw of items) {
+    // Some extracted entries cram a header + several real items + a stray
+    // pricing line into a single "•"-separated string (e.g. CUR-005). Split
+    // on the bullet so each fragment can be judged on its own merits instead
+    // of discarding (or keeping) the whole blob as one unit.
+    const segments = raw.includes("•")
+      ? raw.split("•").map((s) => s.trim()).filter(Boolean)
+      : [raw];
+    for (const segment of segments) pushIfValid(segment);
   }
+
   return out;
 }
 
@@ -287,10 +412,12 @@ export function parseSyllabusModules(markdown?: string): SyllabusModule[] {
     }
 
     if (line.startsWith("*") || line.startsWith("•") || /^✅|^✔/.test(line)) {
+      if (isAuthorityOrPricingNoise(line, "topics")) continue;
       if (!group) group = { items: [] };
       const item = cleanText(line);
       if (item) group.items.push(item);
     } else {
+      if (isAuthorityOrPricingNoise(line, "topics")) continue;
       // Sub-section heading
       pushGroup();
       group = { heading: cleanText(line), items: [] };

@@ -30,6 +30,8 @@ import { CourseSyllabus } from "@/components/suvoga/CourseSyllabus";
 import { CourseSectionNav } from "@/components/suvoga/CourseSectionNav";
 import { CoursePdfResource } from "@/components/suvoga/CoursePdfResource";
 import { YouTubeLiteEmbed } from "@/components/suvoga/YouTubeLiteEmbed";
+import { SuvogaWhatsAppButton } from "@/components/suvoga/SuvogaWhatsAppButton";
+import { FacilitatorCard } from "@/components/suvoga/FacilitatorCard";
 import {
   cleanLabeledValue,
   cleanList,
@@ -42,6 +44,7 @@ import {
   priceLabel,
   youTubeId,
 } from "@/lib/course-presentation";
+import { buildCourseWhatsAppMessage } from "@/lib/whatsapp";
 
 type CoursePageProps = {
   params: { id: string };
@@ -95,13 +98,13 @@ export default function CoursePage({ params }: CoursePageProps) {
   const pc = record.publicCopy;
 
   // --- Clean and structure the source content ---------------------------------
-  const objectiveList = cleanList(pc.objectives);
+  const objectiveList = cleanList(pc.objectives, "results");
   const objective =
     objectiveList.find((s) => s.length > 45) || objectiveList[0] || cleanText(pc.description.value);
 
   const profile = (() => {
     const out: string[] = [];
-    for (const raw of cleanList(pc.profile)) {
+    for (const raw of cleanList(pc.profile, "profile")) {
       if (raw === objective || /^capacitar/i.test(raw)) continue;
       const dirigido = raw.match(/^dirigido a:?\s*(.*)/i);
       if (dirigido) {
@@ -118,16 +121,16 @@ export default function CoursePage({ params }: CoursePageProps) {
     return Array.from(new Set(out));
   })();
 
-  const requirements = cleanList(pc.requirements);
+  const requirements = cleanList(pc.requirements, "requirements");
   const modules = parseSyllabusModules(pc.syllabusMarkdown);
   const learn = pc.competencies?.length
-    ? cleanList(pc.competencies)
+    ? cleanList(pc.competencies, "competencies")
     : modules.slice(0, 8).map((m) => m.title);
-  const materials = cleanList(pc.materials);
-  const practices = cleanList(pc.practices);
-  const indications = cleanList(pc.indications);
-  const contraindications = cleanList(pc.contraindications);
-  const certifications = cleanList(pc.certifications);
+  const materials = cleanList(pc.materials, "materials");
+  const practices = cleanList(pc.practices, "benefits");
+  const indications = cleanList(pc.indications, "indications");
+  const contraindications = cleanList(pc.contraindications, "contraindications");
+  const certifications = cleanList(pc.certifications, "certifications");
   const facilitator = cleanText(pc.facilitator);
 
   // Hero subtitle: only show a genuinely descriptive line, never a stray
@@ -153,7 +156,7 @@ export default function CoursePage({ params }: CoursePageProps) {
   const hasPublicPrice = course.precioTotal > 0;
   const memberPrice = course.precioMiembros ?? 0;
   const reservationNote = cleanText(pc.pricing.reservation?.raw);
-  const paymentPlan = cleanList(pc.pricing.paymentPlan);
+  const paymentPlan = cleanList(pc.pricing.paymentPlan, "pricing");
   const hasVideo = Boolean(youTubeId(course.youtube_url));
   const hasPdf = Boolean(course.pdf_drive_url && /^https?:\/\//i.test(course.pdf_drive_url));
 
@@ -164,6 +167,8 @@ export default function CoursePage({ params }: CoursePageProps) {
   if (practices.length || materials.length) sections.push({ id: "practicas", label: "Prácticas" });
   sections.push({ id: "inversion", label: "Inversión" });
   if (certifications.length || facilitator) sections.push({ id: "certificacion", label: "Certificación" });
+  const verifiedFacilitatorProfile = pc.facilitatorProfile?.verified ? pc.facilitatorProfile : null;
+  if (verifiedFacilitatorProfile) sections.push({ id: "facilitadora", label: "Facilitadora" });
   if (hasVideo || hasPdf) sections.push({ id: "recursos", label: "Recursos" });
 
   const sectionClass = "scroll-mt-32 md:scroll-mt-36";
@@ -407,7 +412,6 @@ export default function CoursePage({ params }: CoursePageProps) {
                   <div className="rounded-2xl border border-[#D4AF37]/25 bg-white p-5 shadow-sm">
                     <p className="text-xs font-semibold uppercase tracking-[0.14em] text-[#8D7530]">Facilitadora</p>
                     <p className="suvoga-serif mt-2 text-lg font-semibold text-[#0D3B22]">{facilitator}</p>
-                    <p className="mt-1 text-xs text-[#6B6048]">Directora de SuVoGa Escuela y Centro de Masajes</p>
                   </div>
                 ) : null}
               </div>
@@ -422,6 +426,16 @@ export default function CoursePage({ params }: CoursePageProps) {
                   </p>
                 </div>
               ) : null}
+            </article>
+          ) : null}
+
+          {/* Facilitador(a) — independent section, only when owner-validated */}
+          {verifiedFacilitatorProfile ? (
+            <article id="facilitadora" className={sectionClass}>
+              <SectionTitle icon={UserCheck} eyebrow="Quién enseña" title="Facilitadora" />
+              <div className="mt-5">
+                <FacilitatorCard profile={verifiedFacilitatorProfile} />
+              </div>
             </article>
           ) : null}
 
@@ -464,6 +478,7 @@ export default function CoursePage({ params }: CoursePageProps) {
           </Link>
         </div>
       </section>
+      <SuvogaWhatsAppButton message={buildCourseWhatsAppMessage(course.nombre)} />
     </main>
   );
 }

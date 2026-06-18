@@ -4,6 +4,7 @@ import { contactInfo } from "@/data/contact";
 import { ContactForm } from "@/components/suvoga/ContactForm";
 import { SectionHeading } from "@/components/suvoga/SectionHeading";
 import { Reveal } from "@/components/suvoga/Reveal";
+import { SuvogaWhatsAppButton } from "@/components/suvoga/SuvogaWhatsAppButton";
 
 export const metadata: Metadata = {
   title: "Contacto y orientación | SuVoGa Academia",
@@ -120,6 +121,7 @@ export default function ContactoPage() {
           </div>
         </div>
       </section>
+      <SuvogaWhatsAppButton />
     </main>
   );
 }

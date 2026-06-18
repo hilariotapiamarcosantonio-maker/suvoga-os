@@ -3,6 +3,7 @@ import { suvogaCourses } from "@/data/courses";
 import { courseCategory, courseModality } from "@/lib/course-presentation";
 import { CoursesExplorer } from "@/components/suvoga/CoursesExplorer";
 import { SiteCTA } from "@/components/suvoga/SiteCTA";
+import { SuvogaWhatsAppButton } from "@/components/suvoga/SuvogaWhatsAppButton";
 
 export const metadata: Metadata = {
   title: "Catálogo de cursos | SuVoGa Academia",
@@ -64,6 +65,7 @@ export default function CoursesPage({ searchParams }: CoursesPageProps) {
         title="¿No sabes cuál elegir?"
         description="Cuéntanos tu objetivo y te ayudamos a encontrar el programa que mejor se adapta a ti."
       />
+      <SuvogaWhatsAppButton />
     </main>
   );
 }

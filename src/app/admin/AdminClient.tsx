@@ -543,23 +543,28 @@ export function AdminClient({
           </div>
         </section>
 
-        {/* Tabs */}
+        {/* Tabs — horizontally scrollable on narrow screens; short labels below sm
+            keep every tab's full word visible instead of clipping mid-word, while
+            aria-label preserves the complete name for assistive tech. */}
         <div className="flex overflow-x-auto whitespace-nowrap scrollbar-none gap-1 rounded-2xl border border-[#D4AF37]/30 bg-white p-1 shadow-sm shadow-[#0D3B22]/5">
           {([
-            { id: "dashboard", label: "Dashboard", icon: <BarChart3 className="h-4 w-4" /> },
-            { id: "crm", label: "CRM Académico", icon: <Users className="h-4 w-4" /> },
-            { id: "cursos_vista", label: "Vista por Curso", icon: <TrendingUp className="h-4 w-4" /> },
-            { id: "calendario", label: "Calendario", icon: <CalendarDays className="h-4 w-4" /> },
-            { id: "cursos", label: "Mis Cursos", icon: <BookOpen className="h-4 w-4" /> },
-          ] as { id: AdminTab; label: string; icon: React.ReactNode }[]).map(({ id, label, icon }) => (
+            { id: "dashboard", label: "Dashboard", shortLabel: "Dashboard", icon: <BarChart3 className="h-4 w-4" /> },
+            { id: "crm", label: "CRM Académico", shortLabel: "CRM", icon: <Users className="h-4 w-4" /> },
+            { id: "cursos_vista", label: "Vista por Curso", shortLabel: "Por curso", icon: <TrendingUp className="h-4 w-4" /> },
+            { id: "calendario", label: "Calendario", shortLabel: "Agenda", icon: <CalendarDays className="h-4 w-4" /> },
+            { id: "cursos", label: "Mis Cursos", shortLabel: "Cursos", icon: <BookOpen className="h-4 w-4" /> },
+          ] as { id: AdminTab; label: string; shortLabel: string; icon: React.ReactNode }[]).map(({ id, label, shortLabel, icon }) => (
             <button
               key={id}
               type="button"
               onClick={() => setActiveTab(id)}
-              className={`inline-flex h-10 shrink-0 items-center gap-1.5 rounded-xl px-3 sm:px-4 text-xs sm:text-sm font-semibold transition-colors ${tabClass(id)}`}
+              aria-label={label}
+              aria-current={activeTab === id ? "page" : undefined}
+              className={`inline-flex h-11 shrink-0 items-center gap-1.5 rounded-xl px-3 sm:px-4 text-xs sm:text-sm font-semibold transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#D4AF37]/70 ${tabClass(id)}`}
             >
               {icon}
-              {label}
+              <span className="sm:hidden">{shortLabel}</span>
+              <span className="hidden sm:inline">{label}</span>
             </button>
           ))}
         </div>

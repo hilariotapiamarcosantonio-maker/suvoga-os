@@ -20,6 +20,7 @@ import { CourseCard } from "@/components/suvoga/CourseCard";
 import { SectionHeading } from "@/components/suvoga/SectionHeading";
 import { SiteCTA } from "@/components/suvoga/SiteCTA";
 import { Reveal } from "@/components/suvoga/Reveal";
+import { SuvogaWhatsAppButton } from "@/components/suvoga/SuvogaWhatsAppButton";
 import { studentTestimonials } from "@/data/testimonials";
 
 const featured = selectFeatured(suvogaCourses, 6);
@@ -335,6 +336,7 @@ export default function HomePage() {
 
       {/* 9 + 10. CTA explorar cursos / solicitar orientación */}
       <SiteCTA />
+      <SuvogaWhatsAppButton />
     </main>
   );
 }

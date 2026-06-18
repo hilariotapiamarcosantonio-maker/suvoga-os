@@ -5,6 +5,7 @@ import { graduatesList } from "@/data/graduates";
 import { SectionHeading } from "@/components/suvoga/SectionHeading";
 import { SiteCTA } from "@/components/suvoga/SiteCTA";
 import { Reveal } from "@/components/suvoga/Reveal";
+import { SuvogaWhatsAppButton } from "@/components/suvoga/SuvogaWhatsAppButton";
 
 export const metadata: Metadata = {
   title: "Historias y testimonios | SuVoGa Academia",
@@ -134,6 +135,7 @@ export default function HistoriasPage() {
         title="Tu historia puede ser la próxima"
         description="Explora nuestros programas y comienza tu formación profesional en bienestar."
       />
+      <SuvogaWhatsAppButton />
     </main>
   );
 }

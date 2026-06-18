@@ -112,8 +112,8 @@ export function Header() {
           </span>
         </Link>
 
-        {/* Desktop Navigation Links */}
-        <div className="hidden md:flex items-center gap-8">
+        {/* Desktop Navigation Links + CTA (grouped so spacing never collapses at md) */}
+        <div className="hidden md:flex items-center gap-4 md:gap-5 lg:gap-8">
           {navLinks.map((link) => (
             <Link
               key={link.label}
@@ -132,14 +132,12 @@ export function Header() {
               />
             </Link>
           ))}
-        </div>
 
-        {/* Desktop CTA Button */}
-        <div className="hidden md:flex items-center">
+          {/* Desktop CTA Button — explicit left margin guarantees breathing room from "Contacto" at md */}
           <Link
             href="/cursos"
             onClick={(e) => handleLinkClick(e, "/cursos")}
-            className="inline-flex h-11 items-center justify-center gap-1.5 rounded-2xl border border-[#D4AF37]/35 bg-[#0D3B22] px-5 text-sm font-semibold text-[#FDFBF7] shadow-sm shadow-[#0D3B22]/10 transition-colors hover:bg-[#145332]"
+            className="ml-2 inline-flex h-11 items-center justify-center gap-1.5 rounded-2xl border border-[#D4AF37]/35 bg-[#0D3B22] px-5 text-sm font-semibold text-[#FDFBF7] shadow-sm shadow-[#0D3B22]/10 transition-colors hover:bg-[#145332] md:ml-4 lg:ml-2"
           >
             Ver cursos
           </Link>
@@ -150,8 +148,9 @@ export function Header() {
           <button
             type="button"
             onClick={() => setIsOpen(!isOpen)}
-            className="inline-flex h-10 w-10 items-center justify-center rounded-xl border border-[#D4AF37]/30 bg-white text-[#0D3B22] shadow-sm transition-colors hover:bg-[#F7F1E7] focus:outline-none"
+            className="inline-flex h-11 w-11 items-center justify-center rounded-xl border border-[#D4AF37]/30 bg-white text-[#0D3B22] shadow-sm transition-colors hover:bg-[#F7F1E7] focus:outline-none focus-visible:ring-2 focus-visible:ring-[#D4AF37]/70 focus-visible:ring-offset-2"
             aria-label={isOpen ? "Cerrar menú" : "Abrir menú"}
+            aria-expanded={isOpen}
           >
             {isOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
           </button>

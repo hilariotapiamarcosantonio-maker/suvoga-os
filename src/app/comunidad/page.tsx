@@ -13,6 +13,7 @@ import {
 import { SectionHeading } from "@/components/suvoga/SectionHeading";
 import { SiteCTA } from "@/components/suvoga/SiteCTA";
 import { Reveal } from "@/components/suvoga/Reveal";
+import { SuvogaWhatsAppButton } from "@/components/suvoga/SuvogaWhatsAppButton";
 
 export const metadata: Metadata = {
   title: "Comunidad SuVoGa | SuVoGa Academia",
@@ -138,6 +139,7 @@ export default function ComunidadPage() {
         title="Comienza tu camino con nosotros"
         description="Elige tu programa o conversa con el equipo para encontrar tu mejor punto de partida."
       />
+      <SuvogaWhatsAppButton />
     </main>
   );
 }

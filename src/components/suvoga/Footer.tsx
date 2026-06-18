@@ -35,10 +35,13 @@ export function Footer() {
           {/* Navigation */}
           <div className="space-y-4">
             <h4 className="text-xs font-semibold uppercase tracking-widest text-[#D4AF37]">Navegación</h4>
-            <ul className="space-y-2.5 text-sm text-[#EAE2D0]">
+            <ul className="-mx-1 space-y-1 text-sm text-[#EAE2D0]">
               {navLinks.map((link) => (
                 <li key={link.href}>
-                  <Link href={link.href} className="transition-colors hover:text-[#D4AF37]">
+                  <Link
+                    href={link.href}
+                    className="flex min-h-11 items-center rounded-lg px-1 transition-colors hover:text-[#D4AF37] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#D4AF37]/70"
+                  >
                     {link.label}
                   </Link>
                 </li>
@@ -64,7 +67,10 @@ export function Footer() {
           <p>
             &copy; {new Date().getFullYear()} {brand.productName}. Todos los derechos reservados.
           </p>
-          <Link href="/admin" className="hover:text-[#D4AF37] hover:underline">
+          <Link
+            href="/admin"
+            className="flex min-h-11 items-center px-1 hover:text-[#D4AF37] hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#D4AF37]/70 focus-visible:rounded-lg"
+          >
             Acceso Administrativo
           </Link>
         </div>

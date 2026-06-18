@@ -86,6 +86,27 @@ export type CourseSourceRaw = {
   lineEnd: number;
 };
 
+/**
+ * Validated facilitator profile, independent from certification/endorsements/
+ * competencies. Every field is optional on purpose: this type only describes
+ * the shape a validated profile would take. Nothing populates it today — see
+ * docs/RECLASIFICACION_CONTENIDO_40_CURSOS.md ("Cargo": pendiente de
+ * propietaria) for why. Do not fill placeholder/invented values here; leave
+ * fields undefined until the owner confirms them.
+ */
+export type FacilitatorProfile = {
+  name: string;
+  role?: string;
+  photoUrl?: string;
+  shortBio?: string;
+  specialties?: string[];
+  credentials?: string[];
+  institution?: string;
+  signatureUrl?: string;
+  /** Must be explicitly true after owner confirmation; the UI only renders when this is true. */
+  verified: boolean;
+};
+
 export type CoursePublicCopy = {
   title: string;
   subtitle: string;
@@ -105,6 +126,8 @@ export type CoursePublicCopy = {
   certifications: string[];
   endorsements: string[];
   facilitator: string;
+  /** Optional richer profile; render only when present and `verified: true`. */
+  facilitatorProfile?: FacilitatorProfile | null;
   legalNotes: string[];
   professionalNotes: string[];
   normalizedMarkdown: string;
