@@ -146,7 +146,9 @@ export default function CoursePage({ params }: CoursePageProps) {
   const familyName = identity ? COURSE_VISUAL_FAMILIES[family].publicName : null;
   const heroEyebrow = identity?.eyebrow ?? null;
   const primaryBenefit = identity?.primaryBenefit ?? null;
-  const heroLocalSrc = identity?.coverStatus === "pending" ? undefined : courseImage(course);
+  const shouldUseFallbackCover =
+    identity?.coverStatus === "pending" || identity?.coverStatus === "invalid";
+  const heroLocalSrc = shouldUseFallbackCover ? undefined : courseImage(course);
 
   // Hero subtitle: only show a genuinely descriptive line, never a stray
   // price/condition fragment captured during extraction.

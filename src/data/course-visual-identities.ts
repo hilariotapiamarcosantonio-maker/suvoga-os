@@ -12,13 +12,15 @@ import type { CourseVisualFamily } from "./course-visual-families";
 //      "provisional" → a real but non-final local image is in use today.
 //      "pending"     → no course-specific image exists; the premium editorial
 //                      fallback is rendered (never a blank green rectangle).
+//      "invalid"     → a provided URL failed validation and must not render.
 //  - Local images cur-001..cur-017 (.png) and cur-018..cur-025 (.svg) exist and
 //    are unique per course → "provisional". cur-026..cur-040 currently reuse
 //    cur-025.svg (16-way duplicate) → marked "pending" so the fallback renders
 //    instead of repeating one image. Replace coverImageUrl with a Google Drive
 //    link to promote a course to "definitive".
 
-export type CourseCoverStatus = "definitive" | "provisional" | "pending";
+export type CourseCoverStatus = "definitive" | "provisional" | "pending" | "invalid";
+export type CourseResourceStatus = "ready" | "partial" | "pending" | "invalid";
 
 export type CourseVisualIdentity = {
   courseId: string;
@@ -36,6 +38,7 @@ export type CourseVisualIdentity = {
   visualMotif?: string;
   accentVariant?: string;
   coverStatus: CourseCoverStatus;
+  resourceStatus?: CourseResourceStatus;
 };
 
 export const COURSE_VISUAL_IDENTITIES: Record<string, CourseVisualIdentity> = {

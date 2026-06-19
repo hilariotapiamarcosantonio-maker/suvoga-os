@@ -38,7 +38,9 @@ export function CourseCard({ course, featured = false }: CourseCardProps) {
 
   // Pending covers have no unique local art → force the editorial fallback
   // instead of repeating the shared placeholder image.
-  const localSrc = identity?.coverStatus === "pending" ? undefined : courseImage(course);
+  const shouldUseFallbackCover =
+    identity?.coverStatus === "pending" || identity?.coverStatus === "invalid";
+  const localSrc = shouldUseFallbackCover ? undefined : courseImage(course);
 
   return (
     <article className="group flex h-full flex-col overflow-hidden rounded-3xl border border-[#D4AF37]/30 bg-white text-[#0D3B22] shadow-sm shadow-[#0D3B22]/5 transition-all duration-300 hover:-translate-y-1 hover:border-[#D4AF37]/70 hover:shadow-xl hover:shadow-[#D4AF37]/15">

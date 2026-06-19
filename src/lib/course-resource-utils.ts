@@ -17,6 +17,14 @@ export type ExternalCourseResource = {
   updatedAt?: string;
 };
 
+const PLACEHOLDER_PATTERNS = [
+  /1_[A-Z]\d{5}/,
+  /\.placeholder(?:\/|$)/i,
+  /example\.(?:com|org|net)/i,
+];
+
+const LOCAL_OR_PRIVATE_HOSTS = new Set(["localhost", "127.0.0.1", "0.0.0.0", "::1"]);
+
 /** True for a syntactically valid http(s) URL. */
 export function isValidHttpUrl(url?: string): boolean {
   if (!url) return false;
@@ -36,6 +44,36 @@ function getHost(url: string): string {
   }
 }
 
+export function isKnownPlaceholderUrl(url?: string): boolean {
+  if (!url) return false;
+  return PLACEHOLDER_PATTERNS.some((pattern) => pattern.test(url));
+}
+
+/**
+ * Reject resource URLs that are clearly local, placeholders, Drive folders, or
+ * Drive admin surfaces. This is not a public-permission check; it only prevents
+ * links that are obviously not renderable course assets from reaching the UI.
+ */
+export function isClearlyPrivateOrAdminResourceUrl(url?: string): boolean {
+  if (!isValidHttpUrl(url)) return true;
+  if (isKnownPlaceholderUrl(url)) return true;
+
+  const parsed = new URL(url!.trim());
+  const host = parsed.hostname.replace(/^www\./, "");
+  if (LOCAL_OR_PRIVATE_HOSTS.has(host) || host.endsWith(".local")) return true;
+
+  if (!isGoogleDriveUrl(url)) return false;
+
+  const path = parsed.pathname.toLowerCase();
+  return (
+    path.startsWith("/drive/") ||
+    path.includes("/drive/folders/") ||
+    path.includes("/drive/shared-drives/") ||
+    path.includes("/drive/my-drive/") ||
+    path.includes("/forms/")
+  );
+}
+
 export function isGoogleDriveUrl(url?: string): boolean {
   if (!isValidHttpUrl(url)) return false;
   const host = getHost(url!.trim());
@@ -45,6 +83,7 @@ export function isGoogleDriveUrl(url?: string): boolean {
 /** Extract a Google Drive file id from the common link shapes. */
 export function getDriveFileId(url?: string): string | null {
   if (!isGoogleDriveUrl(url)) return null;
+  if (isClearlyPrivateOrAdminResourceUrl(url)) return null;
   const value = url!.trim();
   // .../file/d/<id>/view  |  ...?id=<id>  |  .../d/<id>/...
   const byPath = value.match(/\/(?:file\/)?d\/([a-zA-Z0-9_-]{10,})/);
@@ -66,6 +105,7 @@ export function getDriveFileId(url?: string): string | null {
  */
 export function toDriveDirectImageUrl(url?: string): string | null {
   if (!isValidHttpUrl(url)) return null;
+  if (isClearlyPrivateOrAdminResourceUrl(url)) return null;
   const id = getDriveFileId(url);
   if (id) return `https://drive.google.com/uc?export=view&id=${id}`;
   return url!.trim();
@@ -74,6 +114,7 @@ export function toDriveDirectImageUrl(url?: string): string | null {
 /** Open-in-new-tab document link for a Drive PDF (preview, not auto-download). */
 export function toDrivePreviewUrl(url?: string): string | null {
   if (!isValidHttpUrl(url)) return null;
+  if (isClearlyPrivateOrAdminResourceUrl(url)) return null;
   const id = getDriveFileId(url);
   if (id) return `https://drive.google.com/file/d/${id}/view`;
   return url!.trim();
