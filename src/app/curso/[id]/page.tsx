@@ -24,6 +24,7 @@ import {
   findPublishedCourseRecord,
   suvogaCourses,
 } from "@/data/courses";
+import { getFacilitatorForCourseRecord } from "@/data/facilitators";
 import { CourseLandingSignup } from "@/components/suvoga/CourseLandingSignup";
 import { CourseHeroCTA } from "@/components/suvoga/CourseHeroCTA";
 import { CourseSyllabus } from "@/components/suvoga/CourseSyllabus";
@@ -136,6 +137,7 @@ export default function CoursePage({ params }: CoursePageProps) {
   const certifications = cleanList(pc.certifications, "certifications");
   const endorsements = cleanList(pc.endorsements, "endorsements");
   const facilitator = cleanText(pc.facilitator);
+  const globalFacilitator = getFacilitatorForCourseRecord(record);
 
   // --- Visual identity (family, eyebrow, confirmed benefit, cover) ------------
   const identity = getCourseVisualIdentity(record.sourceId);
@@ -441,7 +443,21 @@ export default function CoursePage({ params }: CoursePageProps) {
                 {facilitator ? (
                   <div className="rounded-2xl border border-[#D4AF37]/25 bg-white p-5 shadow-sm">
                     <p className="text-xs font-semibold uppercase tracking-[0.14em] text-[#8D7530]">Facilitadora</p>
-                    <p className="suvoga-serif mt-2 text-lg font-semibold text-[#0D3B22]">{facilitator}</p>
+                    {globalFacilitator ? (
+                      <>
+                        <Link
+                          href={`/facilitadores/${globalFacilitator.slug}`}
+                          className="suvoga-serif mt-2 inline-flex text-lg font-semibold text-[#0D3B22] underline decoration-[#D4AF37]/40 underline-offset-4 transition-colors hover:text-[#145332]"
+                        >
+                          {facilitator}
+                        </Link>
+                        <p className="mt-2 text-xs font-semibold uppercase tracking-[0.12em] text-[#8D7530]">
+                          {globalFacilitator.verified ? "Perfil verificado" : "Datos por confirmar"}
+                        </p>
+                      </>
+                    ) : (
+                      <p className="suvoga-serif mt-2 text-lg font-semibold text-[#0D3B22]">{facilitator}</p>
+                    )}
                   </div>
                 ) : null}
               </div>

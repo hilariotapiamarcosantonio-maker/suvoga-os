@@ -13,4 +13,5 @@ export const headerNavigationLinks: NavigationLink[] = [
 export const footerNavigationLinks: NavigationLink[] = [
   { label: "Inicio", href: "/" },
   ...headerNavigationLinks,
+  { label: "Facilitadores", href: "/facilitadores" },
 ];

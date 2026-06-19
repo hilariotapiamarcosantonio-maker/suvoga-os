@@ -3,7 +3,7 @@ export const featuresConfig = {
   stories: true,
   community: true,
   contact: true,
-  facilitators: false,
+  facilitators: true,
   testimonials: true,
   pdfs: true,
   videos: true,

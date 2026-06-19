@@ -95,14 +95,25 @@ export type CourseSourceRaw = {
  * fields undefined until the owner confirms them.
  */
 export type FacilitatorProfile = {
+  id?: string;
+  slug?: string;
   name: string;
   role?: string;
   photoUrl?: string;
+  photoAlt?: string;
   shortBio?: string;
+  fullBio?: string;
   specialties?: string[];
   credentials?: string[];
   institution?: string;
   signatureUrl?: string;
+  provisionalPhoto?: boolean;
+  socialLinks?: {
+    instagram?: string;
+    facebook?: string;
+    linkedin?: string;
+    website?: string;
+  };
   /** Must be explicitly true after owner confirmation; the UI only renders when this is true. */
   verified: boolean;
 };
