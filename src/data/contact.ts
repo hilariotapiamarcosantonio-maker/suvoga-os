@@ -1,3 +1,6 @@
+import { contactConfig } from "@/config/contact.config";
+import { buildWhatsAppLink, suvogaContact } from "@/lib/suvoga-contact";
+
 export type ContactChannel = {
   label: string;
   link: string;
@@ -14,30 +17,16 @@ export type ContactConfig = {
   horario: string;
 };
 
-import { buildWhatsAppLink, suvogaContact } from "@/lib/suvoga-contact";
-
 export const contactInfo: ContactConfig = {
   whatsapp: {
     label: "Escríbenos por WhatsApp",
     link: buildWhatsAppLink(),
     displayValue: suvogaContact.phoneDisplay,
   },
-  instagram: {
-    label: "Instagram oficial próximamente",
-    link: "https://instagram.com/suvoga.academia.placeholder",
-    displayValue: "@suvoga.academia",
-  },
-  tiktok: {
-    label: "TikTok oficial próximamente",
-    link: "https://tiktok.com/@suvoga.academia.placeholder",
-    displayValue: "@suvoga.academia",
-  },
-  facebook: {
-    label: "Facebook oficial próximamente",
-    link: "https://facebook.com/suvoga.academia.placeholder",
-    displayValue: "SuVoGa Academia",
-  },
+  instagram: contactConfig.social.instagram,
+  tiktok: contactConfig.social.tiktok,
+  facebook: contactConfig.social.facebook,
   correo: suvogaContact.email,
-  ubicacion: "Santo Domingo, República Dominicana",
-  horario: "Lunes a Sábado: 9:00 AM - 6:00 PM (Hora Local)",
+  ubicacion: contactConfig.location,
+  horario: contactConfig.hours,
 };

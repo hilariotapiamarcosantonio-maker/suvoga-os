@@ -1,10 +1,10 @@
 import type { Metadata } from "next";
 import { Cormorant_Garamond, Inter } from "next/font/google";
 import "./globals.css";
-import { brand } from "@/lib/brand";
 import { Footer } from "@/components/suvoga/Footer";
 import { Header } from "@/components/suvoga/Header";
 import { getSiteUrl } from "@/lib/site-url";
+import { seoConfig } from "@/config/seo.config";
 
 const inter = Inter({ subsets: ["latin"], variable: "--font-sans" });
 const cormorant = Cormorant_Garamond({
@@ -15,16 +15,16 @@ const cormorant = Cormorant_Garamond({
 
 export const metadata: Metadata = {
   metadataBase: new URL(getSiteUrl()),
-  title: `${brand.productName} | Masoterapia, estética y bienestar`,
-  description: brand.tagline,
+  title: seoConfig.defaultTitle,
+  description: seoConfig.defaultDescription,
   alternates: {
     canonical: "/",
   },
   openGraph: {
-    title: `${brand.productName} | Masoterapia, estetica y bienestar`,
-    description: brand.tagline,
+    title: seoConfig.defaultTitle,
+    description: seoConfig.defaultDescription,
     url: "/",
-    siteName: brand.productName,
+    siteName: seoConfig.siteName,
     type: "website",
   },
 };

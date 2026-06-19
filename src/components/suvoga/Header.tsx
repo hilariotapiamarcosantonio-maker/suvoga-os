@@ -7,6 +7,7 @@ import { motion, AnimatePresence, useReducedMotion, type Variants } from "framer
 import { Menu, X, Leaf, MessageCircle, ArrowRight } from "lucide-react";
 import { contactInfo } from "@/data/contact";
 import { brand } from "@/lib/brand";
+import { headerNavigationLinks } from "@/config/navigation.config";
 
 export function Header() {
   const [isOpen, setIsOpen] = useState(false);
@@ -30,12 +31,7 @@ export function Header() {
     };
   }, [isOpen]);
 
-  const navLinks = [
-    { label: "Cursos", href: "/cursos" },
-    { label: "Historias", href: "/historias" },
-    { label: "Comunidad", href: "/comunidad" },
-    { label: "Contacto", href: "/contacto" },
-  ];
+  const navLinks = headerNavigationLinks;
 
   const isActive = (href: string) =>
     href === "/" ? pathname === "/" : pathname === href || pathname.startsWith(`${href}/`);

@@ -1,9 +1,9 @@
+import { brandingConfig } from "@/config/branding.config";
+
 export const brand = {
-  productName: "SuVoGa Academia",
-  parentBrand: "SuVoGa",
-  workspaceName: "DB Cursos",
-  tagline:
-    "Formación profesional en masoterapia, estética y bienestar.",
-  description:
-    "Infraestructura operativa para organizar catalogo, pacientes, inscripciones y anticipos.",
+  productName: brandingConfig.productName,
+  parentBrand: brandingConfig.parentBrand,
+  workspaceName: brandingConfig.workspaceName,
+  tagline: brandingConfig.tagline,
+  description: brandingConfig.description,
 };

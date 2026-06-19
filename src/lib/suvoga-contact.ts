@@ -1,25 +1,20 @@
+import { contactConfig } from "@/config/contact.config";
+
 // Single source of truth for SuVoGa Academia's official, owner-approved
 // public contact channels. Do NOT scatter the phone number or email across
-// components — import from here.
-//
-// These values are explicitly authorized by the owner to appear publicly and
-// to ship in production. Environment variables may override them (e.g. for a
-// staging number), but production works correctly even with no env var set.
-// Only these approved values are allowed — never invent other phones, emails,
-// addresses, social handles, or hours.
+// components; import from here.
 
 /** Human-readable phone number, as shown to visitors. */
-const OFFICIAL_PHONE_DISPLAY = "829-838-9185";
+const OFFICIAL_PHONE_DISPLAY = contactConfig.phoneDisplay;
 
 /** International number, digits only, for wa.me links (no "+", spaces or dashes). */
-const OFFICIAL_WHATSAPP_NUMBER = "18298389185";
+const OFFICIAL_WHATSAPP_NUMBER = contactConfig.whatsappNumber;
 
 /** Official academy email. */
-const OFFICIAL_EMAIL = "asnamatem@gmail.com";
+const OFFICIAL_EMAIL = contactConfig.email;
 
 /** Default WhatsApp message when no course context is available. */
-const DEFAULT_WHATSAPP_MESSAGE =
-  "Hola, deseo recibir orientación sobre los programas de SuVoGa Academia.";
+const DEFAULT_WHATSAPP_MESSAGE = contactConfig.defaultWhatsAppMessage;
 
 function sanitizeDigits(raw: string) {
   return raw.replace(/[^0-9]/g, "");
@@ -27,7 +22,7 @@ function sanitizeDigits(raw: string) {
 
 /**
  * Resolve the WhatsApp number (digits only). Prefers an env override when it
- * is a plausible international number (8–15 digits); otherwise falls back to
+ * is a plausible international number (8-15 digits); otherwise falls back to
  * the official approved number so production always works.
  */
 export function getWhatsAppNumber(): string {

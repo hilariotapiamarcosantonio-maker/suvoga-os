@@ -3,14 +3,7 @@ import { Mail, MessageCircle } from "lucide-react";
 import { contactInfo } from "@/data/contact";
 import { brand } from "@/lib/brand";
 import { buildWhatsAppLink, suvogaContact } from "@/lib/suvoga-contact";
-
-const navLinks = [
-  { label: "Inicio", href: "/" },
-  { label: "Cursos", href: "/cursos" },
-  { label: "Historias", href: "/historias" },
-  { label: "Comunidad", href: "/comunidad" },
-  { label: "Contacto", href: "/contacto" },
-];
+import { footerNavigationLinks } from "@/config/navigation.config";
 
 export function Footer() {
   return (
@@ -48,7 +41,7 @@ export function Footer() {
           <div className="space-y-4">
             <h4 className="text-xs font-semibold uppercase tracking-widest text-[#D4AF37]">Navegación</h4>
             <ul className="-mx-1 space-y-1 text-sm text-[#EAE2D0]">
-              {navLinks.map((link) => (
+              {footerNavigationLinks.map((link) => (
                 <li key={link.href}>
                   <Link
                     href={link.href}
