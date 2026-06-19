@@ -23,16 +23,36 @@ type InscriptionModalProps = {
 type FormState = {
   nombreCompleto: string;
   whatsapp: string;
+  correo: string;
   cedula: string;
   provincia: string;
+  website: string;
+};
+
+type ApiResponse = {
+  success?: boolean;
+  message?: string;
+  error?: string;
+  email?: {
+    notification?: { status?: string };
+  };
 };
 
 const initialForm: FormState = {
   nombreCompleto: "",
   whatsapp: "",
+  correo: "",
   cedula: "",
   provincia: "",
+  website: "",
 };
+
+function createSubmissionId() {
+  if (typeof crypto !== "undefined" && "randomUUID" in crypto) {
+    return crypto.randomUUID();
+  }
+  return `${Date.now()}-${Math.random().toString(36).slice(2)}`;
+}
 
 function formatDop(value: number) {
   return new Intl.NumberFormat("es-DO", {
@@ -48,12 +68,16 @@ function Field({
   value,
   onChange,
   autoComplete,
+  type = "text",
+  required = true,
 }: {
   id: keyof FormState;
   label: string;
   value: string;
   onChange: (field: keyof FormState, value: string) => void;
   autoComplete?: string;
+  type?: string;
+  required?: boolean;
 }) {
   return (
     <label className="block" htmlFor={id}>
@@ -63,9 +87,10 @@ function Field({
       <input
         id={id}
         name={id}
+        type={type}
         value={value}
         onChange={(event) => onChange(id, event.target.value)}
-        required
+        required={required}
         autoComplete={autoComplete}
         className="h-12 w-full rounded-2xl border border-[#D4AF37]/35 bg-[#FDFBF7] px-4 text-[14px] text-[#0D3B22] outline-none transition-all placeholder:text-[#9A927F] focus:border-[#0D3B22] focus:ring-1 focus:ring-[#0D3B22]"
       />
@@ -79,12 +104,19 @@ export function InscriptionModal({
   onClose,
 }: InscriptionModalProps) {
   const [form, setForm] = useState<FormState>(initialForm);
+  const [submissionId, setSubmissionId] = useState(createSubmissionId);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
   const [success, setSuccess] = useState(false);
+  const [successMessage, setSuccessMessage] = useState("");
+  const [emailStatus, setEmailStatus] = useState<"sent" | "partial">("partial");
 
   const canSubmit = useMemo(
-    () => Object.values(form).every((value) => value.trim().length > 0),
+    () =>
+      form.nombreCompleto.trim().length > 0 &&
+      form.whatsapp.trim().length > 0 &&
+      form.cedula.trim().length > 0 &&
+      form.provincia.trim().length > 0,
     [form]
   );
 
@@ -97,8 +129,11 @@ export function InscriptionModal({
 
   function closeAndReset() {
     setForm(initialForm);
+    setSubmissionId(createSubmissionId());
     setError("");
     setSuccess(false);
+    setSuccessMessage("");
+    setEmailStatus("partial");
     setIsLoading(false);
     onClose();
   }
@@ -111,28 +146,39 @@ export function InscriptionModal({
     setError("");
 
     try {
-      const response = await fetch("/api/suvoga/inscriptions", {
+      const response = await fetch("/api/suvoga/inquiries", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          idServicio: course.idServicio,
-          montoAnticipo: course.montoAnticipo,
-          ...form,
+          type: "reservation",
+          submissionId,
+          courseId: course.idServicio,
+          courseName: course.nombre,
+          name: form.nombreCompleto,
+          phone: form.whatsapp,
+          email: form.correo,
+          cedula: form.cedula,
+          provincia: form.provincia,
+          website: form.website,
+          originPath: `${window.location.pathname}${window.location.search}`,
         }),
       });
 
-      const payload = await response.json();
+      const payload = (await response.json().catch(() => ({}))) as ApiResponse;
       if (!response.ok) {
-        throw new Error(payload.error || "No se pudo guardar la inscripcion.");
+        throw new Error(payload.error || "No se pudo registrar la solicitud.");
       }
 
       setSuccess(true);
+      setEmailStatus(payload.email?.notification?.status === "sent" ? "sent" : "partial");
+      setSuccessMessage(payload.message || "Solicitud registrada.");
       setForm(initialForm);
+      setSubmissionId(createSubmissionId());
     } catch (caughtError) {
       setError(
-          caughtError instanceof Error
-            ? caughtError.message
-            : "No se pudo guardar la inscripcion."
+        caughtError instanceof Error
+          ? caughtError.message
+          : "No se pudo registrar la solicitud."
       );
     } finally {
       setIsLoading(false);
@@ -176,11 +222,10 @@ export function InscriptionModal({
             <div className="rounded-2xl border border-[#0D3B22]/15 bg-[#0D3B22]/[0.04] p-5 text-center">
               <CheckCircle2 className="mx-auto h-9 w-9 text-[#0D3B22]" />
               <h3 className="suvoga-serif mt-3 text-xl font-semibold text-[#0D3B22]">
-                Cupo solicitado con éxito
+                {emailStatus === "sent" ? "Cupo solicitado con éxito" : "Solicitud registrada"}
               </h3>
               <p className="mt-2 text-xs leading-relaxed text-[#6B6048]">
-                Guardamos tus datos en SuVoGa Academia. El equipo puede confirmar el
-                anticipo de {formatDop(course.montoAnticipo)} desde la base.
+                {successMessage || "Guardamos tus datos en SuVoGa Academia."}
               </p>
               <button
                 type="button"
@@ -192,7 +237,6 @@ export function InscriptionModal({
             </div>
           ) : (
             <>
-              {/* Detailed course selection highlights */}
               <div className="mb-5 rounded-2xl border border-[#D4AF37]/35 bg-[#0D3B22]/[0.02] p-4 space-y-2.5">
                 <div className="flex justify-between items-center text-xs">
                   <span className="text-[#8D7530] font-semibold uppercase tracking-wider">Programa</span>
@@ -209,6 +253,16 @@ export function InscriptionModal({
               </div>
 
               <form className="space-y-4" onSubmit={handleSubmit}>
+                <input
+                  type="text"
+                  name="website"
+                  value={form.website}
+                  onChange={(event) => updateField("website", event.target.value)}
+                  tabIndex={-1}
+                  autoComplete="off"
+                  className="hidden"
+                  aria-hidden="true"
+                />
                 <Field
                   id="nombreCompleto"
                   label="Nombre Completo"
@@ -222,6 +276,15 @@ export function InscriptionModal({
                   value={form.whatsapp}
                   onChange={updateField}
                   autoComplete="tel"
+                />
+                <Field
+                  id="correo"
+                  label="Correo para confirmación"
+                  value={form.correo}
+                  onChange={updateField}
+                  autoComplete="email"
+                  type="email"
+                  required={false}
                 />
                 <Field
                   id="cedula"
@@ -252,7 +315,7 @@ export function InscriptionModal({
                     {isLoading ? (
                       <>
                         <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                        Guardando en Sheets...
+                        Registrando solicitud...
                       </>
                     ) : (
                       "Confirmar reserva de cupo"

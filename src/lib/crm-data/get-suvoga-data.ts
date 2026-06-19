@@ -71,6 +71,7 @@ export type SuvogaPaciente = {
   idPaciente: string;
   nombreCompleto: string;
   whatsapp: string;
+  correo?: string;
   cedula: string;
   provincia: string;
   fechaRegistro: string;
@@ -111,9 +112,13 @@ export type NewPacienteInput = {
   idPaciente?: string;
   nombreCompleto: string;
   whatsapp: string;
+  correo?: string;
   cedula?: string;
   provincia?: string;
   fechaRegistro?: string;
+  esRegistroPrueba?: boolean;
+  origenRegistro?: string;
+  notaInterna?: string;
 };
 
 export type NewInscripcionInput = {
@@ -126,6 +131,9 @@ export type NewInscripcionInput = {
   balancePendiente?: number;
   metodoPago?: string;
   estadoPago?: string;
+  esRegistroPrueba?: boolean;
+  origenRegistro?: string;
+  notaInterna?: string;
 };
 
 export type NewAnticipoInput = {
@@ -162,6 +170,7 @@ const FIELD_ALIASES: Record<string, string[]> = {
   id_paciente: ["ID_Paciente", "idPaciente", "id_paciente"],
   nombre_completo: ["Nombre_Completo", "nombreCompleto", "nombre_completo"],
   whatsapp: ["WhatsApp", "whatsapp", "Telefono", "telefono"],
+  correo: ["Correo", "Email", "correo", "email"],
   cedula: ["Cedula", "cedula"],
   provincia: ["Provincia", "provincia"],
   fecha_registro: ["Fecha_Registro", "fechaRegistro", "fecha_registro"],
@@ -483,6 +492,7 @@ function mapPaciente(row: Record<string, RawValue>): SuvogaPaciente {
     idPaciente: readString(row, FIELD_ALIASES.id_paciente),
     nombreCompleto: readString(row, FIELD_ALIASES.nombre_completo),
     whatsapp: readString(row, FIELD_ALIASES.whatsapp),
+    correo: readString(row, FIELD_ALIASES.correo),
     cedula: readString(row, FIELD_ALIASES.cedula),
     provincia: readString(row, FIELD_ALIASES.provincia),
     fechaRegistro: readString(row, FIELD_ALIASES.fecha_registro),
@@ -588,18 +598,26 @@ export async function postPaciente(input: NewPacienteInput) {
     idPaciente: input.idPaciente ?? `PAC-${Date.now()}`,
     nombreCompleto: input.nombreCompleto.trim(),
     whatsapp: input.whatsapp.trim(),
+    correo: input.correo?.trim() ?? "",
     cedula: input.cedula?.trim() ?? "",
     provincia: input.provincia?.trim() ?? "",
     fechaRegistro: input.fechaRegistro ?? todayInLaPaz(),
+    esRegistroPrueba: input.esRegistroPrueba ?? false,
+    origenRegistro: input.origenRegistro?.trim() ?? "",
+    notaInterna: input.notaInterna?.trim() ?? "",
   };
 
   await appendByHeaders(SHEETS.pacientes, {
     id_paciente: paciente.idPaciente,
     nombre_completo: paciente.nombreCompleto,
     whatsapp: paciente.whatsapp,
+    correo: paciente.correo,
     cedula: paciente.cedula,
     provincia: paciente.provincia,
     fecha_registro: paciente.fechaRegistro,
+    es_registro_prueba: paciente.esRegistroPrueba ? "TRUE" : "",
+    origen_registro: paciente.origenRegistro,
+    nota_interna: paciente.notaInterna,
   });
 
   return paciente;
@@ -641,6 +659,9 @@ export async function postInscripcion(input: NewInscripcionInput) {
     idServicio: input.idServicio,
     fechaProgramada: input.fechaProgramada,
     estadoAsistencia: input.estadoAsistencia ?? "Programada",
+    esRegistroPrueba: input.esRegistroPrueba ?? false,
+    origenRegistro: input.origenRegistro?.trim() ?? "",
+    notaInterna: input.notaInterna?.trim() ?? "",
   };
 
   await appendByHeaders(SHEETS.inscripciones, {
@@ -649,6 +670,9 @@ export async function postInscripcion(input: NewInscripcionInput) {
     id_servicio: inscripcion.idServicio,
     fecha_programada: inscripcion.fechaProgramada,
     estado_asistencia: inscripcion.estadoAsistencia,
+    es_registro_prueba: inscripcion.esRegistroPrueba ? "TRUE" : "",
+    origen_registro: inscripcion.origenRegistro,
+    nota_interna: inscripcion.notaInterna,
   });
 
   const catalogo = await getCatalogo();
