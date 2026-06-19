@@ -4,8 +4,11 @@ import { contactInfo } from "@/data/contact";
 import { brand } from "@/lib/brand";
 import { buildWhatsAppLink, suvogaContact } from "@/lib/suvoga-contact";
 import { footerNavigationLinks } from "@/config/navigation.config";
+import { brandingConfig } from "@/config/branding.config";
 
 export function Footer() {
+  const developerCredit = brandingConfig.footer.developerCredit;
+
   return (
     <footer
       id="footer"
@@ -72,12 +75,36 @@ export function Footer() {
           <p>
             &copy; {new Date().getFullYear()} {brand.productName}. Todos los derechos reservados.
           </p>
-          <Link
-            href="/admin"
-            className="flex min-h-11 items-center px-1 hover:text-[#D4AF37] hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#D4AF37]/70 focus-visible:rounded-lg"
-          >
-            Acceso Administrativo
-          </Link>
+          <div className="flex flex-col items-center gap-3 text-center sm:items-end sm:text-right">
+            {developerCredit.enabled ? (
+              <p className="max-w-sm text-[10px] leading-relaxed text-[#A99C82]">
+                <a
+                  href={developerCredit.links.marcosHilario}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="font-semibold text-[#C5A028] transition-colors hover:text-[#D4AF37] hover:underline focus-visible:rounded-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#D4AF37]/70"
+                >
+                  {developerCredit.headline}
+                </a>
+                <span className="block sm:inline"> · </span>
+                <span>Arquitectura Digital de Alto Rendimiento · </span>
+                <a
+                  href={developerCredit.links.lumaPremium}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="font-semibold text-[#C5A028] transition-colors hover:text-[#D4AF37] hover:underline focus-visible:rounded-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#D4AF37]/70"
+                >
+                  Luma Premium
+                </a>
+              </p>
+            ) : null}
+            <Link
+              href="/admin"
+              className="flex min-h-11 items-center px-1 hover:text-[#D4AF37] hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#D4AF37]/70 focus-visible:rounded-lg"
+            >
+              Acceso Administrativo
+            </Link>
+          </div>
         </div>
       </div>
     </footer>
