@@ -6,14 +6,14 @@ import { SectionHeading } from "@/components/suvoga/SectionHeading";
 import { SiteCTA } from "@/components/suvoga/SiteCTA";
 import { Reveal } from "@/components/suvoga/Reveal";
 import { SuvogaWhatsAppButton } from "@/components/suvoga/SuvogaWhatsAppButton";
+import { brandingConfig } from "@/config/branding.config";
 
 export const metadata: Metadata = {
-  title: "Historias y testimonios | SuVoGa Academia",
-  description:
-    "Experiencias de alumnas y egresadas de SuVoGa Academia: resultados formativos y transformación profesional.",
+  title: `Historias y testimonios | ${brandingConfig.productName}`,
+  description: `Experiencias de alumnas y egresadas de ${brandingConfig.productName}: resultados formativos y transformación profesional.`,
   alternates: { canonical: "/historias" },
   openGraph: {
-    title: "Historias y testimonios | SuVoGa Academia",
+    title: `Historias y testimonios | ${brandingConfig.productName}`,
     description: "Experiencias reales de quienes se han formado con nosotros.",
     url: "/historias",
     type: "website",

@@ -1,5 +1,6 @@
 "use client";
 
+import { brandingConfig } from "@/config/branding.config";
 import { buildWhatsAppLink } from "@/lib/suvoga-contact";
 
 type SuvogaWhatsAppButtonProps = {
@@ -50,7 +51,7 @@ export function SuvogaWhatsAppButton({ message }: SuvogaWhatsAppButtonProps) {
       href={href}
       target="_blank"
       rel="noopener noreferrer"
-      aria-label="Escribir por WhatsApp a SuVoGa Academia"
+      aria-label={`Escribir por WhatsApp a ${brandingConfig.productName}`}
       className="group fixed bottom-[max(1.25rem,env(safe-area-inset-bottom))] right-5 z-40 flex h-[58px] w-[58px] items-center overflow-hidden rounded-full border-2 border-[#25D366] bg-[#073B2A] text-white shadow-[0_8px_28px_rgba(37,211,102,0.30),inset_0_0_0_1.5px_rgba(37,211,102,0.22)] transition-[width] duration-300 ease-out focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#25D366] focus-visible:ring-offset-2 focus-visible:ring-offset-[#FDFBF7] motion-reduce:transition-none md:bottom-6 md:right-6 md:h-[60px] md:w-[60px] md:hover:w-[232px] md:focus-visible:w-[232px]"
     >
       {/* Fixed square keeps the glyph centered when collapsed and pinned-left when expanded */}

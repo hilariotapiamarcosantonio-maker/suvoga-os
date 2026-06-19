@@ -4,6 +4,7 @@ export const brandingConfig = {
   productName: "SuVoGa Academia",
   parentBrand: "SuVoGa",
   workspaceName: "DB Cursos",
+  navigationTagline: "Masoterapia · Estética · Bienestar",
   tagline: "Formación profesional en masoterapia, estética y bienestar.",
   description:
     "Infraestructura operativa para organizar catalogo, pacientes, inscripciones y anticipos.",
@@ -30,7 +31,8 @@ export const brandingConfig = {
     developerCredit: {
       enabled: true,
       headline: "Desarrollado por Marcos Hilario",
-      descriptor: "Arquitectura Digital de Alto Rendimiento · Luma Premium",
+      descriptor: "Arquitectura Digital de Alto Rendimiento",
+      lumaPremiumLabel: "Luma Premium",
       links: {
         marcosHilario: "https://marcoshilario.com",
         lumaPremium: "https://lumapremium.com",

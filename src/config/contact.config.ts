@@ -8,19 +8,16 @@ export const contactConfig = {
   hours: "Lunes a Sábado: 9:00 AM - 6:00 PM (Hora Local)",
   social: {
     instagram: {
-      label: "Instagram oficial próximamente",
-      link: "https://instagram.com/suvoga.academia.placeholder",
-      displayValue: "@suvoga.academia",
+      label: "Instagram oficial pendiente de confirmar",
+      displayValue: "Pendiente de confirmar",
     },
     tiktok: {
-      label: "TikTok oficial próximamente",
-      link: "https://tiktok.com/@suvoga.academia.placeholder",
-      displayValue: "@suvoga.academia",
+      label: "TikTok oficial pendiente de confirmar",
+      displayValue: "Pendiente de confirmar",
     },
     facebook: {
-      label: "Facebook oficial próximamente",
-      link: "https://facebook.com/suvoga.academia.placeholder",
-      displayValue: "SuVoGa Academia",
+      label: "Facebook oficial pendiente de confirmar",
+      displayValue: "Pendiente de confirmar",
     },
   },
 } as const;

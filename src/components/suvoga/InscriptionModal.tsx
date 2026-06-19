@@ -2,6 +2,7 @@
 
 import { FormEvent, useMemo, useState } from "react";
 import { CheckCircle2, Loader2, X } from "lucide-react";
+import { brand } from "@/lib/brand";
 
 type Course = {
   idServicio: string;
@@ -225,7 +226,7 @@ export function InscriptionModal({
                 {emailStatus === "sent" ? "Cupo solicitado con éxito" : "Solicitud registrada"}
               </h3>
               <p className="mt-2 text-xs leading-relaxed text-[#6B6048]">
-                {successMessage || "Guardamos tus datos en SuVoGa Academia."}
+                {successMessage || `Guardamos tus datos en ${brand.productName}.`}
               </p>
               <button
                 type="button"

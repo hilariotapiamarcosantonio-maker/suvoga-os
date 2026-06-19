@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { academyConfig } from "@/config/academy.config";
 import {
   getCatalogo,
   postInscripcion,
@@ -12,9 +13,9 @@ import { validateInquiryPayload } from "@/lib/inquiries/inquiry-validation";
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 
-function todayInLaPaz() {
+function todayInAcademyTimezone() {
   const parts = new Intl.DateTimeFormat("en", {
-    timeZone: "America/La_Paz",
+    timeZone: academyConfig.timezone,
     year: "numeric",
     month: "2-digit",
     day: "2-digit",
@@ -80,7 +81,7 @@ async function registerInquiry(inquiry: NormalizedInquiry): Promise<Registration
     const result = await postInscripcion({
       idPaciente: paciente.idPaciente,
       idServicio: servicio.idServicio,
-      fechaProgramada: todayInLaPaz(),
+      fechaProgramada: todayInAcademyTimezone(),
       estadoAsistencia: "Inscrito",
       montoPagado: 0,
       balancePendiente: Number(servicio.montoAnticipo),

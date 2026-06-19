@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { ArrowRight, CalendarDays, CreditCard, Users } from "lucide-react";
 import { InscriptionModal } from "@/components/suvoga/InscriptionModal";
+import { brand } from "@/lib/brand";
 import type { SuvogaServicio } from "@/lib/crm-data/get-suvoga-data";
 
 type CourseLandingSignupProps = {
@@ -82,7 +83,7 @@ export function CourseLandingSignup({ course }: CourseLandingSignupProps) {
         </button>
 
         <p className="mt-4 text-center text-xs leading-5 text-[#6B6048]">
-          Tu solicitud se guarda en SuVoGa Academia para que el equipo confirme cupo y
+          Tu solicitud se guarda en {brand.productName} para que el equipo confirme cupo y
           anticipo.
         </p>
       </aside>

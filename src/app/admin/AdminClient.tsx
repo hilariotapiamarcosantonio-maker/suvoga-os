@@ -22,6 +22,7 @@ import {
   Users,
   X,
 } from "lucide-react";
+import { brand } from "@/lib/brand";
 
 // ─── Types ──────────────────────────────────────────────────────────────────
 
@@ -147,7 +148,7 @@ function cleanPhoneForWhatsapp(phone: string) {
 function whatsappHref(phone: string, name: string, curso: string) {
   const cleaned = cleanPhoneForWhatsapp(phone);
   if (!cleaned) return "";
-  const msg = `Hola ${name}. Te escribimos de SuVoGa Academia para confirmar tu solicitud para ${curso}.`;
+  const msg = `Hola ${name}. Te escribimos de ${brand.productName} para confirmar tu solicitud para ${curso}.`;
   return `https://wa.me/${cleaned}?text=${encodeURIComponent(msg)}`;
 }
 
@@ -498,7 +499,7 @@ export function AdminClient({
             <div>
               <div className="inline-flex items-center gap-2 rounded-full border border-[#D4AF37]/30 bg-[#D4AF37]/10 px-3 py-1 text-xs font-semibold uppercase tracking-[0.16em] text-[#8D7530]">
                 <ShieldCheck className="h-3.5 w-3.5" />
-                Admin SuVoGa
+                Admin {brand.parentBrand}
               </div>
               <h1 className="suvoga-serif mt-4 text-4xl font-semibold leading-none text-[#0D3B22] sm:text-5xl">
                 Academia & CRM Académico
@@ -867,7 +868,7 @@ export function AdminClient({
                 <div className="mt-5 rounded-3xl border border-dashed border-[#D4AF37]/35 bg-[#FDFBF7] p-8 text-center">
                   <Sparkles className="mx-auto h-8 w-8 text-[#D4AF37]" />
                   <p className="suvoga-serif mt-3 text-2xl font-semibold text-[#0D3B22]">Sin registros visibles</p>
-                  <p className="mt-2 text-sm text-[#6B6048]">Los registros aparecerán aquí cuando se guarden en SuVoGa Academia.</p>
+                  <p className="mt-2 text-sm text-[#6B6048]">Los registros aparecerán aquí cuando se guarden en {brand.productName}.</p>
                 </div>
               )}
             </div>

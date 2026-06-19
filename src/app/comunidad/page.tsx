@@ -14,14 +14,15 @@ import { SectionHeading } from "@/components/suvoga/SectionHeading";
 import { SiteCTA } from "@/components/suvoga/SiteCTA";
 import { Reveal } from "@/components/suvoga/Reveal";
 import { SuvogaWhatsAppButton } from "@/components/suvoga/SuvogaWhatsAppButton";
+import { academyConfig } from "@/config/academy.config";
+import { brandingConfig } from "@/config/branding.config";
 
 export const metadata: Metadata = {
-  title: "Comunidad SuVoGa | SuVoGa Academia",
-  description:
-    "Formarte en SuVoGa Academia es entrar a una comunidad de terapeutas: acompañamiento, desarrollo profesional, certificación y continuidad después del curso.",
+  title: `Comunidad ${academyConfig.shortName} | ${brandingConfig.productName}`,
+  description: `Formarte en ${brandingConfig.productName} es entrar a una comunidad de terapeutas: acompañamiento, desarrollo profesional, certificación y continuidad después del curso.`,
   alternates: { canonical: "/comunidad" },
   openGraph: {
-    title: "Comunidad SuVoGa | SuVoGa Academia",
+    title: `Comunidad ${academyConfig.shortName} | ${brandingConfig.productName}`,
     description: "Acompañamiento y desarrollo profesional que continúa después del curso.",
     url: "/comunidad",
     type: "website",

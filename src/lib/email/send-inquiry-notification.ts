@@ -1,3 +1,4 @@
+import { brandingConfig } from "@/config/branding.config";
 import { contactConfig } from "@/config/contact.config";
 import type { NormalizedInquiry, RegistrationResult } from "@/lib/inquiries/inquiry-types";
 import { createEmailProvider } from "./email-provider";
@@ -24,7 +25,7 @@ export async function sendInquiryNotification(
   const internal = buildInternalNotificationEmail(inquiry, registration);
 
   const notification = await provider.send({
-    to: [{ email: notificationTo, name: "SuVoGa Academia" }],
+    to: [{ email: notificationTo, name: brandingConfig.productName }],
     from: sender,
     replyTo,
     subject: internal.subject,

@@ -36,6 +36,7 @@ import { FacilitatorCard } from "@/components/suvoga/FacilitatorCard";
 import { CourseCover } from "@/components/suvoga/CourseCover";
 import { getCourseVisualIdentity } from "@/data/course-visual-identities";
 import { COURSE_VISUAL_FAMILIES } from "@/data/course-visual-families";
+import { brandingConfig } from "@/config/branding.config";
 import {
   courseDurationText,
   cleanList,
@@ -65,7 +66,7 @@ export function generateStaticParams() {
 export function generateMetadata({ params }: CoursePageProps): Metadata {
   const record = findPublishedCourseRecord(params.id);
   if (!record) {
-    return { title: "Curso no encontrado | SuVoGa Academia" };
+    return { title: `Curso no encontrado | ${brandingConfig.productName}` };
   }
 
   const canonicalPath = `/curso/${record.slug}`;
@@ -77,11 +78,11 @@ export function generateMetadata({ params }: CoursePageProps): Metadata {
     record.title;
 
   return {
-    title: `${record.title} | SuVoGa Academia`,
+    title: `${record.title} | ${brandingConfig.productName}`,
     description,
     alternates: { canonical: canonicalPath },
     openGraph: {
-      title: `${record.title} | SuVoGa Academia`,
+      title: `${record.title} | ${brandingConfig.productName}`,
       description,
       url: canonicalPath,
       type: "article",
@@ -525,7 +526,7 @@ export default function CoursePage({ params }: CoursePageProps) {
         <div className="mx-auto max-w-7xl px-4 py-12 text-center sm:px-6 lg:px-8">
           <h2 className="suvoga-serif text-2xl font-semibold text-[#0D3B22]">Explora más formaciones</h2>
           <p className="mx-auto mt-2 max-w-xl text-sm text-[#4E6658]">
-            Descubre el catálogo completo de SuVoGa Academia y encuentra tu próximo paso profesional.
+            Descubre el catálogo completo de {brandingConfig.productName} y encuentra tu próximo paso profesional.
           </p>
           <Link
             href="/cursos"

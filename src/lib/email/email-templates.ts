@@ -1,3 +1,4 @@
+import { brandingConfig } from "@/config/branding.config";
 import type { NormalizedInquiry, RegistrationResult } from "@/lib/inquiries/inquiry-types";
 
 function escapeHtml(value: string) {
@@ -26,7 +27,8 @@ export function buildInternalNotificationEmail(
   inquiry: NormalizedInquiry,
   registration: RegistrationResult
 ) {
-  const subject = "Nueva solicitud de orientación — SuVoGa Academia";
+  const academyName = brandingConfig.productName;
+  const subject = `Nueva solicitud de orientación — ${academyName}`;
   const fields: [string, string | undefined][] = [
     ["Identificador", inquiry.requestId],
     ["Tipo", inquiry.type === "reservation" ? "Reserva de curso" : "Orientación general"],
@@ -46,7 +48,7 @@ export function buildInternalNotificationEmail(
   const html = `
     <div style="font-family:Inter,Arial,sans-serif;color:#0d3b22;line-height:1.5">
       <h1 style="font-family:Georgia,serif;color:#0d3b22">Nueva solicitud de orientación</h1>
-      <p>Se registró una nueva solicitud desde SuVoGa Academia.</p>
+      <p>Se registró una nueva solicitud desde ${escapeHtml(academyName)}.</p>
       <table cellspacing="0" cellpadding="0" style="border-collapse:collapse;width:100%;max-width:720px">${rows(fields)}</table>
     </div>
   `;
@@ -55,13 +57,14 @@ export function buildInternalNotificationEmail(
 }
 
 export function buildUserConfirmationEmail(inquiry: NormalizedInquiry) {
-  const subject = "Hemos recibido tu solicitud — SuVoGa Academia";
+  const academyName = brandingConfig.productName;
+  const subject = `Hemos recibido tu solicitud — ${academyName}`;
   const courseLine = inquiry.courseName ? ` sobre ${inquiry.courseName}` : "";
   const text = [
     `Hola ${inquiry.name},`,
     "",
     `Hemos recibido tu solicitud${courseLine}.`,
-    "El equipo de SuVoGa Academia revisará tu información y te contactará por los canales proporcionados.",
+    `El equipo de ${academyName} revisará tu información y te contactará por los canales proporcionados.`,
     "",
     `Identificador de solicitud: ${inquiry.requestId}`,
     "",
@@ -71,7 +74,7 @@ export function buildUserConfirmationEmail(inquiry: NormalizedInquiry) {
     <div style="font-family:Inter,Arial,sans-serif;color:#0d3b22;line-height:1.6">
       <h1 style="font-family:Georgia,serif;color:#0d3b22">Hemos recibido tu solicitud</h1>
       <p>Hola ${escapeHtml(inquiry.name)},</p>
-      <p>Hemos recibido tu solicitud${escapeHtml(courseLine)}. El equipo de SuVoGa Academia revisará tu información y te contactará por los canales proporcionados.</p>
+      <p>Hemos recibido tu solicitud${escapeHtml(courseLine)}. El equipo de ${escapeHtml(academyName)} revisará tu información y te contactará por los canales proporcionados.</p>
       <p><strong>Identificador:</strong> ${escapeHtml(inquiry.requestId)}</p>
       <p>Gracias por escribirnos.</p>
     </div>

@@ -103,7 +103,7 @@ export function Header() {
               {brand.productName}
             </span>
             <span className="mt-0.5 md:mt-1 text-[9px] md:text-[11px] font-semibold uppercase tracking-[0.18em] text-[#8A7D69]">
-              Masoterapia · Estética · Bienestar
+              {brand.navigationTagline}
             </span>
           </span>
         </Link>
@@ -179,7 +179,7 @@ export function Header() {
                     {brand.productName}
                   </span>
                   <span className="mt-0.5 text-[9px] font-semibold uppercase tracking-[0.18em] text-[#D4AF37]">
-                    Masoterapia · Estética · Bienestar
+                    {brand.navigationTagline}
                   </span>
                 </span>
               </Link>

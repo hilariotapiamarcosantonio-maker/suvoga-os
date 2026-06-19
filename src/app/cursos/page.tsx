@@ -4,16 +4,16 @@ import { courseCategory, courseModality } from "@/lib/course-presentation";
 import { CoursesExplorer } from "@/components/suvoga/CoursesExplorer";
 import { SiteCTA } from "@/components/suvoga/SiteCTA";
 import { SuvogaWhatsAppButton } from "@/components/suvoga/SuvogaWhatsAppButton";
+import { academyConfig } from "@/config/academy.config";
+import { brandingConfig } from "@/config/branding.config";
 
 export const metadata: Metadata = {
-  title: "Catálogo de cursos | SuVoGa Academia",
-  description:
-    "Explora los 38 programas de formación en masoterapia, estética y bienestar de SuVoGa Academia. Filtra por categoría, modalidad y duración.",
+  title: `Catálogo de cursos | ${brandingConfig.productName}`,
+  description: `Explora los ${suvogaCourses.length} programas de formación en masoterapia, estética y bienestar de ${brandingConfig.productName}. Filtra por categoría, modalidad y duración.`,
   alternates: { canonical: "/cursos" },
   openGraph: {
-    title: "Catálogo de cursos | SuVoGa Academia",
-    description:
-      "38 programas de formación profesional en masoterapia, estética y bienestar.",
+    title: `Catálogo de cursos | ${brandingConfig.productName}`,
+    description: `${suvogaCourses.length} programas de formación profesional en ${academyConfig.shortName}.`,
     url: "/cursos",
     type: "website",
   },

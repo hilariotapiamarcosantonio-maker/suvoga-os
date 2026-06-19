@@ -11,6 +11,7 @@ import { CourseCard } from "@/components/suvoga/CourseCard";
 import { SectionHeading } from "@/components/suvoga/SectionHeading";
 import { SuvogaWhatsAppButton } from "@/components/suvoga/SuvogaWhatsAppButton";
 import { buildWhatsAppLink } from "@/lib/suvoga-contact";
+import { brandingConfig } from "@/config/branding.config";
 
 type FacilitatorPageProps = {
   params: { slug: string };
@@ -22,14 +23,14 @@ export function generateStaticParams() {
 
 export function generateMetadata({ params }: FacilitatorPageProps): Metadata {
   const facilitator = findFacilitatorBySlug(params.slug);
-  if (!facilitator) return { title: "Facilitadora no encontrada | SuVoGa Academia" };
+  if (!facilitator) return { title: `Facilitadora no encontrada | ${brandingConfig.productName}` };
 
   return {
-    title: `${facilitator.name} | Facilitadores | SuVoGa Academia`,
-    description: `Perfil docente de ${facilitator.name} en SuVoGa Academia.`,
+    title: `${facilitator.name} | Facilitadores | ${brandingConfig.productName}`,
+    description: `Perfil docente de ${facilitator.name} en ${brandingConfig.productName}.`,
     alternates: { canonical: `/facilitadores/${facilitator.slug}` },
     openGraph: {
-      title: `${facilitator.name} | SuVoGa Academia`,
+      title: `${facilitator.name} | ${brandingConfig.productName}`,
       description: `Cursos asociados a ${facilitator.name}.`,
       url: `/facilitadores/${facilitator.slug}`,
       type: "profile",
@@ -116,7 +117,7 @@ export default function FacilitatorPage({ params }: FacilitatorPageProps) {
         <SectionHeading
           eyebrow="Cursos impartidos"
           title="Programas asociados"
-          description="Listado derivado del catálogo publicado de SuVoGa Academia."
+          description={`Listado derivado del catálogo publicado de ${brandingConfig.productName}.`}
         />
         <div className="mt-10 grid gap-6 md:grid-cols-2 xl:grid-cols-3">
           {courses.map((course) => (

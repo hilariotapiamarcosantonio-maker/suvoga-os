@@ -3,12 +3,12 @@ import { buildWhatsAppLink, suvogaContact } from "@/lib/suvoga-contact";
 
 export type ContactChannel = {
   label: string;
-  link: string;
+  link?: string;
   displayValue: string;
 };
 
 export type ContactConfig = {
-  whatsapp: ContactChannel;
+  whatsapp: ContactChannel & { link: string };
   instagram: ContactChannel;
   tiktok: ContactChannel;
   facebook: ContactChannel;

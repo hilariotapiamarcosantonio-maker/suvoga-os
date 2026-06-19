@@ -87,14 +87,14 @@ export function Footer() {
                   {developerCredit.headline}
                 </a>
                 <span className="block sm:inline"> · </span>
-                <span>Arquitectura Digital de Alto Rendimiento · </span>
+                <span>{developerCredit.descriptor} · </span>
                 <a
                   href={developerCredit.links.lumaPremium}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="font-semibold text-[#C5A028] transition-colors hover:text-[#D4AF37] hover:underline focus-visible:rounded-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#D4AF37]/70"
                 >
-                  Luma Premium
+                  {developerCredit.lumaPremiumLabel}
                 </a>
               </p>
             ) : null}

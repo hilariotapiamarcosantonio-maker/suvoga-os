@@ -17,6 +17,7 @@ import {
   COURSE_VISUAL_FAMILIES,
   type CourseVisualFamily,
 } from "@/data/course-visual-families";
+import { brandingConfig } from "@/config/branding.config";
 import { resolveCover } from "@/lib/course-resource-utils";
 
 const FAMILY_ICON: Record<CourseVisualFamily, LucideIcon> = {
@@ -49,7 +50,7 @@ type CourseCoverProps = {
 
 /**
  * Premium editorial fallback — never a blank green rectangle. A family-tinted
- * gradient with a large low-opacity motif, the SuVoGa monogram, and the course
+ * gradient with a large low-opacity motif, the academy mark, and the course
  * eyebrow, so a course without a definitive cover still looks intentional.
  */
 function FamilyFallback({
@@ -92,7 +93,9 @@ function FamilyFallback({
           {eyebrow ? (
             <p className="text-[11px] font-medium uppercase tracking-[0.18em] text-white/70">{eyebrow}</p>
           ) : null}
-          <p className="suvoga-serif mt-0.5 text-sm font-semibold text-white/90">SuVoGa Academia</p>
+          <p className="suvoga-serif mt-0.5 text-sm font-semibold text-white/90">
+            {brandingConfig.productName}
+          </p>
         </div>
       </div>
     </div>

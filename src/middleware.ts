@@ -1,10 +1,11 @@
 import { NextRequest, NextResponse } from "next/server";
+import { brandingConfig } from "@/config/branding.config";
 
 function unauthorized() {
   return new NextResponse("Authentication required", {
     status: 401,
     headers: {
-      "WWW-Authenticate": 'Basic realm="SuVoGa Academia"',
+      "WWW-Authenticate": `Basic realm="${brandingConfig.productName}"`,
     },
   });
 }

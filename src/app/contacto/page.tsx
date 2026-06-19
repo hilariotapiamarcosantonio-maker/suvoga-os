@@ -6,14 +6,15 @@ import { SectionHeading } from "@/components/suvoga/SectionHeading";
 import { Reveal } from "@/components/suvoga/Reveal";
 import { SuvogaWhatsAppButton } from "@/components/suvoga/SuvogaWhatsAppButton";
 import { buildWhatsAppLink, suvogaContact } from "@/lib/suvoga-contact";
+import { academyConfig } from "@/config/academy.config";
+import { brandingConfig } from "@/config/branding.config";
 
 export const metadata: Metadata = {
-  title: "Contacto y orientación | SuVoGa Academia",
-  description:
-    "Solicita orientación académica en SuVoGa Academia. Cuéntanos tu objetivo y te ayudamos a elegir tu formación en masoterapia, estética y bienestar.",
+  title: `Contacto y orientación | ${brandingConfig.productName}`,
+  description: `Solicita orientación académica en ${brandingConfig.productName}. Cuéntanos tu objetivo y te ayudamos a elegir tu formación en masoterapia, estética y bienestar.`,
   alternates: { canonical: "/contacto" },
   openGraph: {
-    title: "Contacto y orientación | SuVoGa Academia",
+    title: `Contacto y orientación | ${brandingConfig.productName}`,
     description: "Orientación académica personalizada para elegir tu programa.",
     url: "/contacto",
     type: "website",
@@ -35,7 +36,7 @@ const faqs = [
   },
   {
     q: "¿La certificación tiene aval?",
-    a: "Sí. Los certificados están avalados por SuVoGa y por la asociación profesional correspondiente, según el programa.",
+    a: `Sí. Los certificados están avalados por ${academyConfig.shortName} y por la asociación profesional correspondiente, según el programa.`,
   },
 ];
 

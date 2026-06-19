@@ -7,6 +7,7 @@ import {
   genericCourseDescription,
   suvogaCourses,
 } from "@/data/courses";
+import { academyConfig } from "@/config/academy.config";
 import { getSheetsClient } from "../google-sheets";
 
 const SHEETS = {
@@ -430,9 +431,9 @@ async function appendByHeaders(sheetName: string, data: SheetRow) {
   });
 }
 
-function todayInLaPaz() {
+function todayInAcademyTimezone() {
   const parts = new Intl.DateTimeFormat("en", {
-    timeZone: "America/La_Paz",
+    timeZone: academyConfig.timezone,
     year: "numeric",
     month: "2-digit",
     day: "2-digit",
@@ -601,7 +602,7 @@ export async function postPaciente(input: NewPacienteInput) {
     correo: input.correo?.trim() ?? "",
     cedula: input.cedula?.trim() ?? "",
     provincia: input.provincia?.trim() ?? "",
-    fechaRegistro: input.fechaRegistro ?? todayInLaPaz(),
+    fechaRegistro: input.fechaRegistro ?? todayInAcademyTimezone(),
     esRegistroPrueba: input.esRegistroPrueba ?? false,
     origenRegistro: input.origenRegistro?.trim() ?? "",
     notaInterna: input.notaInterna?.trim() ?? "",

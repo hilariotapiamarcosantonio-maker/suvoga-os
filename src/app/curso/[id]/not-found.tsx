@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { SearchX } from "lucide-react";
+import { academyConfig } from "@/config/academy.config";
 
 export default function CourseNotFound() {
   return (
@@ -17,7 +18,7 @@ export default function CourseNotFound() {
           </h1>
           <p className="mx-auto mt-5 max-w-xl text-sm leading-7 text-[#EAE2D0]">
             Puede que el enlace haya cambiado o que el programa ya no forme
-            parte del catálogo público de SuVoGa.
+            parte del catálogo público de {academyConfig.shortName}.
           </p>
           <Link
             href="/"

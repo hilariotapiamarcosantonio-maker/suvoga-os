@@ -4,15 +4,15 @@ import { ArrowRight, BadgeCheck, UserRound } from "lucide-react";
 import { facilitators, getCoursesForFacilitator } from "@/data/facilitators";
 import { SectionHeading } from "@/components/suvoga/SectionHeading";
 import { SuvogaWhatsAppButton } from "@/components/suvoga/SuvogaWhatsAppButton";
+import { brandingConfig } from "@/config/branding.config";
 
 export const metadata: Metadata = {
-  title: "Facilitadores | SuVoGa Academia",
-  description:
-    "Conoce los perfiles docentes vinculados a los programas de SuVoGa Academia.",
+  title: `Facilitadores | ${brandingConfig.productName}`,
+  description: `Conoce los perfiles docentes vinculados a los programas de ${brandingConfig.productName}.`,
   alternates: { canonical: "/facilitadores" },
   openGraph: {
-    title: "Facilitadores | SuVoGa Academia",
-    description: "Perfiles docentes y programas impartidos en SuVoGa Academia.",
+    title: `Facilitadores | ${brandingConfig.productName}`,
+    description: `Perfiles docentes y programas impartidos en ${brandingConfig.productName}.`,
     url: "/facilitadores",
     type: "website",
   },
@@ -30,7 +30,7 @@ export default function FacilitatorsPage() {
             Facilitadores
           </h1>
           <p className="mt-5 max-w-2xl text-base leading-8 text-[#EAE2D0]">
-            Perfiles docentes vinculados a los programas publicados de SuVoGa Academia.
+            Perfiles docentes vinculados a los programas publicados de {brandingConfig.productName}.
           </p>
         </div>
       </section>
