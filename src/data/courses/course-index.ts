@@ -98,10 +98,15 @@ export const courseBySlug = new Map<string, CourseRecord>(
 );
 
 export const courseByLegacyId = new Map<string, CourseRecord>();
+const reservedSourceIds = new Set(
+  officialCourseCatalog.map((course) => course.sourceId.toUpperCase())
+);
 
 for (const course of officialCourseCatalog) {
   for (const legacyId of course.legacyIds) {
-    courseByLegacyId.set(legacyId, course);
+    const normalizedLegacyId = legacyId.toUpperCase();
+    if (reservedSourceIds.has(normalizedLegacyId)) continue;
+    courseByLegacyId.set(normalizedLegacyId, course);
   }
 }
 
