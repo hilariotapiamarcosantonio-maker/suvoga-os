@@ -13,14 +13,16 @@ import type { CourseVisualFamily } from "./course-visual-families";
 //      "pending"     → no course-specific image exists; the premium editorial
 //                      fallback is rendered (never a blank green rectangle).
 //      "invalid"     → a provided URL failed validation and must not render.
-//  - Local images cur-001..cur-017 (.png) and cur-018..cur-025 (.svg) exist and
-//    are unique per course → "provisional". cur-026..cur-040 currently reuse
-//    cur-025.svg (16-way duplicate) → marked "pending" so the fallback renders
-//    instead of repeating one image. Replace coverImageUrl with a Google Drive
-//    link to promote a course to "definitive".
+//  - Course-specific local PNGs approved for continued review are
+//    "provisional". CUR-020/CUR-031 remain "pending" by editorial decision.
+//    CUR-036..CUR-040 also remain "pending" because their current abstract
+//    compositions require regeneration; the editorial fallback renders instead.
+//  - Legacy SVG placeholders remain on disk for now, but are not selected here.
+//    No cover becomes "definitive" without explicit owner approval.
 
 export type CourseCoverStatus = "definitive" | "provisional" | "pending" | "invalid";
 export type CourseResourceStatus = "ready" | "partial" | "pending" | "invalid";
+export type CourseCoverReview = "requires-regeneration";
 
 export type CourseVisualIdentity = {
   courseId: string;
@@ -38,6 +40,7 @@ export type CourseVisualIdentity = {
   visualMotif?: string;
   accentVariant?: string;
   coverStatus: CourseCoverStatus;
+  coverReview?: CourseCoverReview;
   resourceStatus?: CourseResourceStatus;
 };
 
@@ -67,21 +70,21 @@ export const COURSE_VISUAL_IDENTITIES: Record<string, CourseVisualIdentity> = {
   "CUR-023": { courseId: "CUR-023", family: "estetica-aparatologia", eyebrow: "Estética corporal", primaryBenefit: "Realiza depilación con cera de forma profesional y segura.", coverAlt: "Procedimiento de depilación con cera.", coverStatus: "provisional" },
   "CUR-024": { courseId: "CUR-024", family: "masoterapia", eyebrow: "Reflexología", primaryBenefit: "Aprende reflexología podal aplicada.", coverAlt: "Sesión de reflexología podal sobre los pies.", coverStatus: "provisional" },
   "CUR-025": { courseId: "CUR-025", family: "masters-diplomados", eyebrow: "Curso profesional", primaryBenefit: "Formación profesional integral en cosmetología.", coverAlt: "Práctica de cosmetología profesional en cabina.", coverStatus: "provisional" },
-  "CUR-026": { courseId: "CUR-026", family: "masoterapia", eyebrow: "Masaje tailandés", primaryBenefit: "Aprende la técnica del masaje tailandés.", coverAlt: "Sesión de masaje tailandés tradicional.", coverStatus: "pending" },
-  "CUR-027": { courseId: "CUR-027", family: "tecnica-sanitaria", eyebrow: "Técnica sanitaria", primaryBenefit: "Ejecuta canalización e inyectología con bioseguridad en práctica supervisada.", coverAlt: "Práctica supervisada de canalización e inyectología.", coverStatus: "pending" },
-  "CUR-028": { courseId: "CUR-028", family: "terapias-complementarias", eyebrow: "Terapia complementaria", primaryBenefit: "Conoce y aplica los fundamentos del biomagnetismo.", coverAlt: "Sesión de biomagnetismo con imanes terapéuticos.", coverStatus: "pending" },
-  "CUR-029": { courseId: "CUR-029", family: "masoterapia", eyebrow: "Masaje con calor", primaryBenefit: "Aplica piedras calientes, pindas herbales y parafinoterapia.", coverAlt: "Masaje con piedras calientes y pindas herbales.", coverStatus: "pending" },
-  "CUR-030": { courseId: "CUR-030", family: "cosmetica-artesanal", eyebrow: "Cosmética artesanal", primaryBenefit: "Elabora jabones artesanales para uso y venta.", coverAlt: "Jabones artesanales terminados y materias primas.", coverStatus: "pending" },
+  "CUR-026": { courseId: "CUR-026", family: "masoterapia", eyebrow: "Masaje tailandés", primaryBenefit: "Aprende la técnica del masaje tailandés.", coverAlt: "Sesión de masaje tailandés tradicional.", coverStatus: "provisional" },
+  "CUR-027": { courseId: "CUR-027", family: "tecnica-sanitaria", eyebrow: "Técnica sanitaria", primaryBenefit: "Ejecuta canalización e inyectología con bioseguridad en práctica supervisada.", coverAlt: "Práctica supervisada de canalización e inyectología.", coverStatus: "provisional" },
+  "CUR-028": { courseId: "CUR-028", family: "terapias-complementarias", eyebrow: "Terapia complementaria", primaryBenefit: "Conoce y aplica los fundamentos del biomagnetismo.", coverAlt: "Sesión de biomagnetismo con imanes terapéuticos.", coverStatus: "provisional" },
+  "CUR-029": { courseId: "CUR-029", family: "masoterapia", eyebrow: "Masaje con calor", primaryBenefit: "Aplica piedras calientes, pindas herbales y parafinoterapia.", coverAlt: "Masaje con piedras calientes y pindas herbales.", coverStatus: "provisional" },
+  "CUR-030": { courseId: "CUR-030", family: "cosmetica-artesanal", eyebrow: "Cosmética artesanal", primaryBenefit: "Elabora jabones artesanales para uso y venta.", coverAlt: "Jabones artesanales terminados y materias primas.", coverStatus: "provisional" },
   "CUR-031": { courseId: "CUR-031", family: "terapias-complementarias", eyebrow: "Terapia estructural", primaryBenefit: "Aprende terapia de alineación de la estructura ósea.", coverAlt: "Sesión de terapia de alineación de la estructura ósea.", coverStatus: "pending" },
-  "CUR-032": { courseId: "CUR-032", family: "terapias-complementarias", eyebrow: "Vendaje neuromuscular", primaryBenefit: "Aplica vendaje neuromuscular en pacientes postoperatorios y cicatrices.", coverAlt: "Aplicación de vendaje neuromuscular sobre una cicatriz.", coverStatus: "pending" },
-  "CUR-033": { courseId: "CUR-033", family: "masoterapia", eyebrow: "Masaje deportivo", primaryBenefit: "Domina el masaje deportivo y la ventosaterapia.", coverAlt: "Masaje deportivo combinado con ventosaterapia.", coverStatus: "pending" },
-  "CUR-034": { courseId: "CUR-034", family: "facial-cosmetologia", eyebrow: "Lifting facial", primaryBenefit: "Realiza lifting facial con maderoterapia.", coverAlt: "Lifting facial con instrumentos de maderoterapia.", coverStatus: "pending" },
-  "CUR-035": { courseId: "CUR-035", family: "drenaje-postoperatorio", eyebrow: "Postoperatorio estético", primaryBenefit: "Aplica aparatología en pacientes postoperatorios.", coverAlt: "Aparatología aplicada en cuidado postoperatorio.", coverStatus: "pending" },
-  "CUR-036": { courseId: "CUR-036", family: "estetica-aparatologia", eyebrow: "Aparatología terapéutica", primaryBenefit: "Integra aparatología en el masaje terapéutico.", coverAlt: "Aparatología aplicada al masaje terapéutico.", coverStatus: "pending" },
-  "CUR-037": { courseId: "CUR-037", family: "cosmetica-artesanal", eyebrow: "Cosmética artesanal", primaryBenefit: "Formula y elabora cremas cosméticas.", coverAlt: "Elaboración de cremas cosméticas con materias primas.", coverStatus: "pending" },
-  "CUR-038": { courseId: "CUR-038", family: "cosmetica-artesanal", eyebrow: "Cosmética artesanal", primaryBenefit: "Crea exfoliantes, sales de baño y bombas de baño.", coverAlt: "Exfoliantes, sales y bombas de baño artesanales.", coverStatus: "pending" },
-  "CUR-039": { courseId: "CUR-039", family: "emprendimiento", eyebrow: "Emprendimiento creativo", primaryBenefit: "Elabora piezas en resina listas para comercializar.", coverAlt: "Piezas decorativas en resina terminadas.", coverStatus: "pending" },
-  "CUR-040": { courseId: "CUR-040", family: "cosmetica-artesanal", eyebrow: "Cosmética capilar", primaryBenefit: "Formula productos capilares artesanales.", coverAlt: "Elaboración de productos capilares con materias primas.", coverStatus: "pending" },
+  "CUR-032": { courseId: "CUR-032", family: "terapias-complementarias", eyebrow: "Vendaje neuromuscular", primaryBenefit: "Aplica vendaje neuromuscular en pacientes postoperatorios y cicatrices.", coverAlt: "Aplicación de vendaje neuromuscular sobre una cicatriz.", coverStatus: "provisional" },
+  "CUR-033": { courseId: "CUR-033", family: "masoterapia", eyebrow: "Masaje deportivo", primaryBenefit: "Domina el masaje deportivo y la ventosaterapia.", coverAlt: "Masaje deportivo combinado con ventosaterapia.", coverStatus: "provisional" },
+  "CUR-034": { courseId: "CUR-034", family: "facial-cosmetologia", eyebrow: "Lifting facial", primaryBenefit: "Realiza lifting facial con maderoterapia.", coverAlt: "Lifting facial con instrumentos de maderoterapia.", coverStatus: "provisional" },
+  "CUR-035": { courseId: "CUR-035", family: "drenaje-postoperatorio", eyebrow: "Postoperatorio estético", primaryBenefit: "Aplica aparatología en pacientes postoperatorios.", coverAlt: "Aparatología aplicada en cuidado postoperatorio.", coverStatus: "provisional" },
+  "CUR-036": { courseId: "CUR-036", family: "estetica-aparatologia", eyebrow: "Aparatología terapéutica", primaryBenefit: "Integra aparatología en el masaje terapéutico.", coverAlt: "Aparatología aplicada al masaje terapéutico.", coverStatus: "pending", coverReview: "requires-regeneration" },
+  "CUR-037": { courseId: "CUR-037", family: "cosmetica-artesanal", eyebrow: "Cosmética artesanal", primaryBenefit: "Formula y elabora cremas cosméticas.", coverAlt: "Elaboración de cremas cosméticas con materias primas.", coverStatus: "pending", coverReview: "requires-regeneration" },
+  "CUR-038": { courseId: "CUR-038", family: "cosmetica-artesanal", eyebrow: "Cosmética artesanal", primaryBenefit: "Crea exfoliantes, sales de baño y bombas de baño.", coverAlt: "Exfoliantes, sales y bombas de baño artesanales.", coverStatus: "pending", coverReview: "requires-regeneration" },
+  "CUR-039": { courseId: "CUR-039", family: "emprendimiento", eyebrow: "Emprendimiento creativo", primaryBenefit: "Elabora piezas en resina listas para comercializar.", coverAlt: "Piezas decorativas en resina terminadas.", coverStatus: "pending", coverReview: "requires-regeneration" },
+  "CUR-040": { courseId: "CUR-040", family: "cosmetica-artesanal", eyebrow: "Cosmética capilar", primaryBenefit: "Formula productos capilares artesanales.", coverAlt: "Elaboración de productos capilares con materias primas.", coverStatus: "pending", coverReview: "requires-regeneration" },
 };
 
 export function getCourseVisualIdentity(courseId: string): CourseVisualIdentity | undefined {

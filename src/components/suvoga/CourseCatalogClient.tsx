@@ -5,6 +5,7 @@ import Link from "next/link";
 import { motion, type Variants } from "framer-motion";
 import { CalendarDays, GraduationCap, Sparkles, Users } from "lucide-react";
 import { suvogaCourses } from "@/data/courses";
+import { localCourseCoverPath } from "@/lib/course-presentation";
 import { InscriptionModal } from "@/components/suvoga/InscriptionModal";
 
 import { useReducedMotion } from "framer-motion";
@@ -136,9 +137,7 @@ export function CourseCatalogClient() {
       >
         {courses.map((course) => {
           const Icon = typeIcon(course.tipo);
-          const courseIdNum = parseInt(course.idServicio.replace("CUR-", ""), 10);
-          const ext = (!isNaN(courseIdNum) && courseIdNum >= 18 && courseIdNum <= 25) ? "svg" : "png";
-          const cardImageUrl = course.imagen_url || `/images/courses/${course.idServicio.toLowerCase()}.${ext}`;
+          const cardImageUrl = course.imagen_url || localCourseCoverPath(course.idServicio);
           const courseHref = `/curso/${course.slug || course.idServicio}`;
           const hasPublicPrice = course.precioTotal > 0;
 

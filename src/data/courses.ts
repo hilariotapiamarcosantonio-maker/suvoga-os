@@ -6,21 +6,13 @@ import {
   publicCourseCatalog,
   type CourseRecord,
 } from "./courses/course-index";
+import { localCourseCoverPath } from "@/lib/course-presentation";
 
 export const genericCourseDescription =
   "Programa formativo de bienestar y tecnica aplicada, creado para desarrollar habilidades profesionales con acompanamiento cercano.";
 
 function imageForCourse(sourceId: string) {
-  const idNumber = Number(sourceId.replace("CUR-", ""));
-  if (idNumber >= 18 && idNumber <= 25) {
-    return `/images/courses/${sourceId.toLowerCase()}.svg`;
-  }
-
-  if (idNumber > 25) {
-    return "/images/courses/cur-025.svg";
-  }
-
-  return `/images/courses/${sourceId.toLowerCase()}.png`;
+  return localCourseCoverPath(sourceId);
 }
 
 export function courseRecordToSuvogaServicio(

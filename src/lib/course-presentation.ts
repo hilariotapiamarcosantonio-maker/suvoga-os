@@ -1,5 +1,12 @@
 import type { SuvogaServicio } from "@/lib/crm-data/get-suvoga-data";
 
+/** Single source of truth for local course-cover filenames. */
+export function localCourseCoverPath(courseId: string): string {
+  const normalized = courseId.trim().toUpperCase();
+  const match = /^CUR-(\d{3})$/.exec(normalized);
+  return match ? `/images/courses/cur-${match[1]}.png` : "";
+}
+
 /** Format a number as Dominican Peso currency. */
 export function formatDop(value: number) {
   return new Intl.NumberFormat("es-DO", {
@@ -112,10 +119,7 @@ export function durationBucket(course: SuvogaServicio): DurationBucket {
 /** Resolve the hero/card image for a course. */
 export function courseImage(course: SuvogaServicio) {
   if (course.imagen_url) return course.imagen_url;
-  const idNum = Number((course.sourceId || course.idServicio).replace("CUR-", ""));
-  if (idNum >= 18 && idNum <= 25) return `/images/courses/cur-${String(idNum).padStart(3, "0")}.svg`;
-  if (idNum > 25) return "/images/courses/cur-025.svg";
-  return `/images/courses/cur-${String(idNum).padStart(3, "0")}.png`;
+  return localCourseCoverPath(course.sourceId || course.idServicio);
 }
 
 export function courseHref(course: Pick<SuvogaServicio, "slug" | "idServicio">) {
