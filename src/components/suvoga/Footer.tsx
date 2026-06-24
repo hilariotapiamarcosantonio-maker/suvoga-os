@@ -61,7 +61,7 @@ export function Footer() {
           <div className="space-y-4">
             <h4 className="text-xs font-semibold uppercase tracking-widest text-[#D4AF37]">La academia</h4>
             <p className="text-xs leading-relaxed text-[#EAE2D0]">
-              Formación profesional en masoterapia, estética y bienestar. Los programas son
+              Formación técnica y talleres especializados. Los programas son
               de cupos reducidos (máximo 12 estudiantes) y las admisiones se confirman con la
               reserva del anticipo correspondiente.
             </p>

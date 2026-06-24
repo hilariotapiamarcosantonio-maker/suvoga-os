@@ -1,11 +1,11 @@
 export const brandingConfig = {
-  logoText: "SuVoGa Academia",
+  logoText: "SuVoGa Escuela y Centro de Masajes",
   isoType: "leaf",
-  productName: "SuVoGa Academia",
+  productName: "SuVoGa Escuela y Centro de Masajes",
   parentBrand: "SuVoGa",
   workspaceName: "DB Cursos",
   navigationTagline: "Masoterapia · Estética · Bienestar",
-  tagline: "Formación profesional en masoterapia, estética y bienestar.",
+  tagline: "Formación técnica y talleres especializados.",
   description:
     "Infraestructura operativa para organizar catalogo, pacientes, inscripciones y anticipos.",
   colors: {

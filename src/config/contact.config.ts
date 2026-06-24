@@ -3,7 +3,7 @@ export const contactConfig = {
   whatsappNumber: "18298389185",
   email: "asnamatem@gmail.com",
   defaultWhatsAppMessage:
-    "Hola, deseo recibir orientación sobre los programas de SuVoGa Academia.",
+    "Hola, deseo recibir orientación sobre los programas de SuVoGa Escuela y Centro de Masajes.",
   location: "Santo Domingo, República Dominicana",
   hours: "Lunes a Sábado: 9:00 AM - 6:00 PM (Hora Local)",
   social: {

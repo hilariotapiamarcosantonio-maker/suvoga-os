@@ -46,8 +46,8 @@ export default function CoursesPage({ searchParams }: CoursesPageProps) {
             Todos nuestros cursos
           </h1>
           <p className="mt-5 max-w-2xl text-base leading-8 text-[#EAE2D0]">
-            {suvogaCourses.length} programas de formación profesional en masoterapia,
-            estética y bienestar. Busca, filtra y encuentra el camino ideal para ti.
+            {suvogaCourses.length} programas de formación técnica y talleres especializados.
+            Busca, filtra y encuentra el camino ideal para ti.
           </p>
         </div>
       </section>

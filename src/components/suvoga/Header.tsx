@@ -98,12 +98,12 @@ export function Header() {
           <span className="inline-flex h-9 w-9 md:h-11 md:w-11 items-center justify-center rounded-xl md:rounded-2xl border border-[#D4AF37]/30 bg-white text-[#0D3B22] shadow-sm shadow-[#0D3B22]/5 transition-colors group-hover:bg-[#F7F1E7]">
             <Leaf className="h-4 w-4 md:h-5 md:w-5" />
           </span>
-          <span className="flex flex-col leading-none">
-            <span className="suvoga-serif text-lg md:text-2xl font-semibold tracking-normal text-[#0D3B22]">
-              {brand.productName}
+          <span className="flex flex-col leading-tight">
+            <span className="suvoga-serif text-lg md:text-2xl font-bold tracking-normal text-[#0D3B22]">
+              SuVoGa
             </span>
-            <span className="mt-0.5 md:mt-1 text-[9px] md:text-[11px] font-semibold uppercase tracking-[0.18em] text-[#8A7D69]">
-              {brand.navigationTagline}
+            <span className="text-[9px] md:text-[11px] font-semibold uppercase tracking-[0.05em] text-[#8A7D69]">
+              Escuela y Centro de Masajes
             </span>
           </span>
         </Link>
@@ -174,12 +174,12 @@ export function Header() {
                 <span className="inline-flex h-9 w-9 items-center justify-center rounded-xl border border-white/20 bg-white/10 text-white shadow-sm transition-colors">
                   <Leaf className="h-4 w-4" />
                 </span>
-                <span className="flex flex-col leading-none">
+                <span className="flex flex-col leading-tight">
                   <span className="suvoga-serif text-lg font-semibold tracking-normal text-white">
-                    {brand.productName}
+                    SuVoGa
                   </span>
-                  <span className="mt-0.5 text-[9px] font-semibold uppercase tracking-[0.18em] text-[#D4AF37]">
-                    {brand.navigationTagline}
+                  <span className="mt-0.5 text-[9px] font-semibold uppercase tracking-[0.05em] text-[#D4AF37]">
+                    Escuela y Centro de Masajes
                   </span>
                 </span>
               </Link>

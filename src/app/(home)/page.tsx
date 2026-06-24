@@ -80,7 +80,7 @@ export default function HomePage() {
               Forma tus manos. <span className="text-[#E9Cf7c]">Transforma vidas.</span>
             </h1>
             <p className="mt-6 max-w-xl text-base leading-8 text-[#EAE2D0] sm:text-lg">
-              Formación profesional en masoterapia, estética y bienestar: una
+              Formación técnica y talleres especializados: una
               experiencia educativa serena, técnica y profundamente humana.
             </p>
             <div className="mt-9 flex flex-col gap-3 sm:flex-row">
@@ -116,7 +116,7 @@ export default function HomePage() {
             <div className="overflow-hidden rounded-[2rem] border border-[#D4AF37]/35 bg-[#0D3B22]/40 p-2.5 shadow-2xl shadow-black/45">
               <img
                 src="/images/courses/cur-001.png"
-                alt="Formación profesional en SuVoGa Academia"
+                alt="Formación profesional en SuVoGa Escuela y Centro de Masajes"
                 className="aspect-[4/5] w-full rounded-[1.75rem] object-cover"
               />
             </div>
@@ -135,7 +135,7 @@ export default function HomePage() {
             Una academia, un oficio con propósito
           </p>
           <p className="suvoga-serif mt-5 text-2xl font-medium leading-snug text-[#0D3B22] sm:text-3xl lg:text-4xl">
-            En SuVoGa Academia formamos terapeutas y profesionales del bienestar
+            En SuVoGa Escuela y Centro de Masajes formamos terapeutas y profesionales del bienestar
             con técnica rigurosa, sensibilidad humana y la confianza para ejercer
             con excelencia.
           </p>
