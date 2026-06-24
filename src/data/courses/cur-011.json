@@ -28,19 +28,38 @@
       "pendingOwnerReview": false
     },
     "pricing": {
-      "publicPrice": null,
-      "memberPrice": null,
+      "publicPrice": {
+        "amount": 3500,
+        "currency": "DOP",
+        "raw": "Público general: RD$3,500",
+        "pendingOwnerReview": false
+      },
+      "memberPrice": {
+        "amount": 3000,
+        "currency": "DOP",
+        "raw": "Miembros ASNAMATEM: RD$3,000",
+        "pendingOwnerReview": false
+      },
       "reservation": {
         "amount": 1000,
         "currency": "DOP",
-        "raw": "Regla global de reservación individual: todos los demás son 1,000 pesos dominicanos.",
+        "raw": "La reservación se descuenta del precio total",
         "pendingOwnerReview": false
       },
       "paymentPlan": [
-        "Regla global de reservación individual: todos los demás son 1,000 pesos dominicanos."
+        "Público general:",
+        "Reservación: RD$1,000",
+        "Restante el día de la clase: RD$2,500",
+        "Miembros ASNAMATEM:",
+        "Reservación: RD$1,000",
+        "Restante el día de la clase: RD$2,000"
       ],
-      "rawLines": [],
-      "pendingOwnerReview": true
+      "rawLines": [
+        "Público general: RD$3,500",
+        "Miembros ASNAMATEM: RD$3,000",
+        "Anticipo de reservación: RD$1,000"
+      ],
+      "pendingOwnerReview": false
     },
     "schedule": {
       "dateText": "Próxima fecha por anunciar",
