@@ -11,11 +11,11 @@ Fuentes de verdad revisadas:
 
 ## Veredicto
 
-La fase **no se declara terminada**.
+La fase visual de los **38 cursos publicados queda terminada**. Las dos excepciones editoriales continúan fuera del catálogo público.
 
 - `CUR-009` a `CUR-035`, excluyendo `CUR-020` y `CUR-031`, tienen una portada específica y suficientemente relacionada con el curso para continuar como `provisional`.
 - `CUR-020` y `CUR-031` permanecen en `draft`, con `coverStatus: "pending"`, sin PNG propio y con fallback editorial.
-- `CUR-036` a `CUR-040` son composiciones abstractas genéricas. No representan de forma clara el curso y quedan con `coverStatus: "pending"` y `coverReview: "requires-regeneration"`. La interfaz muestra fallback editorial en vez de estos archivos.
+- `CUR-036` a `CUR-040` recibieron nuevas portadas figurativas, específicas para cada curso, y pasan de `pending`/`requires-regeneration` a `coverStatus: "provisional"`.
 - Ninguna portada fue cambiada a `definitive`.
 - Los SVG antiguos se conservaron sin modificaciones y ya no son la ruta activa de portada.
 
@@ -50,21 +50,21 @@ La fase **no se declara terminada**.
 | CUR-033 | Masaje deportivo y ventosaterapia | Maniobra deportiva y copas visibles en uso. | Correcta, `provisional` |
 | CUR-034 | Lifting facial con maderoterapia | Instrumentos pequeños de madera y técnica facial supervisada. | Correcta, `provisional` |
 | CUR-035 | Aparatología en pacientes postoperatorios | Clase con equipo estético, paciente y estudiantes observando. | Correcta, `provisional` |
-| CUR-036 | Aparatología aplicada al masaje terapéutico | Líneas abstractas sobre fondo verde; no muestra masaje, equipo ni formación. | **Requiere regeneración**, `pending` |
-| CUR-037 | Cremas cosméticas | Círculos abstractos; no muestra formulación, utensilios ni cremas. | **Requiere regeneración**, `pending` |
-| CUR-038 | Exfoliantes, sales y bombas de baño | Puntos y líneas abstractas; no muestra producto ni proceso. | **Requiere regeneración**, `pending` |
-| CUR-039 | Piezas en resina | Hexágonos abstractos; no muestra resina, moldes ni piezas. | **Requiere regeneración**, `pending` |
-| CUR-040 | Productos capilares | Gotas abstractas; no muestra formulación ni productos capilares. | **Requiere regeneración**, `pending` |
+| CUR-036 | Aparatología aplicada al masaje terapéutico | Demostración de aparatología sobre masaje en camilla, con estudiantes observando. | Correcta, `provisional` |
+| CUR-037 | Cremas cosméticas | Formulación guiada de crema con balanzas, probetas, aceites y materias primas. | Correcta, `provisional` |
+| CUR-038 | Exfoliantes, sales y bombas de baño | Taller grupal con mezclas, sales, ingredientes botánicos y bombas terminadas. | Correcta, `provisional` |
+| CUR-039 | Piezas en resina | Elaboración protegida con moldes, vertido de resina y piezas botánicas terminadas. | Correcta, `provisional` |
+| CUR-040 | Productos capilares | Formulación guiada con aloe, plantas, aceites, balanza y mezcla de producto. | Correcta, `provisional` |
 
 ## Duplicados, cruces y archivos
 
 - Los 30 PNG inspeccionados abren correctamente y tienen dimensiones válidas.
 - Los 30 PNG tienen SHA-256 diferente: no hay duplicados binarios.
-- No se detectaron duplicados visuales ni imágenes cruzadas entre `CUR-009` y `CUR-035`.
+- No se detectaron duplicados visuales ni imágenes cruzadas entre los 30 cursos con PNG propio de `CUR-009` a `CUR-040`.
 - `CUR-009` a `CUR-016` ya reflejan la reasignación indicada por la auditoría del 22 de junio.
-- Los cinco PNG abstractos `CUR-036` a `CUR-040` existen en el árbol de trabajo, pero fueron descalificados como portadas y no se renderizan mientras permanezcan `pending`.
+- Los cinco PNG nuevos `CUR-036` a `CUR-040` abren correctamente, miden `1024 × 1024`, tienen SHA-256 distintos y se renderizan mediante la ruta local esperada.
 - Los SVG `cur-018.svg` a `cur-025.svg` siguen presentes. Comparten el placeholder histórico, pero no se eliminaron ni se usan como portada activa.
-- No se encontraron archivos rotos. Las imágenes válidas reportaron tamaño natural `1024 × 1024`; las composiciones abstractas, `1600 × 1200`.
+- No se encontraron archivos rotos. Las imágenes válidas reportaron tamaño natural `1024 × 1024`.
 
 ## Recorte y QA responsive
 
@@ -80,7 +80,7 @@ Resultado:
 - El sujeto, equipo o proceso principal permanece visible en tarjetas y fichas.
 - No se requieren ajustes de `focalPosition`.
 - En `CUR-017` la tarjeta recorta parte del margen inferior del equipo, pero conserva instructora, máquina y cabezales; no afecta la lectura del curso.
-- Los fallbacks de `CUR-036` y `CUR-040` se verificaron en tarjeta y ficha, en móvil y escritorio, sin intentar cargar los PNG rechazados.
+- `CUR-036` a `CUR-040` se verificaron en tarjeta y ficha a **320, 390, 768 y 1440 px**. Las tarjetas mantienen recorte `16:10`; las fichas, `4:3`; todas usan `object-fit: cover` y posición central sin perder el proceso o producto principal.
 
 Rutas verificadas directamente:
 
@@ -89,8 +89,11 @@ Rutas verificadas directamente:
 - `/curso/taller-de-manejo-profesional-de-maquina-g5` (`CUR-017`)
 - `/curso/curso-de-cosmetologia-profesional` (`CUR-025`)
 - `/curso/taller-de-aparatologia-aplicada-a-pacientes-postoperatorios` (`CUR-035`)
-- `/curso/taller-de-aparatologia-aplicada-al-masaje-terapeutico` (`CUR-036`, fallback)
-- `/curso/taller-de-elaboracion-de-productos-capilares` (`CUR-040`, fallback)
+- `/curso/taller-de-aparatologia-aplicada-al-masaje-terapeutico` (`CUR-036`)
+- `/curso/taller-de-elaboracion-de-cremas-cosmeticas` (`CUR-037`)
+- `/curso/taller-de-elaboracion-de-exfoliantes-sales-de-bano-y-bombas-de-bano` (`CUR-038`)
+- `/curso/taller-de-elaboracion-de-piezas-en-resina` (`CUR-039`)
+- `/curso/taller-de-elaboracion-de-productos-capilares` (`CUR-040`)
 - `/curso/CUR-020` y `/curso/CUR-031` (respuesta pública “Curso no encontrado” por permanecer en `draft`)
 
 ## Estado de CUR-020 y CUR-031
@@ -122,12 +125,14 @@ La ruta local se resuelve mediante `localCourseCoverPath` en `src/lib/course-pre
 
 ## Decisión sobre CUR-036 a CUR-040
 
-Las cinco composiciones no alcanzan el criterio mínimo de correspondencia curso ↔ imagen. Se consideran placeholders abstractos genéricos y **requieren regeneración** con escenas o procesos reconocibles según el brief del reporte del 22 de junio.
+Las cinco nuevas composiciones alcanzan el criterio mínimo de correspondencia curso ↔ imagen y quedan integradas como portadas `provisional`. Ninguna se declara `definitive` sin aprobación explícita de la propietaria.
 
-Hasta que existan nuevas imágenes y sean aprobadas:
+1. `coverReview: "requires-regeneration"` se elimina de las cinco identidades;
+2. el sitio usa `cur-036.png` a `cur-040.png` tanto en catálogo como en ficha;
+3. el recorte central conserva sujetos, herramientas y productos en los cuatro anchos solicitados;
+4. los SVG antiguos permanecen en disco y no fueron eliminados;
+5. `CUR-020` y `CUR-031` siguen en `pending`, sin portada propia y fuera del catálogo público.
 
-1. permanecen `pending`;
-2. el sitio usa el fallback editorial por familia;
-3. no se declaran provisionales utilizables;
-4. no se declaran definitivas;
-5. la fase de portadas permanece abierta.
+## Separación del trabajo textual previo
+
+Antes de integrar las portadas se revisó el árbol de trabajo. Los cambios textuales anteriores de `scripts/test-content-filter.ts`, `src/app/curso/[id]/page.tsx` y `src/lib/course-presentation.ts`, además de la documentación no rastreada ajena a este QA, se mantuvieron fuera del commit visual. El commit de esta fase contiene únicamente las cinco portadas, el manifiesto visual y este documento de QA.

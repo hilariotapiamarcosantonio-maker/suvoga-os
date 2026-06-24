@@ -15,8 +15,6 @@ import type { CourseVisualFamily } from "./course-visual-families";
 //      "invalid"     → a provided URL failed validation and must not render.
 //  - Course-specific local PNGs approved for continued review are
 //    "provisional". CUR-020/CUR-031 remain "pending" by editorial decision.
-//    CUR-036..CUR-040 also remain "pending" because their current abstract
-//    compositions require regeneration; the editorial fallback renders instead.
 //  - Legacy SVG placeholders remain on disk for now, but are not selected here.
 //    No cover becomes "definitive" without explicit owner approval.
 
@@ -80,11 +78,11 @@ export const COURSE_VISUAL_IDENTITIES: Record<string, CourseVisualIdentity> = {
   "CUR-033": { courseId: "CUR-033", family: "masoterapia", eyebrow: "Masaje deportivo", primaryBenefit: "Domina el masaje deportivo y la ventosaterapia.", coverAlt: "Masaje deportivo combinado con ventosaterapia.", coverStatus: "provisional" },
   "CUR-034": { courseId: "CUR-034", family: "facial-cosmetologia", eyebrow: "Lifting facial", primaryBenefit: "Realiza lifting facial con maderoterapia.", coverAlt: "Lifting facial con instrumentos de maderoterapia.", coverStatus: "provisional" },
   "CUR-035": { courseId: "CUR-035", family: "drenaje-postoperatorio", eyebrow: "Postoperatorio estético", primaryBenefit: "Aplica aparatología en pacientes postoperatorios.", coverAlt: "Aparatología aplicada en cuidado postoperatorio.", coverStatus: "provisional" },
-  "CUR-036": { courseId: "CUR-036", family: "estetica-aparatologia", eyebrow: "Aparatología terapéutica", primaryBenefit: "Integra aparatología en el masaje terapéutico.", coverAlt: "Aparatología aplicada al masaje terapéutico.", coverStatus: "pending", coverReview: "requires-regeneration" },
-  "CUR-037": { courseId: "CUR-037", family: "cosmetica-artesanal", eyebrow: "Cosmética artesanal", primaryBenefit: "Formula y elabora cremas cosméticas.", coverAlt: "Elaboración de cremas cosméticas con materias primas.", coverStatus: "pending", coverReview: "requires-regeneration" },
-  "CUR-038": { courseId: "CUR-038", family: "cosmetica-artesanal", eyebrow: "Cosmética artesanal", primaryBenefit: "Crea exfoliantes, sales de baño y bombas de baño.", coverAlt: "Exfoliantes, sales y bombas de baño artesanales.", coverStatus: "pending", coverReview: "requires-regeneration" },
-  "CUR-039": { courseId: "CUR-039", family: "emprendimiento", eyebrow: "Emprendimiento creativo", primaryBenefit: "Elabora piezas en resina listas para comercializar.", coverAlt: "Piezas decorativas en resina terminadas.", coverStatus: "pending", coverReview: "requires-regeneration" },
-  "CUR-040": { courseId: "CUR-040", family: "cosmetica-artesanal", eyebrow: "Cosmética capilar", primaryBenefit: "Formula productos capilares artesanales.", coverAlt: "Elaboración de productos capilares con materias primas.", coverStatus: "pending", coverReview: "requires-regeneration" },
+  "CUR-036": { courseId: "CUR-036", family: "estetica-aparatologia", eyebrow: "Aparatología terapéutica", primaryBenefit: "Integra aparatología en el masaje terapéutico.", coverAlt: "Aparatología aplicada al masaje terapéutico.", coverStatus: "provisional" },
+  "CUR-037": { courseId: "CUR-037", family: "cosmetica-artesanal", eyebrow: "Cosmética artesanal", primaryBenefit: "Formula y elabora cremas cosméticas.", coverAlt: "Elaboración de cremas cosméticas con materias primas.", coverStatus: "provisional" },
+  "CUR-038": { courseId: "CUR-038", family: "cosmetica-artesanal", eyebrow: "Cosmética artesanal", primaryBenefit: "Crea exfoliantes, sales de baño y bombas de baño.", coverAlt: "Exfoliantes, sales y bombas de baño artesanales.", coverStatus: "provisional" },
+  "CUR-039": { courseId: "CUR-039", family: "emprendimiento", eyebrow: "Emprendimiento creativo", primaryBenefit: "Elabora piezas en resina listas para comercializar.", coverAlt: "Piezas decorativas en resina terminadas.", coverStatus: "provisional" },
+  "CUR-040": { courseId: "CUR-040", family: "cosmetica-artesanal", eyebrow: "Cosmética capilar", primaryBenefit: "Formula productos capilares artesanales.", coverAlt: "Elaboración de productos capilares con materias primas.", coverStatus: "provisional" },
 };
 
 export function getCourseVisualIdentity(courseId: string): CourseVisualIdentity | undefined {
