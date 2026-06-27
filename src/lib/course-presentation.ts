@@ -293,6 +293,7 @@ const ADMIN_HEADER = /^(cur-\d{3}\b|categor[ií]a actual\s*:?$|beneficios del di
 const PRICING_LANGUAGE = /(rd\$|us\$\s?\d|\$\s?\d{2,}|precio\s*:|inversi[oó]n\s*:?\s*(rd\$|\$|\d)|anticipo\s*:|reservaci[oó]n\s*:|miembros?\s+(de\s+)?asnama(s)?tem\s*:?\s*(rd\$|\$|\d))/i;
 const PROMOTIONAL_LANGUAGE = /(transforma ingredientes|experiencia(s)? exclusiva|oportunidad de (emprender|negocio)|aumenta tus ingresos|experiencia transformadora|beneficios que te destacan|formando profesionales)/i;
 const AVAL_CLAIM = /\b(avalad[oa]\s+por|aval(es)?\s+de|certificaci[oó]n\s+avalada)\b/i;
+const CERTIFICATE_CLAIM = /^\s*(certificado|certificaci[oó]n)\b/i;
 
 /**
  * Detect a line that belongs to authorship, the facilitator's identity,
@@ -313,6 +314,13 @@ export function isAuthorityOrPricingNoise(
   if (ADMIN_HEADER.test(text)) return true;
   if (context !== "pricing" && PRICING_LANGUAGE.test(text)) return true;
   if (PROMOTIONAL_LANGUAGE.test(text)) return true;
+  if (
+    CERTIFICATE_CLAIM.test(text) &&
+    context !== "certifications" &&
+    context !== "endorsements"
+  ) {
+    return true;
+  }
   if (
     AVAL_CLAIM.test(text) &&
     context !== "certifications" &&
@@ -359,6 +367,28 @@ export function cleanList(items?: string[], context: CourseListContext = "defaul
   }
 
   return out;
+}
+
+/**
+ * Remove lines already claimed by a more appropriate presentation section.
+ * Comparison is intentionally exact after display normalization: semantic
+ * similarities are not removed automatically because they require editorial
+ * validation. Source JSON and `sourceRaw` remain untouched.
+ */
+export function withoutExactDuplicates(items: string[], ...claimedLists: string[][]) {
+  const claimed = new Set(
+    claimedLists.flat().map((item) => normalizeForCompare(cleanText(item))).filter(Boolean)
+  );
+  return items.filter((item) => !claimed.has(normalizeForCompare(cleanText(item))));
+}
+
+/** True when two non-empty lists contain the same normalized lines in order. */
+export function areEquivalentLists(left: string[], right: string[]) {
+  if (!left.length || left.length !== right.length) return false;
+  return left.every(
+    (item, index) =>
+      normalizeForCompare(cleanText(item)) === normalizeForCompare(cleanText(right[index]))
+  );
 }
 
 // ---------------------------------------------------------------------------

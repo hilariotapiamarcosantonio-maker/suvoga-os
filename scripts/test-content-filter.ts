@@ -10,9 +10,11 @@ import { readFileSync, readdirSync } from "node:fs";
 import { join, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
 import {
+  areEquivalentLists,
   cleanList,
   isAuthorityOrPricingNoise,
   parseSyllabusModules,
+  withoutExactDuplicates,
 } from "../src/lib/course-presentation.ts";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
@@ -120,6 +122,27 @@ for (const sourceId of ["CUR-031", "CUR-037", "CUR-038", "CUR-039", "CUR-040"]) 
     cleanList(readCourse(sourceId).publicCopy.materials, "materials"),
     1
   );
+}
+
+// Exact cross-field duplicates are removed only in presentation. Semantic
+// near-duplicates are deliberately preserved for owner validation.
+const exactPreferred = ["Manual digital ilustrado"];
+const exactMixed = ["Manual digital ilustrado", "Guía de trabajo"];
+const exactResult = withoutExactDuplicates(exactMixed, exactPreferred);
+checks += 1;
+if (exactResult.length !== 1 || exactResult[0] !== "Guía de trabajo") {
+  failures += 1;
+  console.error("FAIL: exact cross-field duplicate was not removed predictably.");
+} else {
+  console.log("OK   exact cross-field duplicate removed in presentation.");
+}
+
+checks += 1;
+if (!areEquivalentLists(["Indicaciones"], ["indicaciones"])) {
+  failures += 1;
+  console.error("FAIL: equivalent duplicate lists were not recognized.");
+} else {
+  console.log("OK   equivalent duplicate lists recognized.");
 }
 
 // Sanity check: a genuine certification/endorsement claim must still render
