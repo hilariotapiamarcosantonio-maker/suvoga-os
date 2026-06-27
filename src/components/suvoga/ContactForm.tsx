@@ -1,6 +1,7 @@
 "use client";
 
 import { FormEvent, useMemo, useState } from "react";
+import Link from "next/link";
 import { Loader2, Send } from "lucide-react";
 import { contactInfo } from "@/data/contact";
 
@@ -52,14 +53,17 @@ export function ContactForm() {
   const [isLoading, setIsLoading] = useState(false);
   const [feedback, setFeedback] = useState("");
   const [status, setStatus] = useState<"idle" | "success" | "partial" | "error">("idle");
+  const [consentPrivacyTerms, setConsentPrivacyTerms] = useState(false);
+  const [consentPromotional, setConsentPromotional] = useState(false);
 
   const canSubmit = useMemo(
     () =>
       form.nombre.trim() &&
       form.mensaje.trim() &&
       (form.telefono.trim() || form.correo.trim()) &&
+      consentPrivacyTerms &&
       !isLoading,
-    [form, isLoading]
+    [form, consentPrivacyTerms, isLoading]
   );
 
   function updateField(field: keyof FormState, value: string) {
@@ -90,6 +94,9 @@ export function ContactForm() {
           message: form.mensaje,
           website: form.website,
           originPath: `${window.location.pathname}${window.location.search}`,
+          consentPrivacyTerms,
+          consentPromotional,
+          policyVersion: "2026-06",
         }),
       });
 
@@ -102,6 +109,8 @@ export function ContactForm() {
       setStatus(notificationStatus === "sent" ? "success" : "partial");
       setFeedback(payload.message || "Solicitud registrada.");
       setForm(initialForm);
+      setConsentPrivacyTerms(false);
+      setConsentPromotional(false);
       setSubmissionId(createSubmissionId());
     } catch (caughtError) {
       setStatus("error");
@@ -206,6 +215,44 @@ export function ContactForm() {
           rows={4}
           className="w-full rounded-2xl border border-[#D4AF37]/35 bg-white px-4 py-3 text-sm text-[#0D3B22] outline-none transition-all placeholder:text-[#9A927F] focus-visible:border-[#0D3B22] focus-visible:ring-2 focus-visible:ring-[#0D3B22]/70"
         />
+      </div>
+
+      <div className="space-y-3 py-2">
+        <label className="flex items-start gap-3 cursor-pointer select-none">
+          <input
+            type="checkbox"
+            checked={consentPrivacyTerms}
+            onChange={(e) => {
+              setConsentPrivacyTerms(e.target.checked);
+              setFeedback("");
+              setStatus("idle");
+            }}
+            className="mt-1 h-4 w-4 rounded border-[#D4AF37]/35 text-[#0D3B22] focus:ring-[#0D3B22]/70"
+          />
+          <span className="text-xs leading-5 text-[#4E6658]">
+            He leído la{" "}
+            <Link href="/politica-de-privacidad" target="_blank" className="font-semibold text-[#0D3B22] underline hover:text-[#145332]">
+              Política de Privacidad
+            </Link>{" "}
+            y acepto los{" "}
+            <Link href="/terminos-y-condiciones" target="_blank" className="font-semibold text-[#0D3B22] underline hover:text-[#145332]">
+              Términos y Condiciones
+            </Link>
+            . <span className="text-red-500">*</span>
+          </span>
+        </label>
+
+        <label className="flex items-start gap-3 cursor-pointer select-none">
+          <input
+            type="checkbox"
+            checked={consentPromotional}
+            onChange={(e) => setConsentPromotional(e.target.checked)}
+            className="mt-1 h-4 w-4 rounded border-[#D4AF37]/35 text-[#0D3B22] focus:ring-[#0D3B22]/70"
+          />
+          <span className="text-xs leading-5 text-[#4E6658]">
+            Acepto recibir novedades y promociones por correo o WhatsApp. <span className="text-[#8D7530] text-[10px] font-semibold">(Opcional)</span>
+          </span>
+        </label>
       </div>
 
       <button

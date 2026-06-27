@@ -72,9 +72,28 @@ export function Footer() {
         </div>
 
         <div className="mt-12 flex flex-col items-center justify-between gap-4 border-t border-white/10 pt-8 text-[10px] text-[#8A7D69] sm:flex-row">
-          <p>
-            &copy; {new Date().getFullYear()} {brand.productName}. Todos los derechos reservados.
-          </p>
+          <div className="space-y-3 text-center sm:text-left">
+            <p>
+              &copy; {new Date().getFullYear()} {brand.productName}. Todos los derechos reservados.
+            </p>
+            <div className="flex flex-wrap justify-center gap-x-4 gap-y-1.5 sm:justify-start">
+              <Link href="/politica-de-privacidad" className="hover:text-[#D4AF37] hover:underline">
+                Política de Privacidad
+              </Link>
+              <Link href="/politica-de-cookies" className="hover:text-[#D4AF37] hover:underline">
+                Política de Cookies
+              </Link>
+              <Link href="/terminos-y-condiciones" className="hover:text-[#D4AF37] hover:underline">
+                Términos y Condiciones
+              </Link>
+              <Link href="/politica-de-reservacion" className="hover:text-[#D4AF37] hover:underline">
+                Política de Reservación
+              </Link>
+              <Link href="/aviso-legal" className="hover:text-[#D4AF37] hover:underline">
+                Aviso Legal
+              </Link>
+            </div>
+          </div>
           <div className="flex flex-col items-center gap-3 text-center sm:items-end sm:text-right">
             {developerCredit.enabled ? (
               <p className="max-w-sm text-[10px] leading-relaxed text-[#A99C82]">

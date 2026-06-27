@@ -43,7 +43,7 @@ function clientIp(request: Request) {
 }
 
 function buildNote(inquiry: NormalizedInquiry) {
-  return [
+  const parts = [
     `Solicitud ${inquiry.requestId}`,
     `Tipo ${inquiry.type}`,
     `Correo ${inquiry.email || "no provisto"}`,
@@ -51,7 +51,16 @@ function buildNote(inquiry: NormalizedInquiry) {
     `Mensaje ${inquiry.message || "sin mensaje adicional"}`,
     `Origen ${inquiry.originPath || "no disponible"}`,
     `Fecha ${inquiry.createdAt}`,
-  ].join(" | ");
+  ];
+
+  if (inquiry.consentPrivacyTerms) {
+    parts.push(`Consentimiento Políticas: Aceptado (Versión: ${inquiry.policyVersion || "2026-06"})`);
+  }
+  if (inquiry.consentPromotional !== undefined) {
+    parts.push(`Consentimiento Promocional: ${inquiry.consentPromotional ? "Aceptado" : "Rechazado"}`);
+  }
+
+  return parts.join(" | ");
 }
 
 async function registerInquiry(inquiry: NormalizedInquiry): Promise<RegistrationResult> {

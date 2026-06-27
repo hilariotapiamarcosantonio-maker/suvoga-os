@@ -12,6 +12,11 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { path: "/comunidad", changeFrequency: "monthly" as const, priority: 0.7 },
     { path: "/contacto", changeFrequency: "monthly" as const, priority: 0.8 },
     { path: "/facilitadores", changeFrequency: "monthly" as const, priority: 0.7 },
+    { path: "/politica-de-privacidad", changeFrequency: "monthly" as const, priority: 0.4 },
+    { path: "/politica-de-cookies", changeFrequency: "monthly" as const, priority: 0.4 },
+    { path: "/terminos-y-condiciones", changeFrequency: "monthly" as const, priority: 0.4 },
+    { path: "/politica-de-reservacion", changeFrequency: "monthly" as const, priority: 0.4 },
+    { path: "/aviso-legal", changeFrequency: "monthly" as const, priority: 0.4 },
   ];
 
   return [

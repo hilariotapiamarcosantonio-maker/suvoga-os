@@ -19,6 +19,9 @@ export type NormalizedInquiry = {
   provincia: string;
   originPath: string;
   createdAt: string;
+  consentPrivacyTerms?: boolean;
+  consentPromotional?: boolean;
+  policyVersion?: string;
 };
 
 export type RegistrationResult = {

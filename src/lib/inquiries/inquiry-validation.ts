@@ -74,10 +74,17 @@ export function validateInquiryPayload(payload: unknown):
   const provincia = cleanText(data.provincia, MAX.provincia);
   const originPath = cleanText(data.originPath ?? data.origen, MAX.originPath);
 
+  const consentPrivacyTerms = Boolean(data.consentPrivacyTerms ?? data.acepto_politicas);
+  const consentPromotional = Boolean(data.consentPromotional ?? data.acepto_promociones);
+  const policyVersion = cleanText(data.policyVersion ?? data.version_politica, 40) || "2026-06";
+
   if (!name) errors.push({ field: "name", message: "Escribe tu nombre." });
   if (rawEmail && !email) errors.push({ field: "email", message: "Escribe un correo valido." });
   if (phone && !hasValidPhone(phone)) {
     errors.push({ field: "phone", message: "Escribe un WhatsApp valido." });
+  }
+  if (!consentPrivacyTerms) {
+    errors.push({ field: "consentPrivacyTerms", message: "Debes aceptar la Política de Privacidad y los Términos y Condiciones." });
   }
 
   if (type === "reservation") {
@@ -110,6 +117,9 @@ export function validateInquiryPayload(payload: unknown):
       provincia,
       originPath,
       createdAt: new Date().toISOString(),
+      consentPrivacyTerms,
+      consentPromotional,
+      policyVersion,
     },
   };
 }
