@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import Image from "next/image";
 import { notFound, permanentRedirect } from "next/navigation";
 import {
   ArrowLeft,
@@ -38,6 +39,7 @@ import { getCourseVisualIdentity } from "@/data/course-visual-identities";
 import { COURSE_VISUAL_FAMILIES } from "@/data/course-visual-families";
 import { brandingConfig } from "@/config/branding.config";
 import {
+  areEquivalentLists,
   courseDurationText,
   cleanList,
   cleanText,
@@ -47,6 +49,7 @@ import {
   formatDop,
   parseSyllabusModules,
   priceLabel,
+  withoutExactDuplicates,
   youTubeId,
 } from "@/lib/course-presentation";
 import { buildCourseWhatsAppMessage } from "@/lib/suvoga-contact";
@@ -131,12 +134,40 @@ export default function CoursePage({ params }: CoursePageProps) {
   const learn = pc.competencies?.length
     ? cleanList(pc.competencies, "competencies")
     : modules.slice(0, 8).map((m) => m.title);
-  const materials = cleanList(pc.materials, "materials");
-  const practices = cleanList(pc.practices, "benefits");
-  const indications = cleanList(pc.indications, "indications");
-  const contraindications = cleanList(pc.contraindications, "contraindications");
   const certifications = cleanList(pc.certifications, "certifications");
-  const endorsements = cleanList(pc.endorsements, "endorsements");
+  const endorsements = withoutExactDuplicates(
+    cleanList(pc.endorsements, "endorsements"),
+    certifications
+  );
+  const rawPractices = cleanList(pc.practices, "benefits");
+  const rawMaterials = cleanList(pc.materials, "materials");
+  const materials = withoutExactDuplicates(rawMaterials, learn, certifications, endorsements).filter(
+    (item) =>
+      !(
+        /^pr[aá]cticas? supervisadas?\.?$/i.test(item) &&
+        rawPractices.some(
+          (practice) =>
+            cleanText(practice).toLocaleLowerCase("es") ===
+            cleanText(item).toLocaleLowerCase("es")
+        )
+      )
+  );
+  const practices = withoutExactDuplicates(
+    rawPractices,
+    materials,
+    learn,
+    certifications,
+    endorsements
+  );
+  const rawIndications = cleanList(pc.indications, "indications");
+  const rawContraindications = cleanList(pc.contraindications, "contraindications");
+  const duplicateClinicalLists = areEquivalentLists(rawIndications, rawContraindications);
+  const indications = withoutExactDuplicates(rawIndications, profile, requirements);
+  // CUR-005/CUR-006 contain the same extracted block in both fields. Keep one
+  // presentation copy and leave the unresolved classification in the review matrix.
+  const contraindications = duplicateClinicalLists
+    ? []
+    : withoutExactDuplicates(rawContraindications, indications, profile, requirements);
   const facilitator = cleanText(pc.facilitator);
   const globalFacilitator = getFacilitatorForCourseRecord(record);
 
@@ -446,21 +477,36 @@ export default function CoursePage({ params }: CoursePageProps) {
                 {facilitator ? (
                   <div className="rounded-2xl border border-[#D4AF37]/25 bg-white p-5 shadow-sm">
                     <p className="text-xs font-semibold uppercase tracking-[0.14em] text-[#8D7530]">Facilitadora</p>
-                    {globalFacilitator ? (
-                      <>
-                        <Link
-                          href={`/facilitadores/${globalFacilitator.slug}`}
-                          className="suvoga-serif mt-2 inline-flex text-lg font-semibold text-[#0D3B22] underline decoration-[#D4AF37]/40 underline-offset-4 transition-colors hover:text-[#145332]"
-                        >
-                          {facilitator}
-                        </Link>
-                        <p className="mt-2 text-xs font-semibold uppercase tracking-[0.12em] text-[#8D7530]">
-                          {globalFacilitator.verified ? "Perfil verificado" : "Datos por confirmar"}
-                        </p>
-                      </>
-                    ) : (
-                      <p className="suvoga-serif mt-2 text-lg font-semibold text-[#0D3B22]">{facilitator}</p>
-                    )}
+                    <div className="mt-3 flex items-start gap-4">
+                      {globalFacilitator?.photoUrl && !globalFacilitator.provisionalPhoto ? (
+                        <span className="relative h-12 w-12 shrink-0 overflow-hidden rounded-xl border border-[#D4AF37]/25 bg-[#F6EFE2]">
+                          <Image
+                            src={globalFacilitator.photoUrl}
+                            alt={globalFacilitator.photoAlt || globalFacilitator.name}
+                            fill
+                            sizes="48px"
+                            className="object-cover"
+                          />
+                        </span>
+                      ) : null}
+                      <div className="min-w-0">
+                        {globalFacilitator ? (
+                          <>
+                            <Link
+                              href={`/facilitadores/${globalFacilitator.slug}`}
+                              className="suvoga-serif inline-flex text-base font-semibold text-[#0D3B22] underline decoration-[#D4AF37]/40 underline-offset-4 transition-colors hover:text-[#145332]"
+                            >
+                              {facilitator}
+                            </Link>
+                            <p className="mt-1 text-xs text-[#6B6048]">
+                              {globalFacilitator.verified ? "Perfil verificado" : "Datos por confirmar"}
+                            </p>
+                          </>
+                        ) : (
+                          <p className="suvoga-serif text-base font-semibold text-[#0D3B22]">{facilitator}</p>
+                        )}
+                      </div>
+                    </div>
                   </div>
                 ) : null}
               </div>

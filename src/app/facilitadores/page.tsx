@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import Image from "next/image";
 import { ArrowRight, BadgeCheck, UserRound } from "lucide-react";
 import { facilitators, getCoursesForFacilitator } from "@/data/facilitators";
 import { SectionHeading } from "@/components/suvoga/SectionHeading";
@@ -51,9 +52,21 @@ export default function FacilitatorsPage() {
                 className="rounded-3xl border border-[#D4AF37]/25 bg-white p-6 shadow-sm shadow-[#0D3B22]/5"
               >
                 <div className="flex items-start gap-4">
-                  <span className="inline-flex h-16 w-16 shrink-0 items-center justify-center rounded-2xl border border-[#D4AF37]/30 bg-[#F6EFE2] text-[#0D3B22]">
-                    <UserRound className="h-8 w-8" />
-                  </span>
+                  {facilitator.photoUrl && !facilitator.provisionalPhoto ? (
+                    <span className="relative h-16 w-16 shrink-0 overflow-hidden rounded-2xl border border-[#D4AF37]/30 bg-[#F6EFE2]">
+                      <Image
+                        src={facilitator.photoUrl}
+                        alt={facilitator.photoAlt || facilitator.name}
+                        fill
+                        sizes="64px"
+                        className="object-cover"
+                      />
+                    </span>
+                  ) : (
+                    <span className="inline-flex h-16 w-16 shrink-0 items-center justify-center rounded-2xl border border-[#D4AF37]/30 bg-[#F6EFE2] text-[#0D3B22]">
+                      <UserRound className="h-8 w-8" />
+                    </span>
+                  )}
                   <div className="min-w-0">
                     <h2 className="suvoga-serif text-2xl font-semibold text-[#0D3B22]">
                       {facilitator.name}

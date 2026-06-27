@@ -38,8 +38,10 @@ export const facilitators: Facilitator[] = [
     slug: "sugeidy-volquez-garcia",
     name: "Sugeidy Vólquez García",
     role: "Facilitadora",
+    photoUrl: "/images/facilitators/sugeidy-volquez-garcia.webp",
+    photoAlt: "Sugeidy Vólquez García, facilitadora de SuVoGa",
     verified: false,
-    provisionalPhoto: true,
+    provisionalPhoto: false,
   },
 ];
 

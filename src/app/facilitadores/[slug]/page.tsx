@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import Image from "next/image";
 import { notFound } from "next/navigation";
 import { ArrowLeft, BadgeCheck, BookOpen, MessageCircle, UserRound } from "lucide-react";
 import {
@@ -57,14 +58,25 @@ export default function FacilitatorPage({ params }: FacilitatorPageProps) {
           </Link>
 
           <div className="mt-8 grid gap-8 lg:grid-cols-[0.75fr_1.25fr] lg:items-center">
-            <div className="relative aspect-square w-full max-w-sm overflow-hidden rounded-[2rem] border border-[#D4AF37]/35 bg-[#F6EFE2] p-6 text-[#0D3B22] shadow-2xl shadow-black/30">
-              <div className="flex h-full w-full flex-col items-center justify-center rounded-[1.5rem] border border-[#D4AF37]/30 bg-white/70 text-center">
-                <UserRound className="h-20 w-20 text-[#8D7530]" />
-                <p className="suvoga-serif mt-4 text-2xl font-semibold">{facilitator.name}</p>
-                <p className="mt-2 text-xs font-semibold uppercase tracking-[0.16em] text-[#8D7530]">
-                  Foto pendiente
-                </p>
-              </div>
+            <div className="relative aspect-square w-full max-w-sm overflow-hidden rounded-[2rem] border border-[#D4AF37]/35 bg-[#F6EFE2] shadow-2xl shadow-black/30">
+              {facilitator.photoUrl && !facilitator.provisionalPhoto ? (
+                <Image
+                  src={facilitator.photoUrl}
+                  alt={facilitator.photoAlt || facilitator.name}
+                  fill
+                  sizes="(max-width: 768px) 100vw, 384px"
+                  className="object-cover"
+                  priority
+                />
+              ) : (
+                <div className="flex h-full w-full flex-col items-center justify-center p-6 rounded-[1.5rem] border border-[#D4AF37]/30 bg-white/70 text-center">
+                  <UserRound className="h-20 w-20 text-[#8D7530]" />
+                  <p className="suvoga-serif mt-4 text-2xl font-semibold">{facilitator.name}</p>
+                  <p className="mt-2 text-xs font-semibold uppercase tracking-[0.16em] text-[#8D7530]">
+                    Foto pendiente
+                  </p>
+                </div>
+              )}
             </div>
 
             <div>
