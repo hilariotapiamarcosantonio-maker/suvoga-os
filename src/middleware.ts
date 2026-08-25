@@ -15,7 +15,10 @@ export function middleware(request: NextRequest) {
   const configuredPassword = process.env.CRM_BASIC_AUTH_PASSWORD;
 
   if (!configuredUser || !configuredPassword) {
-    return NextResponse.next();
+    return new NextResponse("Admin authentication is not configured", {
+      status: 503,
+      headers: { "Cache-Control": "no-store" },
+    });
   }
 
   const header = request.headers.get("authorization");
@@ -40,5 +43,5 @@ export function middleware(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ["/((?!_next/static|_next/image|favicon.ico).*)"],
+  matcher: ["/admin/:path*"],
 };

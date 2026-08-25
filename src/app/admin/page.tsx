@@ -30,33 +30,6 @@ function toDateParts(value: string) {
   };
 }
 
-function sampleSchedule(courses: AdminCourse[]): AdminScheduledCourse[] {
-  const today = new Date();
-  const year = today.getFullYear();
-  const month = today.getMonth();
-  const samples = [
-    { offset: 3, time: "09:00" },
-    { offset: 9, time: "14:00" },
-    { offset: 16, time: "10:30" },
-  ];
-
-  return courses.slice(0, 3).map((course, index) => {
-    const sample = samples[index];
-    const date = new Date(year, month, today.getDate() + sample.offset);
-    const capacity = course.cuposTotales || 12;
-
-    return {
-      id: `sample-${course.idServicio}`,
-      courseId: course.idServicio,
-      courseName: course.nombre,
-      date: date.toISOString().slice(0, 10),
-      time: sample.time,
-      capacity,
-      remaining: Math.max(capacity - index - 2, 1),
-    };
-  });
-}
-
 /** Derive a CRM status label from payment + attendance data */
 function deriveCrmStatus(
   estadoAsistencia: string,
@@ -220,9 +193,7 @@ export default async function AdminPage() {
     <AdminClient
       crmRows={crmRows}
       courses={courses}
-      scheduledCourses={
-        scheduledCourses.length > 0 ? scheduledCourses : sampleSchedule(courses)
-      }
+      scheduledCourses={scheduledCourses}
       courseViews={courseViews}
       source={data.source}
     />

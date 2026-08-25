@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { Quote, Star } from "lucide-react";
-import { studentTestimonials, googleReviews } from "@/data/testimonials";
-import { graduatesList } from "@/data/graduates";
+import { publishedStudentTestimonials, publishedGoogleReviews } from "@/data/testimonials";
+import { publishedGraduates } from "@/data/graduates";
 import { SectionHeading } from "@/components/suvoga/SectionHeading";
 import { SiteCTA } from "@/components/suvoga/SiteCTA";
 import { Reveal } from "@/components/suvoga/Reveal";
@@ -32,14 +32,14 @@ export default function HistoriasPage() {
             Vocaciones que se vuelven profesión
           </h1>
           <p className="mt-5 max-w-2xl text-base leading-8 text-[#EAE2D0]">
-            Cada egresada lleva consigo una técnica cuidada y la confianza para
-            ejercer. Estas son algunas de sus experiencias.
+            Este espacio se habilitará cuando existan testimonios y perfiles
+            reales aprobados por la academia.
           </p>
         </div>
       </section>
 
       {/* Testimonios de alumnas */}
-      <section className="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8 lg:py-20">
+      {publishedStudentTestimonials.length > 0 ? <section className="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8 lg:py-20">
         <Reveal>
           <SectionHeading
             eyebrow="Testimonios"
@@ -47,7 +47,7 @@ export default function HistoriasPage() {
           />
         </Reveal>
         <div className="mt-12 grid gap-6 md:grid-cols-3">
-          {studentTestimonials.map((t, i) => (
+          {publishedStudentTestimonials.map((t, i) => (
             <Reveal key={t.id} delay={i * 0.06}>
               <figure className="flex h-full flex-col rounded-3xl border border-[#D4AF37]/25 bg-white p-6 shadow-sm">
                 <Quote className="h-8 w-8 text-[#D4AF37]/30" />
@@ -72,10 +72,10 @@ export default function HistoriasPage() {
             </Reveal>
           ))}
         </div>
-      </section>
+      </section> : null}
 
       {/* Egresadas destacadas */}
-      <section className="bg-[#F6EFE2]/60">
+      {publishedGraduates.length > 0 ? <section className="bg-[#F6EFE2]/60">
         <div className="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8 lg:py-20">
           <Reveal>
             <SectionHeading
@@ -85,7 +85,7 @@ export default function HistoriasPage() {
             />
           </Reveal>
           <div className="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
-            {graduatesList.map((g, i) => (
+            {publishedGraduates.map((g, i) => (
               <Reveal key={g.id} delay={i * 0.05}>
                 <div className="flex h-full flex-col items-center rounded-3xl border border-[#D4AF37]/25 bg-white p-6 text-center shadow-sm">
                   {g.imagen_url ? (
@@ -102,15 +102,15 @@ export default function HistoriasPage() {
             ))}
           </div>
         </div>
-      </section>
+      </section> : null}
 
       {/* Reseñas */}
-      <section className="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8 lg:py-20">
+      {publishedGoogleReviews.length > 0 ? <section className="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8 lg:py-20">
         <Reveal>
           <SectionHeading eyebrow="Reseñas" title="Lo que dicen de la academia" />
         </Reveal>
         <div className="mt-12 grid gap-6 md:grid-cols-3">
-          {googleReviews.map((r, i) => (
+          {publishedGoogleReviews.map((r, i) => (
             <Reveal key={r.id} delay={i * 0.06}>
               <figure className="flex h-full flex-col rounded-3xl border border-[#D4AF37]/25 bg-white p-6 shadow-sm">
                 <div className="flex items-center gap-1 text-[#D4AF37]">
@@ -129,7 +129,7 @@ export default function HistoriasPage() {
             </Reveal>
           ))}
         </div>
-      </section>
+      </section> : null}
 
       <SiteCTA
         title="Tu historia puede ser la próxima"

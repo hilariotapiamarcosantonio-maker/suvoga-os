@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import Link from "next/link";
 import { motion, type Variants } from "framer-motion";
 import { CalendarDays, GraduationCap, Sparkles, Users } from "lucide-react";
@@ -11,10 +11,6 @@ import { InscriptionModal } from "@/components/suvoga/InscriptionModal";
 import { useReducedMotion } from "framer-motion";
 
 type Course = (typeof suvogaCourses)[number];
-
-const DEMO_COURSES_STORAGE_KEY = "suvoga_demo_courses";
-const demoCourseDescription =
-  "Programa formativo de bienestar y técnica aplicada, creado para desarrollar habilidades profesionales con acompañamiento cercano.";
 
 const gridVariants: Variants = {
   hidden: {},
@@ -42,58 +38,8 @@ function typeIcon(type: string) {
   return type.toLowerCase().includes("curso") ? GraduationCap : Sparkles;
 }
 
-function normalizeStoredCourses(value: unknown): Course[] {
-  if (!Array.isArray(value)) return [];
-
-  return value
-    .map((item) => {
-      if (!item || typeof item !== "object") return null;
-
-      const course = item as Partial<Course>;
-      const idServicio = String(course.idServicio ?? "").trim();
-      const nombre = String(course.nombre ?? "").trim();
-      if (!idServicio || !nombre) return null;
-
-      return {
-        idServicio,
-        nombre,
-        tipo: String(course.tipo ?? "Curso"),
-        category: String(course.category ?? "General").trim() || "General",
-        description:
-          String(course.description ?? demoCourseDescription).trim() ||
-          demoCourseDescription,
-        precioTotal: Number(course.precioTotal) || 0,
-        montoAnticipo: Number(course.montoAnticipo) || 1000,
-        cuposTotales: Number(course.cuposTotales) || 12,
-      };
-    })
-    .filter((course): course is Course => Boolean(course));
-}
-
-function readDemoCourses() {
-  if (typeof window === "undefined") return [];
-
-  try {
-    return normalizeStoredCourses(
-      JSON.parse(window.localStorage.getItem(DEMO_COURSES_STORAGE_KEY) || "[]")
-    );
-  } catch {
-    return [];
-  }
-}
-
-function mergeCourses(baseCourses: Course[], demoCourses: Course[]) {
-  const byId = new Map<string, Course>();
-
-  [...baseCourses, ...demoCourses].forEach((course) => {
-    byId.set(course.idServicio, course);
-  });
-
-  return Array.from(byId.values());
-}
-
 export function CourseCatalogClient() {
-  const [courses, setCourses] = useState<Course[]>(suvogaCourses);
+  const [courses] = useState<Course[]>(suvogaCourses);
   const [selectedCourse, setSelectedCourse] = useState<Course | null>(null);
   const shouldReduceMotion = useReducedMotion();
 
@@ -111,21 +57,6 @@ export function CourseCatalogClient() {
       },
     },
   };
-
-  useEffect(() => {
-    function syncDemoCourses() {
-      setCourses(mergeCourses(suvogaCourses, readDemoCourses()));
-    }
-
-    syncDemoCourses();
-    window.addEventListener("storage", syncDemoCourses);
-    window.addEventListener("suvoga-demo-courses-updated", syncDemoCourses);
-
-    return () => {
-      window.removeEventListener("storage", syncDemoCourses);
-      window.removeEventListener("suvoga-demo-courses-updated", syncDemoCourses);
-    };
-  }, []);
 
   return (
     <>

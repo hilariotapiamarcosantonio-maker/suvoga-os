@@ -51,3 +51,6 @@ export const graduatesList: Graduate[] = [
     curso_id: "CUR-003",
   }
 ];
+
+// Demo records stay available for editorial review but are never rendered in public views.
+export const publishedGraduates = graduatesList.filter((graduate) => !graduate.esDemo);

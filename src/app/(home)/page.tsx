@@ -21,7 +21,7 @@ import { SectionHeading } from "@/components/suvoga/SectionHeading";
 import { SiteCTA } from "@/components/suvoga/SiteCTA";
 import { Reveal } from "@/components/suvoga/Reveal";
 import { SuvogaWhatsAppButton } from "@/components/suvoga/SuvogaWhatsAppButton";
-import { studentTestimonials } from "@/data/testimonials";
+import { publishedStudentTestimonials } from "@/data/testimonials";
 
 const featured = selectFeatured(suvogaCourses, 6);
 
@@ -257,7 +257,7 @@ export default function HomePage() {
       </section>
 
       {/* 7. Tres testimonios destacados */}
-      <section className="bg-[#F6EFE2]/60">
+      {publishedStudentTestimonials.length > 0 ? <section className="bg-[#F6EFE2]/60">
         <div className="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8 lg:py-20">
           <Reveal>
             <SectionHeading
@@ -267,7 +267,7 @@ export default function HomePage() {
             />
           </Reveal>
           <div className="mt-12 grid gap-6 md:grid-cols-3">
-            {studentTestimonials.slice(0, 3).map((t, i) => (
+            {publishedStudentTestimonials.slice(0, 3).map((t, i) => (
               <Reveal key={t.id} delay={i * 0.06}>
                 <figure className="flex h-full flex-col rounded-3xl border border-[#D4AF37]/25 bg-white p-6 shadow-sm">
                   <Quote className="h-8 w-8 text-[#D4AF37]/30" />
@@ -297,7 +297,7 @@ export default function HomePage() {
             </Link>
           </div>
         </div>
-      </section>
+      </section> : null}
 
       {/* 8. Presentación de la comunidad */}
       <section className="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8 lg:py-20">

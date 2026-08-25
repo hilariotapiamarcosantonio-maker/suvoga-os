@@ -232,6 +232,68 @@ function normalizeKey(key: string) {
     .toLowerCase();
 }
 
+type SheetName = (typeof SHEETS)[keyof typeof SHEETS];
+
+const REQUIRED_SHEET_HEADERS: Record<SheetName, Array<{ label: string; aliases: string[] }>> = {
+  [SHEETS.catalogo]: [
+    { label: "ID_Servicio", aliases: FIELD_ALIASES.id_servicio },
+    { label: "Nombre", aliases: FIELD_ALIASES.nombre },
+    { label: "Tipo (Curso o Spa)", aliases: FIELD_ALIASES.tipo },
+    { label: "Precio_Total", aliases: FIELD_ALIASES.precio_total },
+    { label: "Monto_Anticipo", aliases: FIELD_ALIASES.monto_anticipo },
+    { label: "Cupos_Totales", aliases: FIELD_ALIASES.cupos_totales },
+  ],
+  [SHEETS.pacientes]: [
+    { label: "ID_Paciente", aliases: FIELD_ALIASES.id_paciente },
+    { label: "Nombre_Completo", aliases: FIELD_ALIASES.nombre_completo },
+    { label: "WhatsApp", aliases: FIELD_ALIASES.whatsapp },
+    { label: "Correo", aliases: FIELD_ALIASES.correo },
+    { label: "Cedula", aliases: FIELD_ALIASES.cedula },
+    { label: "Provincia", aliases: FIELD_ALIASES.provincia },
+    { label: "Fecha_Registro", aliases: FIELD_ALIASES.fecha_registro },
+    { label: "Nota_Interna", aliases: FIELD_ALIASES.nota_interna },
+  ],
+  [SHEETS.inscripciones]: [
+    { label: "ID_Inscripcion", aliases: FIELD_ALIASES.id_inscripcion },
+    { label: "ID_Paciente", aliases: FIELD_ALIASES.id_paciente },
+    { label: "ID_Servicio", aliases: FIELD_ALIASES.id_servicio },
+    { label: "Fecha_Programada", aliases: FIELD_ALIASES.fecha_programada },
+    { label: "Estado_Asistencia", aliases: FIELD_ALIASES.estado_asistencia },
+    { label: "Nota_Interna", aliases: FIELD_ALIASES.nota_interna },
+  ],
+  [SHEETS.anticipos]: [
+    { label: "ID_Inscripcion", aliases: FIELD_ALIASES.id_inscripcion },
+    { label: "Monto_Pagado", aliases: FIELD_ALIASES.monto_pagado },
+    { label: "Balance_Pendiente", aliases: FIELD_ALIASES.balance_pendiente },
+    { label: "Metodo_Pago", aliases: FIELD_ALIASES.metodo_pago },
+    { label: "Estado_Pago", aliases: FIELD_ALIASES.estado_pago },
+  ],
+  [SHEETS.programacion_cursos]: [
+    { label: "ID_Programacion", aliases: FIELD_ALIASES.id_programacion },
+    { label: "ID_Curso", aliases: FIELD_ALIASES.id_curso },
+    { label: "Fecha_Hora", aliases: FIELD_ALIASES.fecha_hora },
+    { label: "Cupos_Totales", aliases: FIELD_ALIASES.cupos_totales_programados },
+    { label: "Cupos_Restantes", aliases: FIELD_ALIASES.cupos_restantes_programados },
+  ],
+};
+
+function missingRequiredHeaders(sheetName: SheetName, headers: string[]) {
+  const normalizedHeaders = new Set(headers.map(normalizeKey));
+  return REQUIRED_SHEET_HEADERS[sheetName]
+    .filter(({ aliases }) => !aliases.some((alias) => normalizedHeaders.has(normalizeKey(alias))))
+    .map(({ label }) => label);
+}
+
+function reportSchemaWarning(sheetName: SheetName, headers: string[], operation: "read" | "write") {
+  const missing = missingRequiredHeaders(sheetName, headers);
+  if (missing.length === 0) return [];
+
+  const message =
+    `[Google Sheets schema warning] ${sheetName} (${operation}) missing required columns: ${missing.join(", ")}`;
+  console.warn(message);
+  return missing;
+}
+
 function readValue(row: Record<string, RawValue>, aliases: string[]) {
   for (const alias of aliases) {
     const direct = row[alias];
@@ -353,7 +415,10 @@ async function readSheetRange(sheetName: string): Promise<RawTable | null> {
       range: `${sheetName}!A1:AZ1000`,
       valueRenderOption: "UNFORMATTED_VALUE",
     });
-    return matrixToObjects((response.data.values || []) as RawValue[][]);
+    const values = (response.data.values || []) as RawValue[][];
+    const headers = (values[0] || []).map(String);
+    reportSchemaWarning(sheetName as SheetName, headers, "read");
+    return matrixToObjects(values);
   } catch (error) {
     const status =
       typeof error === "object" && error && "status" in error
@@ -413,6 +478,13 @@ async function getHeaders(sheetName: string) {
 
   const headers = headerResponse.data.values?.[0] as string[] | undefined;
   if (!headers) throw new Error(`Could not read headers from ${sheetName}`);
+
+  const missing = reportSchemaWarning(sheetName as SheetName, headers, "write");
+  if (missing.length > 0) {
+    throw new Error(
+      `Google Sheets schema incomplete for ${sheetName}. Missing required columns: ${missing.join(", ")}`
+    );
+  }
 
   return { sheets, spreadsheetId, headers };
 }

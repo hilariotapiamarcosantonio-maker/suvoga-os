@@ -85,3 +85,12 @@ export const googleReviews: Testimonial[] = [
     url_referencia: "https://maps.google.com"
   }
 ];
+
+// Demo records stay available for editorial review but are never rendered in public views.
+export const publishedStudentTestimonials = studentTestimonials.filter(
+  (testimonial) => !testimonial.esDemo
+);
+
+export const publishedGoogleReviews = googleReviews.filter(
+  (review) => !review.esDemo
+);

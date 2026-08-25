@@ -2,8 +2,8 @@
 
 import { motion, useReducedMotion } from "framer-motion";
 import { Star, GraduationCap, Video, Quote, ArrowUpRight, Award } from "lucide-react";
-import { studentTestimonials, googleReviews } from "@/data/testimonials";
-import { graduatesList } from "@/data/graduates";
+import { publishedStudentTestimonials, publishedGoogleReviews } from "@/data/testimonials";
+import { publishedGraduates } from "@/data/graduates";
 import { findSuvogaCourseByIdentifier } from "@/data/courses";
 
 const staggerContainer = {
@@ -28,6 +28,10 @@ function graduateCourseHref(courseId?: string) {
 
 export function SocialProofSection() {
   const shouldReduceMotion = useReducedMotion();
+  const hasPublishedSocialProof =
+    publishedStudentTestimonials.length > 0 ||
+    publishedGoogleReviews.length > 0 ||
+    publishedGraduates.length > 0;
   const activeFadeInUp = {
     hidden: { opacity: 0, y: shouldReduceMotion ? 0 : 25 },
     visible: {
@@ -36,6 +40,20 @@ export function SocialProofSection() {
       transition: { duration: 0.45, ease: [0.22, 1, 0.36, 1] as const }
     }
   };
+  if (!hasPublishedSocialProof) {
+    return (
+      <section className="bg-[#FDFBF7] px-4 py-16 text-center text-[#4E6658] sm:px-6 lg:px-8">
+        <p className="text-xs font-semibold uppercase tracking-[0.2em] text-[#8D7530]">
+          Testimonios verificados
+        </p>
+        <p className="mx-auto mt-3 max-w-xl text-sm leading-6">
+          Este espacio se habilitará cuando la academia apruebe testimonios,
+          reseñas y perfiles reales para publicación.
+        </p>
+      </section>
+    );
+  }
+
   return (
     <div id="historias" className="space-y-20 py-16 bg-[#FDFBF7] overflow-hidden">
       {/* 1. Student Testimonials Section */}
@@ -59,7 +77,7 @@ export function SocialProofSection() {
           whileInView="visible"
           viewport={{ once: true, margin: "-100px" }}
         >
-          {studentTestimonials.map((testimonial) => (
+          {publishedStudentTestimonials.map((testimonial) => (
             <motion.article
               key={testimonial.id}
               variants={activeFadeInUp}
@@ -142,7 +160,7 @@ export function SocialProofSection() {
           </div>
 
           <div className="relative z-10 flex overflow-x-auto snap-x snap-mandatory scrollbar-none gap-6 pb-4 -mx-4 px-4 md:grid md:grid-cols-3 md:mx-0 md:px-0 md:pb-0 md:overflow-visible">
-            {googleReviews.map((review) => (
+            {publishedGoogleReviews.map((review) => (
               <div
                 key={review.id}
                 className="snap-start shrink-0 w-[82vw] max-w-[320px] sm:w-[48%] md:w-auto flex flex-col justify-between bg-white border border-[#D4AF37]/15 rounded-2xl p-5 shadow-sm hover:border-[#D4AF37]/45 transition-colors duration-300"
@@ -206,7 +224,7 @@ export function SocialProofSection() {
           whileInView="visible"
           viewport={{ once: true, margin: "-100px" }}
         >
-          {graduatesList.map((graduate) => {
+          {publishedGraduates.map((graduate) => {
             const courseHref = graduateCourseHref(graduate.curso_id);
 
             return (

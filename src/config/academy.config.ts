@@ -8,7 +8,7 @@ export const academyConfig = {
   shortName: "SuVoGa",
   description: "Formación técnica y talleres especializados.",
   locale: "es-DO",
-  timezone: "America/La_Paz",
+  timezone: "America/Santo_Domingo",
   currency: "DOP",
   country: "República Dominicana",
   contact: {
