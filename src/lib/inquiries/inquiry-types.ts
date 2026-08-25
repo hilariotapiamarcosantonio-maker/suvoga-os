@@ -30,4 +30,5 @@ export type RegistrationResult = {
   pacienteId?: string;
   inscripcionId?: string;
   anticipoEstado?: string;
+  fechaProgramada?: string;
 };

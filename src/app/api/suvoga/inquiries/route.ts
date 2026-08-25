@@ -6,6 +6,7 @@ import {
   postPaciente,
 } from "@/lib/crm-data/get-suvoga-data";
 import { sendInquiryNotification, summarizeEmailWorkflow } from "@/lib/email/send-inquiry-notification";
+import { createReservationCalendarEvent } from "@/lib/google-calendar";
 import type { NormalizedInquiry, RegistrationResult } from "@/lib/inquiries/inquiry-types";
 import { checkInquiryRateLimit, markSubmissionProcessed, wasSubmissionProcessed } from "@/lib/inquiries/rate-limit";
 import { validateInquiryPayload } from "@/lib/inquiries/inquiry-validation";
@@ -106,6 +107,7 @@ async function registerInquiry(inquiry: NormalizedInquiry): Promise<Registration
       pacienteId: paciente.idPaciente,
       inscripcionId: result.inscripcion.idInscripcion,
       anticipoEstado: result.anticipo.estadoPago,
+      fechaProgramada: result.inscripcion.fechaProgramada,
     };
   }
 
@@ -155,12 +157,27 @@ export async function POST(request: Request) {
         success: true,
         duplicate: true,
         requestId: inquiry.requestId,
+        calendar: { status: "skipped" },
         message: "Solicitud ya recibida. No se duplico el registro.",
       });
     }
 
     const registration = await registerInquiry(inquiry);
     markSubmissionProcessed(inquiry.submissionId);
+
+    const calendar =
+      inquiry.type === "reservation" && registration.inscripcionId && registration.fechaProgramada
+        ? await createReservationCalendarEvent({
+            courseName: inquiry.courseName || inquiry.courseId,
+            fechaProgramada: registration.fechaProgramada,
+            inscripcionId: registration.inscripcionId,
+            studentName: inquiry.name,
+            whatsapp: inquiry.phone,
+            email: inquiry.email,
+            provincia: inquiry.provincia,
+            anticipoEstado: registration.anticipoEstado || "no disponible",
+          })
+        : { status: "skipped" as const };
 
     const email = await sendInquiryNotification(inquiry, registration);
     const message = summarizeEmailWorkflow(email);
@@ -171,6 +188,7 @@ export async function POST(request: Request) {
         success: true,
         requestId: inquiry.requestId,
         registration,
+        calendar,
         email,
         message,
       },
