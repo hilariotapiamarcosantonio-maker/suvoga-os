@@ -25,7 +25,7 @@ export async function POST(request: Request) {
       cuposTotales < 1
     ) {
       return NextResponse.json(
-        { error: SAVE_ERROR },
+        { error: SAVE_ERROR, code: "PROGRAMACION_WRITE_FAILED" },
         { status: 400, headers: { "Cache-Control": "no-store" } }
       );
     }
@@ -48,7 +48,7 @@ export async function POST(request: Request) {
   } catch {
     console.error("[admin] No se pudo crear la programación");
     return NextResponse.json(
-      { error: SAVE_ERROR },
+      { error: SAVE_ERROR, code: "PROGRAMACION_WRITE_FAILED" },
       { status: 500, headers: { "Cache-Control": "no-store" } }
     );
   }

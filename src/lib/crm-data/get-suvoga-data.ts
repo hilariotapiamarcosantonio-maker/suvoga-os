@@ -1322,11 +1322,11 @@ export async function postProgramacionCurso(input: NewProgramacionCursoInput) {
     "id_programacion",
     "id_curso",
     "fecha_hora",
-    "cupos_totales_programados",
-    "cupos_restantes_programados",
+    "cupos_totales",
+    "cupos_restantes",
   ];
   const hasExpectedColumns = expectedFields.every(
-    (field, index) => resolveCanonicalField(headers[index] || "") === field
+    (field, index) => normalizeKey(headers[index] || "") === field
   );
   if (!hasExpectedColumns) {
     throw new Error("Programacion_Cursos must have the expected A:E columns");
