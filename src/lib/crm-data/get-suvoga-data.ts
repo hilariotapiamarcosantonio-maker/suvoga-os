@@ -18,6 +18,14 @@ const SHEETS = {
   programacion_cursos: "Programacion_Cursos",
 } as const;
 
+const SHEET_READ_RANGES: Record<string, string> = {
+  [SHEETS.catalogo]: "A1:Z200",
+  [SHEETS.pacientes]: "A1:J500",
+  [SHEETS.inscripciones]: "A1:L500",
+  [SHEETS.anticipos]: "A1:E500",
+  [SHEETS.programacion_cursos]: "A1:E500",
+};
+
 type RawValue = string | number;
 type RawTable = Record<string, RawValue>[];
 type SheetRow = Record<string, RawValue | undefined>;
@@ -412,7 +420,7 @@ async function readSheetRange(sheetName: string): Promise<RawTable | null> {
   try {
     const response = await sheets.spreadsheets.values.get({
       spreadsheetId,
-      range: `${sheetName}!A1:AZ1000`,
+      range: `${sheetName}!${SHEET_READ_RANGES[sheetName] ?? "A1:Z200"}`,
       valueRenderOption: "UNFORMATTED_VALUE",
     });
     const values = (response.data.values || []) as RawValue[][];

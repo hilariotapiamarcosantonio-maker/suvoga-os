@@ -124,6 +124,9 @@ const initialCourseForm: CourseFormState = {
 const CRM_STATUS_COLORS: Record<string, string> = {
   "Nueva inscripción":    "border-blue-200 bg-blue-50 text-blue-700",
   "Contactar por WhatsApp": "border-orange-200 bg-orange-50 text-orange-700",
+  "Pendiente":            "border-[#D4AF37]/30 bg-[#D4AF37]/10 text-[#8D7530]",
+  "Parcial":              "border-orange-200 bg-orange-50 text-orange-700",
+  "Pagado":               "border-emerald-200 bg-emerald-50 text-emerald-700",
   "Anticipo pendiente":   "border-[#D4AF37]/30 bg-[#D4AF37]/10 text-[#8D7530]",
   "Anticipo confirmado":  "border-[#0D3B22]/15 bg-[#0D3B22]/10 text-[#0D3B22]",
   "Balance pendiente":    "border-orange-300 bg-orange-50 text-orange-800",
@@ -155,6 +158,24 @@ function whatsappHref(phone: string, name: string, curso: string) {
 function isPending(status: string) {
   const n = status.toLowerCase();
   return !n || n.includes("pendiente") || n.includes("parcial") || n.includes("nueva");
+}
+
+function isNewRegistration(status: string) {
+  const normalized = status.toLowerCase();
+  return normalized.includes("nueva") || normalized.includes("pendiente") || normalized.includes("contactar");
+}
+
+function dateSortValue(value: string) {
+  if (!value) return 0;
+  const timestamp = new Date(value).getTime();
+  return Number.isNaN(timestamp) ? 0 : timestamp;
+}
+
+function advanceStatus(row: AdminCrmRow) {
+  if (row.estadoPago.trim()) return row.estadoPago;
+  if (row.montoPagado > 0 && row.balancePendiente > 0) return "Parcial";
+  if (row.montoPagado > 0) return "Pagado";
+  return "Pendiente";
 }
 
 function monthTitle(date: Date) {
@@ -305,10 +326,16 @@ export function AdminClient({
   const [expandedRow, setExpandedRow] = useState<string | null>(null);
   const [includeTestRecords, setIncludeTestRecords] = useState(false);
 
-  const visibleCrmRows = useMemo(
-    () => includeTestRecords ? crmRows : crmRows.filter((row) => !row.esRegistroPrueba),
-    [crmRows, includeTestRecords]
-  );
+  const visibleCrmRows = useMemo(() => {
+    const rows = includeTestRecords ? crmRows : crmRows.filter((row) => !row.esRegistroPrueba);
+    return [...rows].sort((a, b) => {
+      const aStatus = localCrmStatus[a.idInscripcion] || a.crmStatus;
+      const bStatus = localCrmStatus[b.idInscripcion] || b.crmStatus;
+      const newPriority = Number(isNewRegistration(bStatus)) - Number(isNewRegistration(aStatus));
+      if (newPriority !== 0) return newPriority;
+      return dateSortValue(b.fechaProgramada) - dateSortValue(a.fechaProgramada);
+    });
+  }, [crmRows, includeTestRecords, localCrmStatus]);
   const testRecordCount = crmRows.filter((row) => row.esRegistroPrueba).length;
   const pendingCount = visibleCrmRows.filter((r) => isPending(localCrmStatus[r.idInscripcion] || r.crmStatus)).length;
   const paidCount = visibleCrmRows.filter((r) => !isPending(localCrmStatus[r.idInscripcion] || r.crmStatus)).length;
@@ -669,12 +696,12 @@ export function AdminClient({
                 </span>
                 <div>
                   <h3 className="suvoga-serif text-xl font-semibold text-[#0D3B22]">Últimas Inscripciones</h3>
-                  <p className="text-xs text-[#6B6048]">Las 5 más recientes</p>
+                  <p className="text-xs text-[#6B6048]">Nuevas y pendientes primero · luego por fecha</p>
                 </div>
               </div>
               {visibleCrmRows.length > 0 ? (
                 <div className="space-y-3">
-                  {visibleCrmRows.slice(-5).reverse().map((row) => (
+                  {visibleCrmRows.slice(0, 5).map((row) => (
                     <div key={row.idInscripcion} className="flex items-center justify-between gap-4 rounded-2xl border border-[#E7DAC2] bg-[#FDFBF7] px-4 py-3">
                       <div className="min-w-0">
                         <p className="truncate text-sm font-semibold text-[#0D3B22]">
@@ -683,9 +710,13 @@ export function AdminClient({
                             <span className="ml-2 rounded-full bg-[#D4AF37]/15 px-2 py-0.5 text-[10px] font-bold text-[#8D7530]">QA</span>
                           ) : null}
                         </p>
-                        <p className="truncate text-xs text-[#6B6048]">{row.cursoNombre}</p>
+                        <p className="truncate text-xs font-medium text-[#6B6048]">{row.cursoNombre}</p>
+                        <p className="mt-0.5 truncate text-[11px] text-[#8A7D69]">{row.whatsapp || "WhatsApp no registrado"}</p>
                       </div>
-                      <StatusPill status={localCrmStatus[row.idInscripcion] || row.crmStatus} />
+                      <div className="flex shrink-0 flex-col items-end gap-1.5">
+                        <span className="text-[11px] font-semibold text-[#0D3B22]">{formatDate(row.fechaProgramada)}</span>
+                        <StatusPill status={advanceStatus(row)} />
+                      </div>
                     </div>
                   ))}
                 </div>
@@ -744,33 +775,41 @@ export function AdminClient({
                       <div key={row.idInscripcion} className="rounded-2xl border border-[#E7DAC2] bg-[#FDFBF7] overflow-hidden transition-all duration-200">
                         {/* Row header */}
                         <div className="flex flex-col gap-3 p-4 sm:flex-row sm:items-center sm:justify-between sm:gap-4">
-                          {/* Name & course */}
+                          {/* Primary contact information */}
                           <div className="min-w-0 flex-1">
-                            <p className="text-sm font-semibold text-[#0D3B22]">
-                              {row.nombreCompleto}
-                              {row.esRegistroPrueba ? (
-                                <span className="ml-2 rounded-full bg-[#D4AF37]/15 px-2 py-0.5 text-[10px] font-bold text-[#8D7530]">QA</span>
-                              ) : null}
-                            </p>
-                            <p className="mt-0.5 text-xs text-[#6B6048]">{row.cursoNombre} · {row.provincia || "Sin provincia"}</p>
+                            <div className="flex flex-wrap items-center gap-x-3 gap-y-1">
+                              <p className="text-sm font-semibold text-[#0D3B22]">
+                                {row.nombreCompleto}
+                                {row.esRegistroPrueba ? (
+                                  <span className="ml-2 rounded-full bg-[#D4AF37]/15 px-2 py-0.5 text-[10px] font-bold text-[#8D7530]">QA</span>
+                                ) : null}
+                              </p>
+                              <span className="text-xs font-medium text-[#4E6658]">
+                                {row.whatsapp || "WhatsApp no registrado"}
+                              </span>
+                            </div>
+                            <p className="mt-1 truncate text-xs font-medium text-[#6B6048]" title={row.cursoNombre}>{row.cursoNombre}</p>
+                            <p className="mt-0.5 text-[11px] text-[#8A7D69]">{row.provincia || "Sin provincia"}</p>
                           </div>
 
-                          {/* Middle details row for mobile, integrated in horizontal flow on desktop */}
+                          {/* Date and payment state stay visible at a glance */}
                           <div className="flex flex-wrap items-center justify-between gap-3 sm:contents">
-                            <StatusPill status={effectiveStatus} />
-
-                            {/* Amounts */}
-                            <div className="flex items-center gap-4 text-xs text-[#6B6048]">
-                              {row.montoPagado > 0 && (
-                                <span className="flex items-center gap-1">
-                                  <span className="text-emerald-700 font-semibold">{formatDop(row.montoPagado)}</span> anticipo
-                                </span>
-                              )}
-                              {row.balancePendiente > 0 && (
-                                <span className="flex items-center gap-1">
-                                  <span className="text-orange-700 font-semibold">{formatDop(row.balancePendiente)}</span> balance
-                                </span>
-                              )}
+                            <div className="flex items-center gap-3">
+                              <div className="text-right">
+                                <p className="text-[10px] font-semibold uppercase tracking-[0.14em] text-[#8A7D69]">Fecha</p>
+                                <p className="mt-0.5 text-xs font-semibold text-[#0D3B22]">{formatDate(row.fechaProgramada)}</p>
+                              </div>
+                              <div className="flex items-center gap-2">
+                                <div>
+                                  <p className="text-[10px] font-semibold uppercase tracking-[0.14em] text-[#8A7D69]">Anticipo</p>
+                                  <div className="mt-0.5"><StatusPill status={advanceStatus(row)} /></div>
+                                </div>
+                                {effectiveStatus !== advanceStatus(row) ? (
+                                  <span className="hidden rounded-full border border-[#E7DAC2] bg-white px-2 py-1 text-[10px] font-semibold text-[#6B6048] sm:inline-flex">
+                                    {effectiveStatus}
+                                  </span>
+                                ) : null}
+                              </div>
                             </div>
 
                             {/* Action buttons */}
