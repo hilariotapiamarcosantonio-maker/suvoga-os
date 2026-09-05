@@ -1310,22 +1310,43 @@ export async function postProgramacionCurso(input: NewProgramacionCursoInput) {
     nota: input.nota?.trim() ?? "",
   };
 
-  await appendByHeaders(SHEETS.programacion_cursos, {
-    id_programacion: programacionCurso.idProgramacion,
-    id_curso: programacionCurso.idServicio,
-    fecha_hora: programacionCurso.fechaHora,
-    cupos_totales_programados: programacionCurso.cuposTotales,
-    cupos_restantes_programados: programacionCurso.cuposRestantes,
-    nombre_grupo: programacionCurso.nombreGrupo,
-    modalidad: programacionCurso.modalidad,
-    estado_programacion: programacionCurso.estadoProgramacion,
-    nota: programacionCurso.nota,
-  }, "RAW");
+  const { sheets, spreadsheetId } = await getSheetsClient();
+  if (!sheets || !spreadsheetId) throw new Error("Google Sheets not configured");
 
-  const savedProgramaciones = await getProgramacionCursos();
-  if (!savedProgramaciones.some((item) => item.idProgramacion === idProgramacion)) {
-    throw new Error("Schedule could not be verified after saving");
+  const headerResponse = await sheets.spreadsheets.values.get({
+    spreadsheetId,
+    range: `${SHEETS.programacion_cursos}!A1:E1`,
+  });
+  const headers = (headerResponse.data.values?.[0] || []).map(String);
+  const expectedFields = [
+    "id_programacion",
+    "id_curso",
+    "fecha_hora",
+    "cupos_totales_programados",
+    "cupos_restantes_programados",
+  ];
+  const hasExpectedColumns = expectedFields.every(
+    (field, index) => resolveCanonicalField(headers[index] || "") === field
+  );
+  if (!hasExpectedColumns) {
+    throw new Error("Programacion_Cursos must have the expected A:E columns");
   }
+
+  await sheets.spreadsheets.values.append({
+    spreadsheetId,
+    range: `${SHEETS.programacion_cursos}!A:E`,
+    valueInputOption: "RAW",
+    insertDataOption: "INSERT_ROWS",
+    requestBody: {
+      values: [[
+        programacionCurso.idProgramacion,
+        programacionCurso.idServicio,
+        programacionCurso.fechaHora,
+        programacionCurso.cuposTotales,
+        programacionCurso.cuposRestantes,
+      ]],
+    },
+  });
 
   return programacionCurso;
 }

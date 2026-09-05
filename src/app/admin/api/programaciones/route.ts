@@ -45,8 +45,8 @@ export async function POST(request: Request) {
       { ok: true, ...result },
       { headers: { "Cache-Control": "no-store" } }
     );
-  } catch (error) {
-    console.error("[admin] No se pudo crear la programación:", error);
+  } catch {
+    console.error("[admin] No se pudo crear la programación");
     return NextResponse.json(
       { error: SAVE_ERROR },
       { status: 500, headers: { "Cache-Control": "no-store" } }

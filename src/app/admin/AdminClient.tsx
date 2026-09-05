@@ -571,7 +571,6 @@ export function AdminClient({
       setScheduleNote("");
       setSaveMessage({ rowId: "programacion", type: "success", text: "Guardado correctamente" });
     } catch {
-      setFormError(SAVE_ERROR_MESSAGE);
       setSaveMessage({ rowId: "programacion", type: "error", text: SAVE_ERROR_MESSAGE });
     } finally {
       setSavingKey(null);
@@ -1703,17 +1702,16 @@ export function AdminClient({
                   <textarea value={scheduleNote} onChange={(e) => setScheduleNote(e.target.value)} placeholder="Información operativa del grupo" rows={2} className="mt-2 w-full rounded-2xl border border-[#D4AF37]/30 bg-[#FDFBF7] px-3 py-2 text-sm font-medium text-[#0D3B22] outline-none transition-colors placeholder:text-[#8A7D69] focus:border-[#0D3B22]" />
                 </label>
 
+                <button type="submit" disabled={savingKey === "programacion"} className="inline-flex h-12 w-full items-center justify-center gap-2 rounded-2xl bg-[#0D3B22] px-5 text-sm font-semibold text-[#FDFBF7] shadow-sm shadow-[#0D3B22]/10 transition-colors hover:bg-[#145332] disabled:cursor-wait disabled:opacity-60">
+                  <Leaf className="h-4 w-4" />
+                  {savingKey === "programacion" ? "Guardando…" : "Guardar programación"}
+                </button>
                 {formError ? <p className="rounded-2xl border border-[#D4AF37]/30 bg-[#D4AF37]/10 px-3 py-2 text-sm font-medium text-[#8D7530]">{formError}</p> : null}
                 {saveMessage?.rowId === "programacion" ? (
                   <p role="status" className={`rounded-2xl border px-3 py-2 text-sm font-semibold ${saveMessage.type === "success" ? "border-[#0D3B22]/15 bg-[#0D3B22]/10 text-[#0D3B22]" : "border-red-200 bg-red-50 text-red-700"}`}>
                     {saveMessage.text}
                   </p>
                 ) : null}
-
-                <button type="submit" disabled={savingKey === "programacion"} className="inline-flex h-12 w-full items-center justify-center gap-2 rounded-2xl bg-[#0D3B22] px-5 text-sm font-semibold text-[#FDFBF7] shadow-sm shadow-[#0D3B22]/10 transition-colors hover:bg-[#145332] disabled:cursor-wait disabled:opacity-60">
-                  <Leaf className="h-4 w-4" />
-                  {savingKey === "programacion" ? "Guardando…" : "Guardar programación"}
-                </button>
               </form>
             </aside>
           </section>
