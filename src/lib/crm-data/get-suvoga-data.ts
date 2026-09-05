@@ -685,14 +685,18 @@ async function getHeaders(sheetName: string) {
   return { sheets, spreadsheetId, headers };
 }
 
-async function appendByHeaders(sheetName: string, data: SheetRow) {
+async function appendByHeaders(
+  sheetName: string,
+  data: SheetRow,
+  valueInputOption: "USER_ENTERED" | "RAW" = "USER_ENTERED"
+) {
   const { sheets, spreadsheetId, headers } = await getHeaders(sheetName);
   const newRow = headers.map((header) => valueForHeader(header, data));
 
   await sheets.spreadsheets.values.append({
     spreadsheetId,
     range: `${sheetName}!A:A`,
-    valueInputOption: "USER_ENTERED",
+    valueInputOption,
     requestBody: {
       values: [newRow],
     },
@@ -805,7 +809,11 @@ export async function postHistorialPago(input: NewPagoInput) {
     registradoEn: new Date().toISOString(),
   };
 
-  const [inscripciones, catalogo] = await Promise.all([getInscripciones(), getCatalogo()]);
+  const [inscripciones, catalogo, anticipos] = await Promise.all([
+    getInscripciones(),
+    getCatalogo(),
+    getAnticipos(),
+  ]);
   const inscripcion = inscripciones.find((item) => item.idInscripcion === idInscripcion);
   const servicio = inscripcion
     ? catalogo.find((item) => item.idServicio === inscripcion.idServicio)
@@ -813,6 +821,7 @@ export async function postHistorialPago(input: NewPagoInput) {
   if (!inscripcion || !servicio) throw new Error("Inscription or course not found");
 
   const historialAntes = await getHistorialPagos();
+  const anticipoPrevio = anticipos.find((item) => item.idInscripcion === idInscripcion);
   const { sheets, spreadsheetId, headers } = await ensureHistorialPagosSheet();
   await sheets.spreadsheets.values.append({
     spreadsheetId,
@@ -831,9 +840,17 @@ export async function postHistorialPago(input: NewPagoInput) {
     historial.push(pago);
   }
 
-  const totalPagado = historial
-    .filter((item) => item.idInscripcion === idInscripcion)
-    .reduce((total, item) => total + item.monto, 0);
+  const pagosDeInscripcion = historial.filter((item) => item.idInscripcion === idInscripcion);
+  const totalHistorial = pagosDeInscripcion.reduce((total, item) => total + item.monto, 0);
+  const historialPrevioDeInscripcion = historialAntes.filter(
+    (item) => item.idInscripcion === idInscripcion
+  );
+  const historialTienePagosPrevios = historialPrevioDeInscripcion.length > 0 ||
+    pagosDeInscripcion.some((item) => item.idPago !== pago.idPago);
+  const pagoPrevioFueraDeHistorial = !historialTienePagosPrevios
+    ? Math.max(anticipoPrevio?.montoPagado ?? 0, 0)
+    : 0;
+  const totalPagado = pagoPrevioFueraDeHistorial + totalHistorial;
   const balancePendiente = Math.max(servicio.precioTotal - totalPagado, 0);
   const estadoPago = totalPagado <= 0
     ? "Anticipo pendiente"
@@ -1303,7 +1320,12 @@ export async function postProgramacionCurso(input: NewProgramacionCursoInput) {
     modalidad: programacionCurso.modalidad,
     estado_programacion: programacionCurso.estadoProgramacion,
     nota: programacionCurso.nota,
-  });
+  }, "RAW");
+
+  const savedProgramaciones = await getProgramacionCursos();
+  if (!savedProgramaciones.some((item) => item.idProgramacion === idProgramacion)) {
+    throw new Error("Schedule could not be verified after saving");
+  }
 
   return programacionCurso;
 }

@@ -15,6 +15,15 @@ function toDateParts(value: string) {
     return { date: "", time: "09:00" };
   }
 
+  const sheetSerial = Number(value);
+  if (/^\d+(\.\d+)?$/.test(value) && sheetSerial > 20000 && sheetSerial < 100000) {
+    const parsedSerial = new Date(Date.UTC(1899, 11, 30) + sheetSerial * 86_400_000);
+    return {
+      date: parsedSerial.toISOString().slice(0, 10),
+      time: parsedSerial.toISOString().slice(11, 16),
+    };
+  }
+
   const parsed = new Date(value);
   if (!Number.isNaN(parsed.getTime())) {
     return {
