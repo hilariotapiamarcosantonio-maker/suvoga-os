@@ -106,8 +106,10 @@ export default async function AdminPage() {
       fechaProgramada: inscripcion.fechaProgramada || prog?.fechaHora || "",
       estadoAsistencia,
       estadoPago,
+      metodoPago: anticipo?.metodoPago || "",
       montoPagado,
       balancePendiente,
+      precioTotal: curso?.precioTotal ?? 0,
       crmStatus: deriveCrmStatus(estadoAsistencia, estadoPago, montoPagado, balancePendiente),
       esRegistroPrueba,
       origenRegistro: inscripcion.origenRegistro || paciente?.origenRegistro || "",
@@ -116,7 +118,10 @@ export default async function AdminPage() {
   });
 
   const courses: AdminCourse[] = data.catalogo
-    .filter((servicio) => servicio.tipo.toLowerCase().includes("curso"))
+    .filter((servicio) => {
+      const tipo = servicio.tipo.toLowerCase();
+      return tipo.includes("curso") || tipo.includes("taller") || tipo.includes("master");
+    })
     .map((servicio) => ({
       idServicio: servicio.idServicio,
       nombre: servicio.nombre,

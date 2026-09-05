@@ -153,6 +153,18 @@ export type NewAnticipoInput = {
   estadoPago?: string;
 };
 
+export type UpdateAnticipoInput = {
+  idInscripcion: string;
+  montoPagado: number;
+  metodoPago?: string;
+  action: "pendiente" | "confirmado" | "completa";
+};
+
+export type UpdateInscripcionInput = {
+  idInscripcion: string;
+  estadoAsistencia: string;
+};
+
 export type NewProgramacionCursoInput = {
   idProgramacion?: string;
   idServicio: string;
@@ -475,6 +487,85 @@ function valueForHeader(header: string, row: SheetRow) {
   return "";
 }
 
+function columnToA1(columnNumber: number) {
+  let current = columnNumber;
+  let result = "";
+
+  while (current > 0) {
+    const remainder = (current - 1) % 26;
+    result = String.fromCharCode(65 + remainder) + result;
+    current = Math.floor((current - 1) / 26);
+  }
+
+  return result;
+}
+
+async function readSheetValuesForWrite(sheetName: SheetName) {
+  const { sheets, spreadsheetId } = await getSheetsClient();
+  if (!sheets || !spreadsheetId) throw new Error("Google Sheets not configured");
+
+  const response = await sheets.spreadsheets.values.get({
+    spreadsheetId,
+    range: `${sheetName}!${SHEET_READ_RANGES[sheetName]}`,
+    valueRenderOption: "UNFORMATTED_VALUE",
+  });
+  const values = (response.data.values || []) as RawValue[][];
+  const headers = (values[0] || []).map(String);
+  const missing = reportSchemaWarning(sheetName, headers, "write");
+
+  if (missing.length > 0) {
+    throw new Error(
+      `Google Sheets schema incomplete for ${sheetName}. Missing required columns: ${missing.join(", ")}`
+    );
+  }
+
+  return { sheets, spreadsheetId, headers, values };
+}
+
+async function updateById(
+  sheetName: SheetName,
+  idField: string,
+  idValue: string,
+  updates: Record<string, RawValue>
+) {
+  const normalizedId = idValue.trim();
+  if (!normalizedId) throw new Error("Missing row ID");
+
+  const { sheets, spreadsheetId, headers, values } = await readSheetValuesForWrite(sheetName);
+  const idColumn = headers.findIndex((header) => resolveCanonicalField(header) === idField);
+
+  if (idColumn < 0) throw new Error(`Missing identifier column ${idField}`);
+
+  const matchingRows = values
+    .slice(1)
+    .map((row, index) => ({ row, rowNumber: index + 2 }))
+    .filter(({ row }) => String(row[idColumn] ?? "").trim() === normalizedId);
+
+  if (matchingRows.length === 0) throw new Error(`Row not found for ${normalizedId}`);
+  if (matchingRows.length > 1) throw new Error(`Duplicate row ID ${normalizedId}`);
+
+  const rowNumber = matchingRows[0].rowNumber;
+  const data = Object.entries(updates).map(([field, value]) => {
+    const column = headers.findIndex((header) => resolveCanonicalField(header) === field);
+    if (column < 0) throw new Error(`Missing update column ${field}`);
+
+    return {
+      range: `${sheetName}!${columnToA1(column + 1)}${rowNumber}`,
+      values: [[value]],
+    };
+  });
+
+  await sheets.spreadsheets.values.batchUpdate({
+    spreadsheetId,
+    requestBody: {
+      valueInputOption: "USER_ENTERED",
+      data,
+    },
+  });
+
+  return { rowNumber };
+}
+
 async function getHeaders(sheetName: string) {
   const { sheets, spreadsheetId } = await getSheetsClient();
   if (!sheets || !spreadsheetId) throw new Error("Google Sheets not configured");
@@ -730,6 +821,68 @@ export async function postAnticipo(input: NewAnticipoInput) {
   });
 
   return anticipo;
+}
+
+export async function updateAnticipo(input: UpdateAnticipoInput) {
+  const idInscripcion = input.idInscripcion.trim();
+  const montoSolicitado = Math.max(Number(input.montoPagado) || 0, 0);
+  const [inscripciones, catalogo] = await Promise.all([getInscripciones(), getCatalogo()]);
+  const inscripcion = inscripciones.find((item) => item.idInscripcion === idInscripcion);
+  const servicio = inscripcion
+    ? catalogo.find((item) => item.idServicio === inscripcion.idServicio)
+    : undefined;
+
+  if (!inscripcion || !servicio) throw new Error("Inscription or course not found");
+
+  const precioTotal = Math.max(servicio.precioTotal, 0);
+  const montoPagado = input.action === "pendiente"
+    ? 0
+    : input.action === "completa"
+      ? precioTotal
+      : montoSolicitado;
+
+  if (input.action === "confirmado" && montoPagado <= 0) {
+    throw new Error("A confirmed advance requires a paid amount");
+  }
+
+  const balancePendiente = Math.max(precioTotal - montoPagado, 0);
+  const estadoPago = input.action === "pendiente"
+    ? "Pendiente"
+    : balancePendiente > 0
+      ? "Parcial"
+      : "Pagado";
+  const metodoPago = input.metodoPago?.trim() ?? "";
+
+  await updateById(SHEETS.anticipos, "id_inscripcion", idInscripcion, {
+    monto_pagado: montoPagado,
+    balance_pendiente: balancePendiente,
+    metodo_pago: metodoPago,
+    estado_pago: estadoPago,
+  });
+
+  return {
+    idInscripcion,
+    montoPagado,
+    balancePendiente,
+    metodoPago,
+    estadoPago,
+  };
+}
+
+export async function updateInscripcion(input: UpdateInscripcionInput) {
+  const estadoAsistencia = input.estadoAsistencia.trim();
+  if (!input.idInscripcion.trim() || !estadoAsistencia) {
+    throw new Error("Inscription ID and attendance status are required");
+  }
+
+  await updateById(SHEETS.inscripciones, "id_inscripcion", input.idInscripcion, {
+    estado_asistencia: estadoAsistencia,
+  });
+
+  return {
+    idInscripcion: input.idInscripcion.trim(),
+    estadoAsistencia,
+  };
 }
 
 export async function postInscripcion(input: NewInscripcionInput) {

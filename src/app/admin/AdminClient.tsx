@@ -37,8 +37,10 @@ export type AdminCrmRow = {
   fechaProgramada: string;
   estadoAsistencia: string;
   estadoPago: string;
+  metodoPago: string;
   montoPagado: number;
   balancePendiente: number;
+  precioTotal: number;
   crmStatus: string;
   esRegistroPrueba?: boolean;
   origenRegistro?: string;
@@ -110,6 +112,17 @@ type CalendarCell = {
   currentMonth: boolean;
 };
 
+type PaymentAction = "pendiente" | "confirmado" | "completa";
+type SaveMessage = {
+  rowId: string;
+  type: "success" | "error";
+  text: string;
+};
+type PaymentDraft = {
+  montoPagado: string;
+  metodoPago: string;
+};
+
 // ─── Constants ──────────────────────────────────────────────────────────────
 
 const weekdays = ["Dom", "Lun", "Mar", "Mie", "Jue", "Vie", "Sab"];
@@ -120,6 +133,23 @@ const initialCourseForm: CourseFormState = {
   anticipo: "1000",
   cupos: "12",
 };
+
+const ATTENDANCE_STATUSES = [
+  "Inscrito",
+  "Contactado",
+  "Asistió",
+  "No asistió",
+  "Reprogramar",
+  "Finalizada",
+] as const;
+
+const PAYMENT_ACTIONS: Array<[PaymentAction, string]> = [
+  ["pendiente", "Anticipo pendiente"],
+  ["confirmado", "Anticipo confirmado"],
+  ["completa", "Inscripción completa"],
+];
+
+const SAVE_ERROR_MESSAGE = "No se pudo guardar. Revisa conexión o permisos.";
 
 const CRM_STATUS_COLORS: Record<string, string> = {
   "Nueva inscripción":    "border-blue-200 bg-blue-50 text-blue-700",
@@ -322,23 +352,27 @@ export function AdminClient({
   const [isCourseModalOpen, setIsCourseModalOpen] = useState(false);
   const [courseForm, setCourseForm] = useState<CourseFormState>(initialCourseForm);
   const [courseFormError, setCourseFormError] = useState("");
-  const [localCrmStatus, setLocalCrmStatus] = useState<Record<string, string>>({});
+  const [localCrmOverrides, setLocalCrmOverrides] = useState<Record<string, Partial<AdminCrmRow>>>({});
+  const [paymentDrafts, setPaymentDrafts] = useState<Record<string, PaymentDraft>>({});
+  const [savingKey, setSavingKey] = useState<string | null>(null);
+  const [saveMessage, setSaveMessage] = useState<SaveMessage | null>(null);
   const [expandedRow, setExpandedRow] = useState<string | null>(null);
   const [includeTestRecords, setIncludeTestRecords] = useState(false);
 
   const visibleCrmRows = useMemo(() => {
-    const rows = includeTestRecords ? crmRows : crmRows.filter((row) => !row.esRegistroPrueba);
+    const rows = (includeTestRecords ? crmRows : crmRows.filter((row) => !row.esRegistroPrueba))
+      .map((row) => ({ ...row, ...localCrmOverrides[row.idInscripcion] }));
     return [...rows].sort((a, b) => {
-      const aStatus = localCrmStatus[a.idInscripcion] || a.crmStatus;
-      const bStatus = localCrmStatus[b.idInscripcion] || b.crmStatus;
+      const aStatus = a.crmStatus;
+      const bStatus = b.crmStatus;
       const newPriority = Number(isNewRegistration(bStatus)) - Number(isNewRegistration(aStatus));
       if (newPriority !== 0) return newPriority;
       return dateSortValue(b.fechaProgramada) - dateSortValue(a.fechaProgramada);
     });
-  }, [crmRows, includeTestRecords, localCrmStatus]);
+  }, [crmRows, includeTestRecords, localCrmOverrides]);
   const testRecordCount = crmRows.filter((row) => row.esRegistroPrueba).length;
-  const pendingCount = visibleCrmRows.filter((r) => isPending(localCrmStatus[r.idInscripcion] || r.crmStatus)).length;
-  const paidCount = visibleCrmRows.filter((r) => !isPending(localCrmStatus[r.idInscripcion] || r.crmStatus)).length;
+  const pendingCount = visibleCrmRows.filter((r) => isPending(r.crmStatus)).length;
+  const paidCount = visibleCrmRows.filter((r) => !isPending(r.crmStatus)).length;
   const selectedCourse = catalogCourses.find((c) => c.idServicio === courseId);
   const dayGrid = getDayGrid(currentMonth);
 
@@ -367,14 +401,14 @@ export function AdminClient({
 
   // CRM filtered rows
   const crmStatuses = useMemo(() => {
-    const set = new Set(visibleCrmRows.map((r) => localCrmStatus[r.idInscripcion] || r.crmStatus));
+    const set = new Set(visibleCrmRows.map((r) => r.crmStatus));
     return ["Todos", ...Array.from(set)];
-  }, [visibleCrmRows, localCrmStatus]);
+  }, [visibleCrmRows]);
 
   const filteredCrmRows = useMemo(() => {
     const needle = crmQuery.trim().toLowerCase();
     return visibleCrmRows.filter((row) => {
-      const effectiveStatus = localCrmStatus[row.idInscripcion] || row.crmStatus;
+      const effectiveStatus = row.crmStatus;
       const matchFilter = crmFilter === "Todos" || effectiveStatus === crmFilter;
       if (!matchFilter) return false;
       if (!needle) return true;
@@ -383,7 +417,7 @@ export function AdminClient({
         .toLowerCase()
         .includes(needle);
     });
-  }, [crmQuery, crmFilter, visibleCrmRows, localCrmStatus]);
+  }, [crmQuery, crmFilter, visibleCrmRows]);
 
   const visibleCourseViews = useMemo(() => {
     const views = new Map(
@@ -402,7 +436,7 @@ export function AdminClient({
     for (const row of visibleCrmRows) {
       const view = views.get(row.idServicio);
       if (!view) continue;
-      const effectiveStatus = localCrmStatus[row.idInscripcion] || row.crmStatus;
+      const effectiveStatus = row.crmStatus;
       view.inscritas += 1;
       if (row.montoPagado > 0) view.pagosRecibidos += row.montoPagado;
       if (row.balancePendiente > 0) view.balancePendienteTotal += row.balancePendiente;
@@ -410,7 +444,7 @@ export function AdminClient({
     }
 
     return Array.from(views.values()).sort((a, b) => b.inscritas - a.inscritas);
-  }, [courseViews, localCrmStatus, visibleCrmRows]);
+  }, [courseViews, visibleCrmRows]);
 
   const eventsByDate = useMemo(() => {
     return events.reduce<Record<string, AdminScheduledCourse[]>>((acc, event) => {
@@ -425,9 +459,10 @@ export function AdminClient({
     setCourseId((current) => current || mergedCourses[0]?.idServicio || "");
   }, [courses]);
 
-  function handleScheduleCourse(event: FormEvent<HTMLFormElement>) {
+  async function handleScheduleCourse(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     setFormError("");
+    setSaveMessage(null);
     const seats = Number.parseInt(capacity, 10);
     const validDate = /^\d{4}-\d{2}-\d{2}$/.test(selectedDate);
     const validTime = /^\d{2}:\d{2}$/.test(selectedTime);
@@ -435,22 +470,145 @@ export function AdminClient({
       setFormError("Completa curso, fecha, hora y cupos con formato valido.");
       return;
     }
-    setEvents((current) => [
+
+    setSavingKey("programacion");
+    try {
+      const response = await fetch("/admin/api/programaciones", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          idServicio: selectedCourse.idServicio,
+          fechaHora: `${selectedDate}T${selectedTime}`,
+          cuposTotales: seats,
+        }),
+      });
+      const payload = (await response.json().catch(() => ({}))) as Partial<AdminScheduledCourse> & { idProgramacion?: string; error?: string };
+      const idProgramacion = payload.idProgramacion;
+      if (!response.ok || !idProgramacion) throw new Error(payload.error || SAVE_ERROR_MESSAGE);
+
+      setEvents((current) => [
+        ...current,
+        {
+          id: idProgramacion,
+          courseId: selectedCourse.idServicio,
+          courseName: selectedCourse.nombre,
+          date: selectedDate,
+          time: selectedTime,
+          capacity: seats,
+          remaining: seats,
+        },
+      ]);
+      setCurrentMonth(new Date(`${selectedDate}T12:00:00`));
+      setSelectedDate("");
+      setSelectedTime("09:00");
+      setCapacity(String(selectedCourse.cuposTotales || 12));
+      setSaveMessage({ rowId: "programacion", type: "success", text: "Guardado correctamente" });
+    } catch {
+      setFormError(SAVE_ERROR_MESSAGE);
+      setSaveMessage({ rowId: "programacion", type: "error", text: SAVE_ERROR_MESSAGE });
+    } finally {
+      setSavingKey(null);
+    }
+  }
+
+  function paymentDraftFor(row: AdminCrmRow): PaymentDraft {
+    return paymentDrafts[row.idInscripcion] ?? {
+      montoPagado: row.montoPagado > 0 ? String(row.montoPagado) : "",
+      metodoPago: row.metodoPago,
+    };
+  }
+
+  function updatePaymentDraft(rowId: string, field: keyof PaymentDraft, value: string) {
+    setPaymentDrafts((current) => ({
       ...current,
-      {
-        id: `local-${selectedCourse.idServicio}-${selectedDate}-${selectedTime}`,
-        courseId: selectedCourse.idServicio,
-        courseName: selectedCourse.nombre,
-        date: selectedDate,
-        time: selectedTime,
-        capacity: seats,
-        remaining: seats,
+      [rowId]: {
+        ...current[rowId],
+        montoPagado: current[rowId]?.montoPagado ?? "",
+        metodoPago: current[rowId]?.metodoPago ?? "",
+        [field]: value,
       },
-    ]);
-    setCurrentMonth(new Date(`${selectedDate}T12:00:00`));
-    setSelectedDate("");
-    setSelectedTime("09:00");
-    setCapacity(String(selectedCourse.cuposTotales || 12));
+    }));
+  }
+
+  async function savePayment(row: AdminCrmRow, action: PaymentAction) {
+    const draft = paymentDraftFor(row);
+    const montoPagado = parsePositiveNumber(draft.montoPagado || "0");
+    if (Number.isNaN(montoPagado)) {
+      setSaveMessage({ rowId: row.idInscripcion, type: "error", text: "Escribe un monto válido." });
+      return;
+    }
+
+    setSavingKey(`${row.idInscripcion}:payment`);
+    setSaveMessage(null);
+    try {
+      const response = await fetch("/admin/api/anticipos", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          idInscripcion: row.idInscripcion,
+          action,
+          montoPagado,
+          metodoPago: draft.metodoPago,
+        }),
+      });
+      const payload = (await response.json().catch(() => ({}))) as Partial<AdminCrmRow> & { error?: string };
+      if (!response.ok || typeof payload.montoPagado !== "number") throw new Error(payload.error || SAVE_ERROR_MESSAGE);
+
+      setLocalCrmOverrides((current) => ({
+        ...current,
+        [row.idInscripcion]: {
+          ...current[row.idInscripcion],
+          montoPagado: payload.montoPagado,
+          balancePendiente: payload.balancePendiente ?? 0,
+          estadoPago: payload.estadoPago ?? "",
+          metodoPago: payload.metodoPago ?? draft.metodoPago,
+          crmStatus: action === "completa"
+            ? "Inscripción completa"
+            : action === "confirmado"
+              ? "Anticipo confirmado"
+              : "Anticipo pendiente",
+        },
+      }));
+      setPaymentDrafts((current) => ({
+        ...current,
+        [row.idInscripcion]: {
+          montoPagado: String(payload.montoPagado),
+          metodoPago: payload.metodoPago ?? draft.metodoPago,
+        },
+      }));
+      setSaveMessage({ rowId: row.idInscripcion, type: "success", text: "Guardado correctamente" });
+    } catch {
+      setSaveMessage({ rowId: row.idInscripcion, type: "error", text: SAVE_ERROR_MESSAGE });
+    } finally {
+      setSavingKey(null);
+    }
+  }
+
+  async function saveAttendance(row: AdminCrmRow, estadoAsistencia: string) {
+    setSavingKey(`${row.idInscripcion}:attendance`);
+    setSaveMessage(null);
+    try {
+      const response = await fetch("/admin/api/inscripciones", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ idInscripcion: row.idInscripcion, estadoAsistencia }),
+      });
+      const payload = (await response.json().catch(() => ({}))) as { error?: string };
+      if (!response.ok) throw new Error(payload.error || SAVE_ERROR_MESSAGE);
+
+      setLocalCrmOverrides((current) => ({
+        ...current,
+        [row.idInscripcion]: {
+          ...current[row.idInscripcion],
+          estadoAsistencia,
+        },
+      }));
+      setSaveMessage({ rowId: row.idInscripcion, type: "success", text: "Guardado correctamente" });
+    } catch {
+      setSaveMessage({ rowId: row.idInscripcion, type: "error", text: SAVE_ERROR_MESSAGE });
+    } finally {
+      setSavingKey(null);
+    }
   }
 
   function updateCourseForm(field: keyof CourseFormState, value: string) {
@@ -497,24 +655,6 @@ export function AdminClient({
       ? "bg-[#0D3B22] text-[#FDFBF7] shadow-sm"
       : "bg-transparent text-[#4E6658] hover:bg-[#FDFBF7]";
   }
-
-  function updateLocalStatus(id: string, status: string) {
-    setLocalCrmStatus((prev) => ({ ...prev, [id]: status }));
-  }
-
-  const ALL_CRM_STATUSES = [
-    "Nueva inscripción",
-    "Contactar por WhatsApp",
-    "Anticipo pendiente",
-    "Anticipo confirmado",
-    "Balance pendiente",
-    "Inscripción completa",
-    "Recordatorio enviado",
-    "Asistió",
-    "No asistió",
-    "Reprogramar",
-    "Finalizada",
-  ];
 
   return (
     <main className="min-h-[calc(100vh-5rem)] bg-[#FDFBF7] px-4 py-8 text-[#0D3B22] sm:px-6 lg:px-8 overflow-hidden max-w-full">
@@ -767,9 +907,15 @@ export function AdminClient({
               {filteredCrmRows.length > 0 ? (
                 <div className="mt-5 space-y-3">
                   {filteredCrmRows.map((row) => {
-                    const effectiveStatus = localCrmStatus[row.idInscripcion] || row.crmStatus;
+                    const effectiveStatus = row.crmStatus;
+                    const attendanceStatus = row.estadoAsistencia || "Inscrito";
                     const waHref = whatsappHref(row.whatsapp, row.nombreCompleto, row.cursoNombre);
                     const isExpanded = expandedRow === row.idInscripcion;
+                    const paymentDraft = paymentDraftFor(row);
+                    const paymentAmount = parsePositiveNumber(paymentDraft.montoPagado || "0");
+                    const paymentBalance = Number.isNaN(paymentAmount)
+                      ? row.balancePendiente
+                      : Math.max(row.precioTotal - paymentAmount, 0);
 
                     return (
                       <div key={row.idInscripcion} className="rounded-2xl border border-[#E7DAC2] bg-[#FDFBF7] overflow-hidden transition-all duration-200">
@@ -876,27 +1022,81 @@ export function AdminClient({
                               </div>
                             </div>
 
-                            {/* Mark follow-up */}
-                            <div>
-                              <p className="text-xs font-semibold uppercase tracking-[0.16em] text-[#6B6048] mb-2">Marcar seguimiento</p>
-                              <div className="flex flex-wrap gap-2">
-                                {ALL_CRM_STATUSES.map((s) => (
+                            {/* Persist payment information in Control_Anticipos */}
+                            <div className="rounded-2xl border border-[#D4AF37]/25 bg-[#FDFBF7] p-4">
+                              <div className="flex flex-col gap-1 sm:flex-row sm:items-center sm:justify-between">
+                                <div>
+                                  <p className="text-xs font-semibold uppercase tracking-[0.16em] text-[#6B6048]">Guardar anticipo</p>
+                                  <p className="mt-1 text-[11px] text-[#8A7D69]">Actualiza Control_Anticipos y recalcula el balance.</p>
+                                </div>
+                                <span className="text-xs font-semibold text-[#0D3B22]">Balance calculado: {formatDop(paymentBalance)}</span>
+                              </div>
+                              <div className="mt-3 grid gap-3 sm:grid-cols-2">
+                                <label className="block">
+                                  <span className="text-[10px] font-semibold uppercase tracking-[0.14em] text-[#8A7D69]">Monto pagado</span>
+                                  <input
+                                    value={paymentDraft.montoPagado}
+                                    onChange={(event) => updatePaymentDraft(row.idInscripcion, "montoPagado", event.target.value)}
+                                    inputMode="decimal"
+                                    placeholder="0"
+                                    className="mt-1.5 h-10 w-full rounded-xl border border-[#D4AF37]/30 bg-white px-3 text-sm font-medium text-[#0D3B22] outline-none focus:border-[#0D3B22]"
+                                  />
+                                </label>
+                                <label className="block">
+                                  <span className="text-[10px] font-semibold uppercase tracking-[0.14em] text-[#8A7D69]">Método de pago</span>
+                                  <input
+                                    value={paymentDraft.metodoPago}
+                                    onChange={(event) => updatePaymentDraft(row.idInscripcion, "metodoPago", event.target.value)}
+                                    placeholder="Transferencia, efectivo…"
+                                    className="mt-1.5 h-10 w-full rounded-xl border border-[#D4AF37]/30 bg-white px-3 text-sm font-medium text-[#0D3B22] outline-none focus:border-[#0D3B22]"
+                                  />
+                                </label>
+                              </div>
+                              <div className="mt-3 flex flex-wrap gap-2">
+                                {PAYMENT_ACTIONS.map(([action, label]) => (
                                   <button
-                                    key={s}
+                                    key={action}
                                     type="button"
-                                    onClick={() => updateLocalStatus(row.idInscripcion, s)}
-                                    className={`inline-flex rounded-full border px-3 py-1 text-xs font-semibold transition-all ${
-                                      effectiveStatus === s
+                                    disabled={savingKey === `${row.idInscripcion}:payment`}
+                                    onClick={() => savePayment(row, action)}
+                                    className="inline-flex min-h-9 items-center justify-center rounded-xl border border-[#D4AF37]/30 bg-white px-3 text-xs font-semibold text-[#0D3B22] transition-colors hover:bg-[#F7F1E7] disabled:cursor-wait disabled:opacity-60"
+                                  >
+                                    {savingKey === `${row.idInscripcion}:payment` ? "Guardando…" : label}
+                                  </button>
+                                ))}
+                              </div>
+                            </div>
+
+                            {/* Persist attendance and follow-up in Inscripciones_Citas */}
+                            <div>
+                              <p className="mb-2 text-xs font-semibold uppercase tracking-[0.16em] text-[#6B6048]">Asistencia y seguimiento</p>
+                              <div className="flex flex-wrap gap-2">
+                                {ATTENDANCE_STATUSES.map((status) => (
+                                  <button
+                                    key={status}
+                                    type="button"
+                                    disabled={savingKey === `${row.idInscripcion}:attendance`}
+                                    onClick={() => saveAttendance(row, status)}
+                                    className={`inline-flex rounded-full border px-3 py-1 text-xs font-semibold transition-all disabled:cursor-wait disabled:opacity-60 ${
+                                      attendanceStatus === status
                                         ? "border-[#0D3B22] bg-[#0D3B22] text-[#FDFBF7]"
                                         : "border-[#D4AF37]/30 bg-white text-[#0D3B22] hover:border-[#0D3B22]/30 hover:bg-[#FDFBF7]"
                                     }`}
                                   >
-                                    {s}
+                                    {savingKey === `${row.idInscripcion}:attendance` ? "Guardando…" : status}
                                   </button>
                                 ))}
                               </div>
-                              <p className="mt-2 text-[10px] text-[#8A7D69]">El seguimiento es local hasta que se implemente escritura a Google Sheets.</p>
                             </div>
+
+                            {saveMessage?.rowId === row.idInscripcion ? (
+                              <p
+                                role="status"
+                                className={`rounded-xl border px-3 py-2 text-sm font-semibold ${saveMessage.type === "success" ? "border-[#0D3B22]/15 bg-[#0D3B22]/10 text-[#0D3B22]" : "border-red-200 bg-red-50 text-red-700"}`}
+                              >
+                                {saveMessage.text}
+                              </p>
+                            ) : null}
                           </div>
                         )}
                       </div>
@@ -1115,10 +1315,15 @@ export function AdminClient({
                 </label>
 
                 {formError ? <p className="rounded-2xl border border-[#D4AF37]/30 bg-[#D4AF37]/10 px-3 py-2 text-sm font-medium text-[#8D7530]">{formError}</p> : null}
+                {saveMessage?.rowId === "programacion" ? (
+                  <p role="status" className={`rounded-2xl border px-3 py-2 text-sm font-semibold ${saveMessage.type === "success" ? "border-[#0D3B22]/15 bg-[#0D3B22]/10 text-[#0D3B22]" : "border-red-200 bg-red-50 text-red-700"}`}>
+                    {saveMessage.text}
+                  </p>
+                ) : null}
 
-                <button type="submit" className="inline-flex h-12 w-full items-center justify-center gap-2 rounded-2xl bg-[#0D3B22] px-5 text-sm font-semibold text-[#FDFBF7] shadow-sm shadow-[#0D3B22]/10 transition-colors hover:bg-[#145332]">
+                <button type="submit" disabled={savingKey === "programacion"} className="inline-flex h-12 w-full items-center justify-center gap-2 rounded-2xl bg-[#0D3B22] px-5 text-sm font-semibold text-[#FDFBF7] shadow-sm shadow-[#0D3B22]/10 transition-colors hover:bg-[#145332] disabled:cursor-wait disabled:opacity-60">
                   <Leaf className="h-4 w-4" />
-                  Crear Course Chip
+                  {savingKey === "programacion" ? "Guardando…" : "Guardar programación"}
                 </button>
               </form>
             </aside>
