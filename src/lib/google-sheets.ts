@@ -21,8 +21,8 @@ export async function getSheetsClient() {
 
     const sheets = google.sheets({ version: "v4", auth });
     return { sheets, spreadsheetId };
-  } catch (error) {
-    console.error("Error inicializando cliente de Google Sheets:", error);
+  } catch {
+    console.error("Error inicializando cliente de Google Sheets.");
     return { sheets: null, spreadsheetId: null };
   }
 }

@@ -13,6 +13,7 @@ import { validateInquiryPayload } from "@/lib/inquiries/inquiry-validation";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
+const NO_STORE_HEADERS = { "Cache-Control": "no-store" };
 
 function todayInAcademyTimezone() {
   const parts = new Intl.DateTimeFormat("en", {
@@ -135,7 +136,10 @@ export async function POST(request: Request) {
       { error: "Demasiadas solicitudes. Intenta nuevamente en unos minutos." },
       {
         status: 429,
-        headers: { "Retry-After": String(rateLimit.retryAfterSeconds) },
+        headers: {
+          ...NO_STORE_HEADERS,
+          "Retry-After": String(rateLimit.retryAfterSeconds),
+        },
       }
     );
   }
@@ -147,19 +151,22 @@ export async function POST(request: Request) {
     if (!validation.ok) {
       return NextResponse.json(
         { error: validation.errors[0]?.message || "Solicitud invalida.", errors: validation.errors },
-        { status: 400 }
+        { status: 400, headers: NO_STORE_HEADERS }
       );
     }
 
     const { inquiry } = validation;
     if (wasSubmissionProcessed(inquiry.submissionId)) {
-      return NextResponse.json({
-        success: true,
-        duplicate: true,
-        requestId: inquiry.requestId,
-        calendar: { status: "skipped" },
-        message: "Solicitud ya recibida. No se duplico el registro.",
-      });
+      return NextResponse.json(
+        {
+          success: true,
+          duplicate: true,
+          requestId: inquiry.requestId,
+          calendar: { status: "skipped" },
+          message: "Solicitud ya recibida. No se duplico el registro.",
+        },
+        { headers: NO_STORE_HEADERS }
+      );
     }
 
     const registration = await registerInquiry(inquiry);
@@ -192,7 +199,7 @@ export async function POST(request: Request) {
         email,
         message,
       },
-      { status }
+      { status, headers: NO_STORE_HEADERS }
     );
   } catch (error) {
     const maybeStatus =
@@ -203,28 +210,26 @@ export async function POST(request: Request) {
     if (maybeStatus === 404) {
       return NextResponse.json(
         { error: error instanceof Error ? error.message : "Recurso no encontrado." },
-        { status: 404 }
+        { status: 404, headers: NO_STORE_HEADERS }
       );
     }
 
     console.error("Error creating SuVoGa inquiry:", {
-      message: error instanceof Error ? error.message : "Unknown error",
       status: maybeStatus || undefined,
     });
 
     if (isGooglePermissionError(error)) {
       return NextResponse.json(
         {
-          error:
-            "La app no tiene permisos para escribir en SuVoGa_OS_DB. Comparte el Sheet con la cuenta de servicio configurada.",
+          error: "No se pudo registrar la solicitud en este momento.",
         },
-        { status: 403 }
+        { status: 403, headers: NO_STORE_HEADERS }
       );
     }
 
     return NextResponse.json(
       { error: "Error interno al registrar la solicitud." },
-      { status: 500 }
+      { status: 500, headers: NO_STORE_HEADERS }
     );
   }
 }

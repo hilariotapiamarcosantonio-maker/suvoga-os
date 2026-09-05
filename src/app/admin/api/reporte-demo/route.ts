@@ -17,8 +17,8 @@ export async function GET() {
       },
       { headers: { "Cache-Control": "no-store" } }
     );
-  } catch (error) {
-    console.error("[admin] No se pudo generar el reporte de prueba:", error);
+  } catch {
+    console.error("[admin] No se pudo generar el reporte de prueba.");
     return NextResponse.json(
       { error: "No se pudo generar el reporte." },
       { status: 500, headers: { "Cache-Control": "no-store" } }

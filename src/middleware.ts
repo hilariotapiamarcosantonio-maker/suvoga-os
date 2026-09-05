@@ -1,13 +1,28 @@
 import { NextRequest, NextResponse } from "next/server";
 import { brandingConfig } from "@/config/branding.config";
 
+function secureAdminResponse(response: NextResponse) {
+  response.headers.set("Cache-Control", "no-store");
+  response.headers.set("X-Robots-Tag", "noindex, nofollow, noarchive");
+  response.headers.set("X-Content-Type-Options", "nosniff");
+  response.headers.set("X-Frame-Options", "DENY");
+  response.headers.set("Referrer-Policy", "no-referrer");
+  response.headers.set(
+    "Permissions-Policy",
+    "camera=(), microphone=(), geolocation=()"
+  );
+  return response;
+}
+
 function unauthorized() {
-  return new NextResponse("Authentication required", {
-    status: 401,
-    headers: {
-      "WWW-Authenticate": `Basic realm="${brandingConfig.productName}"`,
-    },
-  });
+  return secureAdminResponse(
+    new NextResponse("Authentication required", {
+      status: 401,
+      headers: {
+        "WWW-Authenticate": `Basic realm="${brandingConfig.productName}"`,
+      },
+    })
+  );
 }
 
 export function middleware(request: NextRequest) {
@@ -15,10 +30,11 @@ export function middleware(request: NextRequest) {
   const configuredPassword = process.env.CRM_BASIC_AUTH_PASSWORD;
 
   if (!configuredUser || !configuredPassword) {
-    return new NextResponse("Admin authentication is not configured", {
-      status: 503,
-      headers: { "Cache-Control": "no-store" },
-    });
+    return secureAdminResponse(
+      new NextResponse("Admin authentication is not configured", {
+        status: 503,
+      })
+    );
   }
 
   const header = request.headers.get("authorization");
@@ -33,7 +49,7 @@ export function middleware(request: NextRequest) {
     const password = passwordParts.join(":");
 
     if (user === configuredUser && password === configuredPassword) {
-      return NextResponse.next();
+      return secureAdminResponse(NextResponse.next());
     }
   } catch {
     return unauthorized();

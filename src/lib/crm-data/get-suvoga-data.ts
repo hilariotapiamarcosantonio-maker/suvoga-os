@@ -1110,7 +1110,7 @@ export async function postPaciente(input: NewPacienteInput) {
     es_registro_prueba: paciente.esRegistroPrueba ? "TRUE" : "",
     origen_registro: paciente.origenRegistro,
     nota_interna: paciente.notaInterna,
-  });
+  }, "RAW");
 
   return paciente;
 }
@@ -1276,7 +1276,7 @@ export async function postInscripcion(input: NewInscripcionInput) {
     es_registro_prueba: inscripcion.esRegistroPrueba ? "TRUE" : "",
     origen_registro: inscripcion.origenRegistro,
     nota_interna: inscripcion.notaInterna,
-  });
+  }, "RAW");
 
   const catalogo = await getCatalogo();
   const servicio = catalogo.find((item) => item.idServicio === input.idServicio);
