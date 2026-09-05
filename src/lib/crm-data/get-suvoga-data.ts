@@ -16,6 +16,7 @@ const SHEETS = {
   inscripciones: "Inscripciones_Citas",
   anticipos: "Control_Anticipos",
   programacion_cursos: "Programacion_Cursos",
+  historial_pagos: "Historial_Pagos",
 } as const;
 
 const SHEET_READ_RANGES: Record<string, string> = {
@@ -24,6 +25,7 @@ const SHEET_READ_RANGES: Record<string, string> = {
   [SHEETS.inscripciones]: "A1:L500",
   [SHEETS.anticipos]: "A1:E500",
   [SHEETS.programacion_cursos]: "A1:E500",
+  [SHEETS.historial_pagos]: "A:O",
 };
 
 type RawValue = string | number;
@@ -74,6 +76,10 @@ export type SuvogaProgramacionCurso = {
   fechaHora: string;
   cuposTotales: number;
   cuposRestantes: number;
+  nombreGrupo?: string;
+  modalidad?: string;
+  estadoProgramacion?: string;
+  nota?: string;
 };
 
 export type SuvogaPaciente = {
@@ -93,6 +99,7 @@ export type SuvogaInscripcionCita = {
   idInscripcion: string;
   idPaciente: string;
   idServicio: string;
+  idProgramacion?: string;
   fechaProgramada: string;
   estadoAsistencia: string;
   esRegistroPrueba?: boolean;
@@ -108,12 +115,31 @@ export type SuvogaAnticipo = {
   estadoPago: string;
 };
 
+export type SuvogaPago = {
+  idPago: string;
+  idInscripcion: string;
+  idPaciente: string;
+  idServicio: string;
+  nombreAlumnoAlPagar: string;
+  nombreProgramaAlPagar: string;
+  fechaPago: string;
+  fechaVencimiento: string;
+  monto: number;
+  metodoPago: string;
+  concepto: string;
+  estadoTiempo: string;
+  nota: string;
+  registradoPor: string;
+  registradoEn: string;
+};
+
 export type SuvogaData = {
   catalogo: SuvogaServicio[];
   pacientes: SuvogaPaciente[];
   inscripciones: SuvogaInscripcionCita[];
   anticipos: SuvogaAnticipo[];
   programacionCursos: SuvogaProgramacionCurso[];
+  historialPagos: SuvogaPago[];
   source: Source;
 };
 
@@ -162,7 +188,8 @@ export type UpdateAnticipoInput = {
 
 export type UpdateInscripcionInput = {
   idInscripcion: string;
-  estadoAsistencia: string;
+  estadoAsistencia?: string;
+  idProgramacion?: string | null;
 };
 
 export type NewProgramacionCursoInput = {
@@ -171,6 +198,26 @@ export type NewProgramacionCursoInput = {
   fechaHora: string;
   cuposTotales: number;
   cuposRestantes?: number;
+  nombreGrupo?: string;
+  modalidad?: string;
+  estadoProgramacion?: string;
+  nota?: string;
+};
+
+export type NewPagoInput = {
+  idPago?: string;
+  idInscripcion: string;
+  idPaciente: string;
+  idServicio: string;
+  nombreAlumnoAlPagar: string;
+  nombreProgramaAlPagar: string;
+  fechaPago: string;
+  fechaVencimiento?: string;
+  monto: number;
+  metodoPago?: string;
+  concepto: string;
+  nota?: string;
+  registradoPor?: string;
 };
 
 const FIELD_ALIASES: Record<string, string[]> = {
@@ -230,6 +277,28 @@ const FIELD_ALIASES: Record<string, string[]> = {
     "cuposRestantes",
     "cupos_restantes_programados",
   ],
+  nombre_grupo: ["Nombre_Grupo", "nombreGrupo", "nombre_grupo"],
+  modalidad: ["Modalidad", "modalidad"],
+  estado_programacion: ["Estado_Programacion", "estadoProgramacion", "estado_programacion"],
+  nota: ["Nota", "nota"],
+  id_pago: ["ID_Pago", "idPago", "id_pago"],
+  nombre_alumno_al_pagar: [
+    "Nombre_Alumno_Al_Pagar",
+    "nombreAlumnoAlPagar",
+    "nombre_alumno_al_pagar",
+  ],
+  nombre_programa_al_pagar: [
+    "Nombre_Programa_Al_Pagar",
+    "nombreProgramaAlPagar",
+    "nombre_programa_al_pagar",
+  ],
+  fecha_pago: ["Fecha_Pago", "fechaPago", "fecha_pago"],
+  fecha_vencimiento: ["Fecha_Vencimiento", "fechaVencimiento", "fecha_vencimiento"],
+  monto: ["Monto", "monto"],
+  concepto: ["Concepto", "concepto"],
+  estado_tiempo: ["Estado_Tiempo", "estadoTiempo", "estado_tiempo"],
+  registrado_por: ["Registrado_Por", "registradoPor", "registrado_por"],
+  registrado_en: ["Registrado_En", "registradoEn", "registrado_en"],
 };
 
 function parseNumber(value: unknown) {
@@ -295,7 +364,26 @@ const REQUIRED_SHEET_HEADERS: Record<SheetName, Array<{ label: string; aliases: 
     { label: "Cupos_Totales", aliases: FIELD_ALIASES.cupos_totales_programados },
     { label: "Cupos_Restantes", aliases: FIELD_ALIASES.cupos_restantes_programados },
   ],
+  [SHEETS.historial_pagos]: [],
 };
+
+const HISTORIAL_PAGOS_HEADERS = [
+  "ID_Pago",
+  "ID_Inscripcion",
+  "ID_Paciente",
+  "ID_Servicio",
+  "Nombre_Alumno_Al_Pagar",
+  "Nombre_Programa_Al_Pagar",
+  "Fecha_Pago",
+  "Fecha_Vencimiento",
+  "Monto",
+  "Metodo_Pago",
+  "Concepto",
+  "Estado_Tiempo",
+  "Nota",
+  "Registrado_Por",
+  "Registrado_En",
+] as const;
 
 function missingRequiredHeaders(sheetName: SheetName, headers: string[]) {
   const normalizedHeaders = new Set(headers.map(normalizeKey));
@@ -526,7 +614,8 @@ async function updateById(
   sheetName: SheetName,
   idField: string,
   idValue: string,
-  updates: Record<string, RawValue>
+  updates: Record<string, RawValue>,
+  options?: { ignoreMissingFields?: boolean }
 ) {
   const normalizedId = idValue.trim();
   if (!normalizedId) throw new Error("Missing row ID");
@@ -545,25 +634,33 @@ async function updateById(
   if (matchingRows.length > 1) throw new Error(`Duplicate row ID ${normalizedId}`);
 
   const rowNumber = matchingRows[0].rowNumber;
-  const data = Object.entries(updates).map(([field, value]) => {
+  const data = Object.entries(updates).flatMap(([field, value]) => {
     const column = headers.findIndex((header) => resolveCanonicalField(header) === field);
-    if (column < 0) throw new Error(`Missing update column ${field}`);
+    if (column < 0) {
+      if (options?.ignoreMissingFields) return [];
+      throw new Error(`Missing update column ${field}`);
+    }
 
-    return {
+    return [{
       range: `${sheetName}!${columnToA1(column + 1)}${rowNumber}`,
       values: [[value]],
-    };
+    }];
   });
 
-  await sheets.spreadsheets.values.batchUpdate({
-    spreadsheetId,
-    requestBody: {
-      valueInputOption: "USER_ENTERED",
-      data,
-    },
-  });
+  if (data.length > 0) {
+    await sheets.spreadsheets.values.batchUpdate({
+      spreadsheetId,
+      requestBody: {
+        valueInputOption: "USER_ENTERED",
+        data,
+      },
+    });
+  }
 
-  return { rowNumber };
+  return {
+    rowNumber,
+    updatedFields: data.map((item) => resolveCanonicalField(item.range.split("!")[1].replace(/\d+$/, ""))),
+  };
 }
 
 async function getHeaders(sheetName: string) {
@@ -600,6 +697,164 @@ async function appendByHeaders(sheetName: string, data: SheetRow) {
       values: [newRow],
     },
   });
+}
+
+async function ensureHistorialPagosSheet() {
+  const { sheets, spreadsheetId } = await getSheetsClient();
+  if (!sheets || !spreadsheetId) throw new Error("Google Sheets not configured");
+
+  const spreadsheet = await sheets.spreadsheets.get({
+    spreadsheetId,
+    fields: "sheets.properties",
+  });
+  const exists = spreadsheet.data.sheets?.some(
+    (sheet) => sheet.properties?.title === SHEETS.historial_pagos
+  );
+
+  if (!exists) {
+    await sheets.spreadsheets.batchUpdate({
+      spreadsheetId,
+      requestBody: {
+        requests: [{ addSheet: { properties: { title: SHEETS.historial_pagos } } }],
+      },
+    });
+  }
+
+  const headerResponse = await sheets.spreadsheets.values.get({
+    spreadsheetId,
+    range: `${SHEETS.historial_pagos}!A1:O1`,
+  });
+  const existingHeaders = (headerResponse.data.values?.[0] || []).map(String);
+  const hasAnyHeader = existingHeaders.some((header) => header.trim());
+  const missingHeaders = HISTORIAL_PAGOS_HEADERS.filter(
+    (header) => !existingHeaders.some((existing) => normalizeKey(existing) === normalizeKey(header))
+  );
+
+  if (hasAnyHeader && missingHeaders.length > 0) {
+    throw new Error(
+      `Google Sheets schema incomplete for ${SHEETS.historial_pagos}. Missing required columns: ${missingHeaders.join(", ")}`
+    );
+  }
+
+  const headers = hasAnyHeader ? existingHeaders : [...HISTORIAL_PAGOS_HEADERS];
+
+  if (!hasAnyHeader) {
+    await sheets.spreadsheets.values.update({
+      spreadsheetId,
+      range: `${SHEETS.historial_pagos}!A1:O1`,
+      valueInputOption: "RAW",
+      requestBody: { values: [HISTORIAL_PAGOS_HEADERS.slice()] },
+    });
+  }
+
+  return { sheets, spreadsheetId, headers };
+}
+
+function isIsoDate(value: string) {
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(value)) return false;
+  const parsed = new Date(`${value}T00:00:00Z`);
+  return !Number.isNaN(parsed.getTime()) && parsed.toISOString().slice(0, 10) === value;
+}
+
+const PAYMENT_CONCEPTS = [
+  "Anticipo",
+  "Pago de clase",
+  "Pago parcial",
+  "Pago final",
+  "Ajuste",
+  "Otro",
+] as const;
+
+export async function postHistorialPago(input: NewPagoInput) {
+  const idInscripcion = input.idInscripcion.trim();
+  const fechaPago = input.fechaPago.trim();
+  const fechaVencimiento = input.fechaVencimiento?.trim() ?? "";
+  const monto = Number(input.monto);
+  const concepto = input.concepto.trim();
+
+  if (!idInscripcion || !input.idPaciente.trim() || !input.idServicio.trim()) {
+    throw new Error("Payment references are required");
+  }
+  if (!Number.isFinite(monto) || monto <= 0) throw new Error("Payment amount must be positive");
+  if (!isIsoDate(fechaPago) || (fechaVencimiento && !isIsoDate(fechaVencimiento))) {
+    throw new Error("Payment dates are invalid");
+  }
+  if (!PAYMENT_CONCEPTS.includes(concepto as (typeof PAYMENT_CONCEPTS)[number])) {
+    throw new Error("Payment concept is invalid");
+  }
+
+  const pago = {
+    idPago: input.idPago?.trim() || `PAG-${Date.now()}`,
+    idInscripcion,
+    idPaciente: input.idPaciente.trim(),
+    idServicio: input.idServicio.trim(),
+    nombreAlumnoAlPagar: input.nombreAlumnoAlPagar.trim(),
+    nombreProgramaAlPagar: input.nombreProgramaAlPagar.trim(),
+    fechaPago,
+    fechaVencimiento,
+    monto,
+    metodoPago: input.metodoPago?.trim() ?? "",
+    concepto,
+    estadoTiempo: !fechaVencimiento
+      ? "Sin fecha límite"
+      : fechaPago <= fechaVencimiento
+        ? "A tiempo"
+        : "Fuera de fecha",
+    nota: input.nota?.trim() ?? "",
+    registradoPor: input.registradoPor?.trim() || "Admin SuVoGa",
+    registradoEn: new Date().toISOString(),
+  };
+
+  const [inscripciones, catalogo] = await Promise.all([getInscripciones(), getCatalogo()]);
+  const inscripcion = inscripciones.find((item) => item.idInscripcion === idInscripcion);
+  const servicio = inscripcion
+    ? catalogo.find((item) => item.idServicio === inscripcion.idServicio)
+    : undefined;
+  if (!inscripcion || !servicio) throw new Error("Inscription or course not found");
+
+  const historialAntes = await getHistorialPagos();
+  const { sheets, spreadsheetId, headers } = await ensureHistorialPagosSheet();
+  await sheets.spreadsheets.values.append({
+    spreadsheetId,
+    range: `${SHEETS.historial_pagos}!A:O`,
+    valueInputOption: "USER_ENTERED",
+    requestBody: {
+      values: [headers.map((header) => valueForHeader(header, pago))],
+    },
+  });
+
+  const historialLeida = await getHistorialPagos();
+  const historial = historialLeida.length > 0 || historialAntes.length === 0
+    ? historialLeida
+    : historialAntes;
+  if (!historial.some((item) => item.idPago === pago.idPago)) {
+    historial.push(pago);
+  }
+
+  const totalPagado = historial
+    .filter((item) => item.idInscripcion === idInscripcion)
+    .reduce((total, item) => total + item.monto, 0);
+  const balancePendiente = Math.max(servicio.precioTotal - totalPagado, 0);
+  const estadoPago = totalPagado <= 0
+    ? "Anticipo pendiente"
+    : balancePendiente > 0
+      ? "Parcial"
+      : "Pagado";
+
+  await updateById(SHEETS.anticipos, "id_inscripcion", idInscripcion, {
+    monto_pagado: totalPagado,
+    balance_pendiente: balancePendiente,
+    metodo_pago: pago.metodoPago,
+    estado_pago: estadoPago,
+  });
+
+  return {
+    pago,
+    totalPagado,
+    balancePendiente,
+    metodoPago: pago.metodoPago,
+    estadoPago,
+  };
 }
 
 function todayInAcademyTimezone() {
@@ -679,6 +934,7 @@ function mapInscripcion(row: Record<string, RawValue>): SuvogaInscripcionCita {
     idInscripcion: readString(row, FIELD_ALIASES.id_inscripcion),
     idPaciente: readString(row, FIELD_ALIASES.id_paciente),
     idServicio: readString(row, FIELD_ALIASES.id_servicio),
+    idProgramacion: readString(row, FIELD_ALIASES.id_programacion),
     fechaProgramada: readString(row, FIELD_ALIASES.fecha_programada),
     estadoAsistencia: readString(row, FIELD_ALIASES.estado_asistencia),
     esRegistroPrueba: readBoolean(row, FIELD_ALIASES.es_registro_prueba),
@@ -704,6 +960,30 @@ function mapProgramacionCurso(row: Record<string, RawValue>): SuvogaProgramacion
     fechaHora: readString(row, FIELD_ALIASES.fecha_hora),
     cuposTotales: readNumber(row, FIELD_ALIASES.cupos_totales_programados),
     cuposRestantes: readNumber(row, FIELD_ALIASES.cupos_restantes_programados),
+    nombreGrupo: readString(row, FIELD_ALIASES.nombre_grupo),
+    modalidad: readString(row, FIELD_ALIASES.modalidad),
+    estadoProgramacion: readString(row, FIELD_ALIASES.estado_programacion),
+    nota: readString(row, FIELD_ALIASES.nota),
+  };
+}
+
+function mapPago(row: Record<string, RawValue>): SuvogaPago {
+  return {
+    idPago: readString(row, FIELD_ALIASES.id_pago),
+    idInscripcion: readString(row, FIELD_ALIASES.id_inscripcion),
+    idPaciente: readString(row, FIELD_ALIASES.id_paciente),
+    idServicio: readString(row, FIELD_ALIASES.id_servicio),
+    nombreAlumnoAlPagar: readString(row, FIELD_ALIASES.nombre_alumno_al_pagar),
+    nombreProgramaAlPagar: readString(row, FIELD_ALIASES.nombre_programa_al_pagar),
+    fechaPago: readString(row, FIELD_ALIASES.fecha_pago),
+    fechaVencimiento: readString(row, FIELD_ALIASES.fecha_vencimiento),
+    monto: readNumber(row, FIELD_ALIASES.monto),
+    metodoPago: readString(row, FIELD_ALIASES.metodo_pago),
+    concepto: readString(row, FIELD_ALIASES.concepto),
+    estadoTiempo: readString(row, FIELD_ALIASES.estado_tiempo),
+    nota: readString(row, FIELD_ALIASES.nota),
+    registradoPor: readString(row, FIELD_ALIASES.registrado_por),
+    registradoEn: readString(row, FIELD_ALIASES.registrado_en),
   };
 }
 
@@ -733,14 +1013,36 @@ export async function getProgramacionCursos() {
   return table.rows.map(mapProgramacionCurso);
 }
 
+async function readOptionalSheet(sheetName: string) {
+  try {
+    const { sheets, spreadsheetId } = await getSheetsClient();
+    if (!sheets || !spreadsheetId) return [];
+
+    const response = await sheets.spreadsheets.values.get({
+      spreadsheetId,
+      range: `${sheetName}!${SHEET_READ_RANGES[sheetName]}`,
+      valueRenderOption: "UNFORMATTED_VALUE",
+    });
+    return matrixToObjects((response.data.values || []) as RawValue[][]);
+  } catch {
+    return [];
+  }
+}
+
+export async function getHistorialPagos() {
+  const rows = await readOptionalSheet(SHEETS.historial_pagos);
+  return rows.map(mapPago);
+}
+
 export async function getSuvogaData(): Promise<SuvogaData> {
-  const [catalogoTable, pacientesTable, inscripcionesTable, anticiposTable, programacionCursosTable] =
+  const [catalogoTable, pacientesTable, inscripcionesTable, anticiposTable, programacionCursosTable, historialPagos] =
     await Promise.all([
       readTable(SHEETS.catalogo),
       readTable(SHEETS.pacientes),
       readTable(SHEETS.inscripciones),
       readTable(SHEETS.anticipos),
       readTable(SHEETS.programacion_cursos),
+      getHistorialPagos(),
     ]);
 
   const source =
@@ -761,6 +1063,7 @@ export async function getSuvogaData(): Promise<SuvogaData> {
     inscripciones: inscripcionesTable.rows.map(mapInscripcion),
     anticipos: anticiposTable.rows.map(mapAnticipo),
     programacionCursos: programacionCursosTable.rows.map(mapProgramacionCurso),
+    historialPagos,
     source,
   };
 }
@@ -869,19 +1172,68 @@ export async function updateAnticipo(input: UpdateAnticipoInput) {
   };
 }
 
-export async function updateInscripcion(input: UpdateInscripcionInput) {
-  const estadoAsistencia = input.estadoAsistencia.trim();
-  if (!input.idInscripcion.trim() || !estadoAsistencia) {
-    throw new Error("Inscription ID and attendance status are required");
+async function adjustProgramacionCupos(idProgramacion: string, delta: number) {
+  if (!idProgramacion || delta === 0) return;
+  const programaciones = await getProgramacionCursos();
+  const programacion = programaciones.find((item) => item.idProgramacion === idProgramacion);
+  if (!programacion) throw new Error("Schedule not found");
+
+  const cuposRestantes = Math.max(programacion.cuposRestantes + delta, 0);
+  if (delta < 0 && programacion.cuposRestantes <= 0) {
+    throw new Error("Schedule has no remaining seats");
   }
 
-  await updateById(SHEETS.inscripciones, "id_inscripcion", input.idInscripcion, {
-    estado_asistencia: estadoAsistencia,
+  await updateById(SHEETS.programacion_cursos, "id_programacion", idProgramacion, {
+    cupos_restantes_programados: cuposRestantes,
   });
+}
+
+export async function updateInscripcion(input: UpdateInscripcionInput) {
+  const idInscripcion = input.idInscripcion.trim();
+  const estadoAsistencia = input.estadoAsistencia?.trim() ?? "";
+  const shouldUpdateProgramacion = input.idProgramacion !== undefined;
+  if (!idInscripcion || (!estadoAsistencia && !shouldUpdateProgramacion)) {
+    throw new Error("Inscription ID and an update are required");
+  }
+
+  const current = (await getInscripciones()).find((item) => item.idInscripcion === idInscripcion);
+  if (!current) throw new Error("Inscription not found");
+
+  const previousProgramacion = current.idProgramacion?.trim() ?? "";
+  const requestedProgramacion = shouldUpdateProgramacion
+    ? input.idProgramacion?.trim() ?? ""
+    : previousProgramacion;
+  if (shouldUpdateProgramacion && requestedProgramacion && requestedProgramacion !== previousProgramacion) {
+    const nextProgramacion = (await getProgramacionCursos()).find(
+      (item) => item.idProgramacion === requestedProgramacion
+    );
+    if (!nextProgramacion) throw new Error("Schedule not found");
+    if (nextProgramacion.cuposRestantes <= 0) throw new Error("Schedule has no remaining seats");
+  }
+
+  const updates: Record<string, RawValue> = {};
+  if (estadoAsistencia) updates.estado_asistencia = estadoAsistencia;
+  if (shouldUpdateProgramacion) updates.id_programacion = requestedProgramacion;
+
+  const result = await updateById(
+    SHEETS.inscripciones,
+    "id_inscripcion",
+    idInscripcion,
+    updates,
+    { ignoreMissingFields: true }
+  );
+  const idProgramacionSupported = result.updatedFields.includes("id_programacion");
+
+  if (idProgramacionSupported && shouldUpdateProgramacion && requestedProgramacion !== previousProgramacion) {
+    if (requestedProgramacion) await adjustProgramacionCupos(requestedProgramacion, -1);
+    if (previousProgramacion) await adjustProgramacionCupos(previousProgramacion, 1);
+  }
 
   return {
-    idInscripcion: input.idInscripcion.trim(),
-    estadoAsistencia,
+    idInscripcion,
+    estadoAsistencia: estadoAsistencia || current.estadoAsistencia,
+    idProgramacion: idProgramacionSupported ? requestedProgramacion : previousProgramacion,
+    idProgramacionSupported,
   };
 }
 
@@ -935,6 +1287,10 @@ export async function postProgramacionCurso(input: NewProgramacionCursoInput) {
     fechaHora: input.fechaHora,
     cuposTotales: input.cuposTotales,
     cuposRestantes: input.cuposRestantes ?? input.cuposTotales, // Initially all cupos are remaining
+    nombreGrupo: input.nombreGrupo?.trim() ?? "",
+    modalidad: input.modalidad?.trim() ?? "",
+    estadoProgramacion: input.estadoProgramacion?.trim() || "Programada",
+    nota: input.nota?.trim() ?? "",
   };
 
   await appendByHeaders(SHEETS.programacion_cursos, {
@@ -943,6 +1299,10 @@ export async function postProgramacionCurso(input: NewProgramacionCursoInput) {
     fecha_hora: programacionCurso.fechaHora,
     cupos_totales_programados: programacionCurso.cuposTotales,
     cupos_restantes_programados: programacionCurso.cuposRestantes,
+    nombre_grupo: programacionCurso.nombreGrupo,
+    modalidad: programacionCurso.modalidad,
+    estado_programacion: programacionCurso.estadoProgramacion,
+    nota: programacionCurso.nota,
   });
 
   return programacionCurso;

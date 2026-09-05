@@ -97,7 +97,9 @@ export default async function AdminPage() {
 
     return {
       idInscripcion: inscripcion.idInscripcion,
+      idPaciente: inscripcion.idPaciente,
       idServicio: inscripcion.idServicio,
+      idProgramacion: inscripcion.idProgramacion || "",
       nombreCompleto: paciente?.nombreCompleto || "Estudiante sin nombre",
       whatsapp: paciente?.whatsapp || "",
       cedula: paciente?.cedula || "",
@@ -144,10 +146,25 @@ export default async function AdminPage() {
         time: parts.time,
         capacity: programacion.cuposTotales || course?.cuposTotales || 12,
         remaining:
-          programacion.cuposRestantes ||
-          programacion.cuposTotales ||
-          course?.cuposTotales ||
+          programacion.cuposRestantes ??
+          programacion.cuposTotales ??
+          course?.cuposTotales ??
           12,
+        groupName: programacion.nombreGrupo || "",
+        modality: programacion.modalidad || "",
+        status: programacion.estadoProgramacion || "Programada",
+        note: programacion.nota || "",
+        enrolled: crmRows.filter(
+          (row) => row.idProgramacion === programacion.idProgramacion
+        ).length,
+        paymentsReceived: crmRows
+          .filter((row) => row.idProgramacion === programacion.idProgramacion)
+          .reduce((total, row) => total + row.montoPagado, 0),
+        pendingPayments: crmRows.filter(
+          (row) =>
+            row.idProgramacion === programacion.idProgramacion &&
+            row.balancePendiente > 0
+        ).length,
       };
     })
     .filter((event) => event.date);
@@ -200,6 +217,7 @@ export default async function AdminPage() {
       courses={courses}
       scheduledCourses={scheduledCourses}
       courseViews={courseViews}
+      historialPagos={data.historialPagos}
       source={data.source}
     />
   );

@@ -22,15 +22,33 @@ export async function POST(request: Request) {
     const body = (await request.json()) as Partial<UpdateInscripcionInput>;
     const idInscripcion = String(body.idInscripcion ?? "").trim();
     const estadoAsistencia = String(body.estadoAsistencia ?? "").trim();
+    const hasProgramacion = Object.prototype.hasOwnProperty.call(body, "idProgramacion");
+    const idProgramacion = body.idProgramacion == null
+      ? null
+      : String(body.idProgramacion).trim();
 
-    if (!idInscripcion || !ATTENDANCE_STATUSES.includes(estadoAsistencia as (typeof ATTENDANCE_STATUSES)[number])) {
+    const validAttendance = ATTENDANCE_STATUSES.includes(
+      estadoAsistencia as (typeof ATTENDANCE_STATUSES)[number]
+    );
+    if (!idInscripcion || (!hasProgramacion && !validAttendance) || (hasProgramacion && estadoAsistencia && !validAttendance)) {
       return NextResponse.json(
         { error: SAVE_ERROR },
         { status: 400, headers: { "Cache-Control": "no-store" } }
       );
     }
 
-    const result = await updateInscripcion({ idInscripcion, estadoAsistencia });
+    if (hasProgramacion && idProgramacion !== null && idProgramacion.length > 120) {
+      return NextResponse.json(
+        { error: SAVE_ERROR },
+        { status: 400, headers: { "Cache-Control": "no-store" } }
+      );
+    }
+
+    const result = await updateInscripcion({
+      idInscripcion,
+      ...(estadoAsistencia ? { estadoAsistencia } : {}),
+      ...(hasProgramacion ? { idProgramacion } : {}),
+    });
 
     return NextResponse.json(
       { ok: true, ...result },

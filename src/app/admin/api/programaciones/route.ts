@@ -12,6 +12,9 @@ export async function POST(request: Request) {
     const idServicio = String(body.idServicio ?? "").trim();
     const fechaHora = String(body.fechaHora ?? "").trim();
     const cuposTotales = Number(body.cuposTotales);
+    const nombreGrupo = String(body.nombreGrupo ?? "").trim();
+    const modalidad = String(body.modalidad ?? "").trim();
+    const nota = String(body.nota ?? "").trim();
     const validDateTime = /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}$/.test(fechaHora);
 
     if (
@@ -32,6 +35,10 @@ export async function POST(request: Request) {
       fechaHora,
       cuposTotales,
       cuposRestantes: cuposTotales,
+      nombreGrupo,
+      modalidad,
+      estadoProgramacion: "Programada",
+      nota,
     });
 
     return NextResponse.json(

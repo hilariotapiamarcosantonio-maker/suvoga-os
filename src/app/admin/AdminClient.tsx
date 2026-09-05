@@ -28,7 +28,9 @@ import { brand } from "@/lib/brand";
 
 export type AdminCrmRow = {
   idInscripcion: string;
+  idPaciente: string;
   idServicio: string;
+  idProgramacion: string;
   nombreCompleto: string;
   whatsapp: string;
   cedula: string;
@@ -75,6 +77,31 @@ export type AdminScheduledCourse = {
   time: string;
   capacity: number;
   remaining: number;
+  groupName?: string;
+  modality?: string;
+  status?: string;
+  note?: string;
+  enrolled?: number;
+  paymentsReceived?: number;
+  pendingPayments?: number;
+};
+
+export type AdminPayment = {
+  idPago: string;
+  idInscripcion: string;
+  idPaciente: string;
+  idServicio: string;
+  nombreAlumnoAlPagar: string;
+  nombreProgramaAlPagar: string;
+  fechaPago: string;
+  fechaVencimiento: string;
+  monto: number;
+  metodoPago: string;
+  concepto: string;
+  estadoTiempo: string;
+  nota: string;
+  registradoPor: string;
+  registradoEn: string;
 };
 
 export type AdminCourseView = {
@@ -94,6 +121,7 @@ type AdminClientProps = {
   courses: AdminCourse[];
   scheduledCourses: AdminScheduledCourse[];
   courseViews: AdminCourseView[];
+  historialPagos: AdminPayment[];
   source: string;
 };
 
@@ -121,6 +149,14 @@ type SaveMessage = {
 type PaymentDraft = {
   montoPagado: string;
   metodoPago: string;
+};
+type PaymentEntryDraft = {
+  monto: string;
+  metodoPago: string;
+  concepto: AdminPayment["concepto"];
+  fechaPago: string;
+  fechaVencimiento: string;
+  nota: string;
 };
 
 // ─── Constants ──────────────────────────────────────────────────────────────
@@ -150,6 +186,14 @@ const PAYMENT_ACTIONS: Array<[PaymentAction, string]> = [
 ];
 
 const SAVE_ERROR_MESSAGE = "No se pudo guardar. Revisa conexión o permisos.";
+const PAYMENT_CONCEPTS: PaymentEntryDraft["concepto"][] = [
+  "Anticipo",
+  "Pago de clase",
+  "Pago parcial",
+  "Pago final",
+  "Ajuste",
+  "Otro",
+];
 
 const CRM_STATUS_COLORS: Record<string, string> = {
   "Nueva inscripción":    "border-blue-200 bg-blue-50 text-blue-700",
@@ -260,6 +304,10 @@ function formatDate(dateStr: string) {
   return d.toLocaleDateString("es-DO", { day: "2-digit", month: "short", year: "numeric" });
 }
 
+function todayIsoDate() {
+  return new Date().toISOString().slice(0, 10);
+}
+
 function normalizeStoredCourses(value: unknown): AdminCourse[] {
   if (!Array.isArray(value)) return [];
   return value
@@ -336,6 +384,7 @@ export function AdminClient({
   courses,
   scheduledCourses,
   courseViews,
+  historialPagos,
   source,
 }: AdminClientProps) {
   const [activeTab, setActiveTab] = useState<AdminTab>("dashboard");
@@ -348,12 +397,17 @@ export function AdminClient({
   const [selectedDate, setSelectedDate] = useState("");
   const [selectedTime, setSelectedTime] = useState("09:00");
   const [capacity, setCapacity] = useState("12");
+  const [groupName, setGroupName] = useState("");
+  const [modality, setModality] = useState("");
+  const [scheduleNote, setScheduleNote] = useState("");
   const [formError, setFormError] = useState("");
   const [isCourseModalOpen, setIsCourseModalOpen] = useState(false);
   const [courseForm, setCourseForm] = useState<CourseFormState>(initialCourseForm);
   const [courseFormError, setCourseFormError] = useState("");
   const [localCrmOverrides, setLocalCrmOverrides] = useState<Record<string, Partial<AdminCrmRow>>>({});
   const [paymentDrafts, setPaymentDrafts] = useState<Record<string, PaymentDraft>>({});
+  const [paymentEntryDrafts, setPaymentEntryDrafts] = useState<Record<string, PaymentEntryDraft>>({});
+  const [localPaymentHistory, setLocalPaymentHistory] = useState<Record<string, AdminPayment[]>>({});
   const [savingKey, setSavingKey] = useState<string | null>(null);
   const [saveMessage, setSaveMessage] = useState<SaveMessage | null>(null);
   const [expandedRow, setExpandedRow] = useState<string | null>(null);
@@ -480,6 +534,9 @@ export function AdminClient({
           idServicio: selectedCourse.idServicio,
           fechaHora: `${selectedDate}T${selectedTime}`,
           cuposTotales: seats,
+          nombreGrupo: groupName,
+          modalidad: modality,
+          nota: scheduleNote,
         }),
       });
       const payload = (await response.json().catch(() => ({}))) as Partial<AdminScheduledCourse> & { idProgramacion?: string; error?: string };
@@ -496,12 +553,22 @@ export function AdminClient({
           time: selectedTime,
           capacity: seats,
           remaining: seats,
+          groupName,
+          modality,
+          status: "Programada",
+          note: scheduleNote,
+          enrolled: 0,
+          paymentsReceived: 0,
+          pendingPayments: 0,
         },
       ]);
       setCurrentMonth(new Date(`${selectedDate}T12:00:00`));
       setSelectedDate("");
       setSelectedTime("09:00");
       setCapacity(String(selectedCourse.cuposTotales || 12));
+      setGroupName("");
+      setModality("");
+      setScheduleNote("");
       setSaveMessage({ rowId: "programacion", type: "success", text: "Guardado correctamente" });
     } catch {
       setFormError(SAVE_ERROR_MESSAGE);
@@ -528,6 +595,111 @@ export function AdminClient({
         [field]: value,
       },
     }));
+  }
+
+  function paymentEntryDraftFor(row: AdminCrmRow): PaymentEntryDraft {
+    return paymentEntryDrafts[row.idInscripcion] ?? {
+      monto: "",
+      metodoPago: row.metodoPago,
+      concepto: "Anticipo",
+      fechaPago: todayIsoDate(),
+      fechaVencimiento: "",
+      nota: "",
+    };
+  }
+
+  function updatePaymentEntryDraft(
+    rowId: string,
+    field: keyof PaymentEntryDraft,
+    value: string
+  ) {
+    const row = crmRows.find((item) => item.idInscripcion === rowId);
+    setPaymentEntryDrafts((current) => ({
+      ...current,
+      [rowId]: {
+        ...(current[rowId] ?? {
+          monto: "",
+          metodoPago: row?.metodoPago ?? "",
+          concepto: "Anticipo" as const,
+          fechaPago: todayIsoDate(),
+          fechaVencimiento: "",
+          nota: "",
+        }),
+        [field]: field === "concepto"
+          ? value as PaymentEntryDraft["concepto"]
+          : value,
+      },
+    }));
+  }
+
+  async function saveNewPayment(row: AdminCrmRow) {
+    const draft = paymentEntryDraftFor(row);
+    const monto = parsePositiveNumber(draft.monto);
+    if (Number.isNaN(monto) || monto <= 0) {
+      setSaveMessage({ rowId: row.idInscripcion, type: "error", text: "Escribe un monto válido." });
+      return;
+    }
+
+    setSavingKey(`${row.idInscripcion}:new-payment`);
+    setSaveMessage(null);
+    try {
+      const response = await fetch("/admin/api/pagos", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          idInscripcion: row.idInscripcion,
+          idPaciente: row.idPaciente,
+          idServicio: row.idServicio,
+          nombreAlumnoAlPagar: row.nombreCompleto,
+          nombreProgramaAlPagar: row.cursoNombre,
+          fechaPago: draft.fechaPago,
+          fechaVencimiento: draft.fechaVencimiento,
+          monto,
+          metodoPago: draft.metodoPago,
+          concepto: draft.concepto,
+          nota: draft.nota,
+        }),
+      });
+      const payload = (await response.json().catch(() => ({}))) as {
+        pago?: AdminPayment;
+        totalPagado?: number;
+        balancePendiente?: number;
+        estadoPago?: string;
+        metodoPago?: string;
+        error?: string;
+      };
+      if (!response.ok || !payload.pago || typeof payload.totalPagado !== "number") {
+        throw new Error(payload.error || SAVE_ERROR_MESSAGE);
+      }
+
+      const nextStatus = payload.balancePendiente && payload.balancePendiente > 0
+        ? "Anticipo confirmado"
+        : "Inscripción completa";
+      setLocalCrmOverrides((current) => ({
+        ...current,
+        [row.idInscripcion]: {
+          ...current[row.idInscripcion],
+          montoPagado: payload.totalPagado,
+          balancePendiente: payload.balancePendiente ?? 0,
+          estadoPago: payload.estadoPago ?? "",
+          metodoPago: payload.metodoPago ?? draft.metodoPago,
+          crmStatus: nextStatus,
+        },
+      }));
+      setLocalPaymentHistory((current) => ({
+        ...current,
+        [row.idInscripcion]: [...(current[row.idInscripcion] ?? []), payload.pago as AdminPayment],
+      }));
+      setPaymentEntryDrafts((current) => ({
+        ...current,
+        [row.idInscripcion]: { ...draft, monto: "", nota: "" },
+      }));
+      setSaveMessage({ rowId: row.idInscripcion, type: "success", text: "Pago guardado correctamente" });
+    } catch {
+      setSaveMessage({ rowId: row.idInscripcion, type: "error", text: SAVE_ERROR_MESSAGE });
+    } finally {
+      setSavingKey(null);
+    }
   }
 
   async function savePayment(row: AdminCrmRow, action: PaymentAction) {
@@ -602,6 +774,58 @@ export function AdminClient({
           ...current[row.idInscripcion],
           estadoAsistencia,
         },
+      }));
+      setSaveMessage({ rowId: row.idInscripcion, type: "success", text: "Guardado correctamente" });
+    } catch {
+      setSaveMessage({ rowId: row.idInscripcion, type: "error", text: SAVE_ERROR_MESSAGE });
+    } finally {
+      setSavingKey(null);
+    }
+  }
+
+  async function saveProgramacion(row: AdminCrmRow, idProgramacion: string) {
+    setSavingKey(`${row.idInscripcion}:programacion`);
+    setSaveMessage(null);
+    try {
+      const response = await fetch("/admin/api/inscripciones", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          idInscripcion: row.idInscripcion,
+          estadoAsistencia: row.estadoAsistencia || "Inscrito",
+          idProgramacion,
+        }),
+      });
+      const payload = (await response.json().catch(() => ({}))) as {
+        idProgramacion?: string;
+        idProgramacionSupported?: boolean;
+        error?: string;
+      };
+      if (!response.ok) throw new Error(payload.error || SAVE_ERROR_MESSAGE);
+      if (!payload.idProgramacionSupported) {
+        setSaveMessage({
+          rowId: row.idInscripcion,
+          type: "error",
+          text: "No se pudo asignar el grupo: falta la columna ID_Programacion.",
+        });
+        return;
+      }
+
+      setLocalCrmOverrides((current) => ({
+        ...current,
+        [row.idInscripcion]: {
+          ...current[row.idInscripcion],
+          idProgramacion: payload.idProgramacion ?? idProgramacion,
+        },
+      }));
+      setEvents((current) => current.map((event) => {
+        if (event.id === row.idProgramacion && event.id !== idProgramacion) {
+          return { ...event, remaining: event.remaining + 1 };
+        }
+        if (event.id === idProgramacion && event.id !== row.idProgramacion) {
+          return { ...event, remaining: Math.max(event.remaining - 1, 0) };
+        }
+        return event;
       }));
       setSaveMessage({ rowId: row.idInscripcion, type: "success", text: "Guardado correctamente" });
     } catch {
@@ -912,6 +1136,11 @@ export function AdminClient({
                     const waHref = whatsappHref(row.whatsapp, row.nombreCompleto, row.cursoNombre);
                     const isExpanded = expandedRow === row.idInscripcion;
                     const paymentDraft = paymentDraftFor(row);
+                    const paymentEntryDraft = paymentEntryDraftFor(row);
+                    const rowPaymentHistory = [
+                      ...historialPagos.filter((payment) => payment.idInscripcion === row.idInscripcion),
+                      ...(localPaymentHistory[row.idInscripcion] ?? []),
+                    ];
                     const paymentAmount = parsePositiveNumber(paymentDraft.montoPagado || "0");
                     const paymentBalance = Number.isNaN(paymentAmount)
                       ? row.balancePendiente
@@ -1022,6 +1251,36 @@ export function AdminClient({
                               </div>
                             </div>
 
+                            <div className="rounded-2xl border border-[#0D3B22]/15 bg-[#FDFBF7] p-4">
+                              <div className="flex flex-col gap-1 sm:flex-row sm:items-center sm:justify-between">
+                                <div>
+                                  <p className="text-xs font-semibold uppercase tracking-[0.16em] text-[#6B6048]">Grupo / programación</p>
+                                  <p className="mt-1 text-[11px] text-[#8A7D69]">Asigna esta inscripción a una fecha con cupos reales.</p>
+                                </div>
+                                {row.idProgramacion ? <StatusPill status="Grupo asignado" /> : <StatusPill status="Sin grupo" />}
+                              </div>
+                              <div className="mt-3 flex flex-col gap-2 sm:flex-row sm:items-center">
+                                <select
+                                  value={row.idProgramacion || ""}
+                                  disabled={savingKey === `${row.idInscripcion}:programacion` || events.filter((event) => event.courseId === row.idServicio).length === 0}
+                                  onChange={(event) => saveProgramacion(row, event.target.value)}
+                                  className="h-10 min-w-0 flex-1 rounded-xl border border-[#D4AF37]/30 bg-white px-3 text-sm font-medium text-[#0D3B22] outline-none focus:border-[#0D3B22] disabled:opacity-60"
+                                >
+                                  <option value="">Sin grupo asignado</option>
+                                  {events
+                                    .filter((event) => event.courseId === row.idServicio)
+                                    .map((event) => (
+                                      <option key={event.id} value={event.id}>
+                                        {event.groupName || event.courseName} · {formatDate(event.date)} · {event.time} · {event.remaining}/{event.capacity}
+                                      </option>
+                                    ))}
+                                </select>
+                                {events.filter((event) => event.courseId === row.idServicio).length === 0 ? (
+                                  <span className="text-xs text-[#8A7D69]">Crea primero una programación.</span>
+                                ) : null}
+                              </div>
+                            </div>
+
                             {/* Persist payment information in Control_Anticipos */}
                             <div className="rounded-2xl border border-[#D4AF37]/25 bg-[#FDFBF7] p-4">
                               <div className="flex flex-col gap-1 sm:flex-row sm:items-center sm:justify-between">
@@ -1065,6 +1324,94 @@ export function AdminClient({
                                   </button>
                                 ))}
                               </div>
+                            </div>
+
+                            <div className="rounded-2xl border border-[#D4AF37]/25 bg-white p-4">
+                              <div className="flex flex-col gap-1 sm:flex-row sm:items-center sm:justify-between">
+                                <div>
+                                  <p className="text-xs font-semibold uppercase tracking-[0.16em] text-[#6B6048]">Registrar nuevo pago</p>
+                                  <p className="mt-1 text-[11px] text-[#8A7D69]">Cada pago queda como historial y actualiza el resumen.</p>
+                                </div>
+                                <span className="text-xs font-semibold text-[#0D3B22]">Total pagado: {formatDop(row.montoPagado)}</span>
+                              </div>
+                              <div className="mt-3 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+                                <label className="block">
+                                  <span className="text-[10px] font-semibold uppercase tracking-[0.14em] text-[#8A7D69]">Monto</span>
+                                  <input
+                                    value={paymentEntryDraft.monto}
+                                    onChange={(event) => updatePaymentEntryDraft(row.idInscripcion, "monto", event.target.value)}
+                                    inputMode="decimal"
+                                    placeholder="0"
+                                    className="mt-1.5 h-10 w-full rounded-xl border border-[#D4AF37]/30 bg-[#FDFBF7] px-3 text-sm font-medium text-[#0D3B22] outline-none focus:border-[#0D3B22]"
+                                  />
+                                </label>
+                                <label className="block">
+                                  <span className="text-[10px] font-semibold uppercase tracking-[0.14em] text-[#8A7D69]">Método</span>
+                                  <input
+                                    value={paymentEntryDraft.metodoPago}
+                                    onChange={(event) => updatePaymentEntryDraft(row.idInscripcion, "metodoPago", event.target.value)}
+                                    placeholder="Transferencia, efectivo…"
+                                    className="mt-1.5 h-10 w-full rounded-xl border border-[#D4AF37]/30 bg-[#FDFBF7] px-3 text-sm font-medium text-[#0D3B22] outline-none focus:border-[#0D3B22]"
+                                  />
+                                </label>
+                                <label className="block">
+                                  <span className="text-[10px] font-semibold uppercase tracking-[0.14em] text-[#8A7D69]">Concepto</span>
+                                  <select
+                                    value={paymentEntryDraft.concepto}
+                                    onChange={(event) => updatePaymentEntryDraft(row.idInscripcion, "concepto", event.target.value)}
+                                    className="mt-1.5 h-10 w-full rounded-xl border border-[#D4AF37]/30 bg-[#FDFBF7] px-3 text-sm font-medium text-[#0D3B22] outline-none focus:border-[#0D3B22]"
+                                  >
+                                    {PAYMENT_CONCEPTS.map((concept) => <option key={concept} value={concept}>{concept}</option>)}
+                                  </select>
+                                </label>
+                                <label className="block">
+                                  <span className="text-[10px] font-semibold uppercase tracking-[0.14em] text-[#8A7D69]">Fecha de pago</span>
+                                  <input type="date" value={paymentEntryDraft.fechaPago} onChange={(event) => updatePaymentEntryDraft(row.idInscripcion, "fechaPago", event.target.value)} className="mt-1.5 h-10 w-full rounded-xl border border-[#D4AF37]/30 bg-[#FDFBF7] px-3 text-sm font-medium text-[#0D3B22] outline-none focus:border-[#0D3B22]" />
+                                </label>
+                                <label className="block">
+                                  <span className="text-[10px] font-semibold uppercase tracking-[0.14em] text-[#8A7D69]">Vencimiento (opcional)</span>
+                                  <input type="date" value={paymentEntryDraft.fechaVencimiento} onChange={(event) => updatePaymentEntryDraft(row.idInscripcion, "fechaVencimiento", event.target.value)} className="mt-1.5 h-10 w-full rounded-xl border border-[#D4AF37]/30 bg-[#FDFBF7] px-3 text-sm font-medium text-[#0D3B22] outline-none focus:border-[#0D3B22]" />
+                                </label>
+                                <label className="block">
+                                  <span className="text-[10px] font-semibold uppercase tracking-[0.14em] text-[#8A7D69]">Nota</span>
+                                  <input value={paymentEntryDraft.nota} onChange={(event) => updatePaymentEntryDraft(row.idInscripcion, "nota", event.target.value)} placeholder="Opcional" className="mt-1.5 h-10 w-full rounded-xl border border-[#D4AF37]/30 bg-[#FDFBF7] px-3 text-sm font-medium text-[#0D3B22] outline-none focus:border-[#0D3B22]" />
+                                </label>
+                              </div>
+                              <button
+                                type="button"
+                                disabled={savingKey === `${row.idInscripcion}:new-payment`}
+                                onClick={() => saveNewPayment(row)}
+                                className="mt-3 inline-flex h-10 items-center justify-center gap-2 rounded-xl bg-[#0D3B22] px-4 text-xs font-semibold text-[#FDFBF7] transition-colors hover:bg-[#145332] disabled:cursor-wait disabled:opacity-60"
+                              >
+                                <Save className="h-3.5 w-3.5" />
+                                {savingKey === `${row.idInscripcion}:new-payment` ? "Guardando…" : "Guardar pago"}
+                              </button>
+                            </div>
+
+                            <div className="rounded-2xl border border-[#0D3B22]/10 bg-[#FDFBF7] p-4">
+                              <div className="flex items-center justify-between gap-3">
+                                <p className="text-xs font-semibold uppercase tracking-[0.16em] text-[#6B6048]">Historial de pagos</p>
+                                <span className="text-xs font-semibold text-[#8A7D69]">{rowPaymentHistory.length} registro{rowPaymentHistory.length === 1 ? "" : "s"}</span>
+                              </div>
+                              {rowPaymentHistory.length > 0 ? (
+                                <div className="mt-3 space-y-2">
+                                  {rowPaymentHistory.map((payment) => (
+                                    <div key={payment.idPago} className="flex flex-col gap-2 rounded-xl border border-[#E7DAC2] bg-white p-3 text-xs sm:flex-row sm:items-center sm:justify-between">
+                                      <div>
+                                        <p className="font-semibold text-[#0D3B22]">{formatDate(payment.fechaPago)} · {payment.concepto}</p>
+                                        <p className="mt-0.5 text-[#6B6048]">{payment.metodoPago || "Método no indicado"}{payment.fechaVencimiento ? ` · vence ${formatDate(payment.fechaVencimiento)}` : ""}</p>
+                                        {payment.nota ? <p className="mt-0.5 text-[#8A7D69]">{payment.nota}</p> : null}
+                                      </div>
+                                      <div className="flex items-center gap-2 sm:justify-end">
+                                        <span className="font-bold text-emerald-700">{formatDop(payment.monto)}</span>
+                                        <StatusPill status={payment.estadoTiempo || "Sin fecha límite"} />
+                                      </div>
+                                    </div>
+                                  ))}
+                                </div>
+                              ) : (
+                                <p className="mt-3 text-sm text-[#8A7D69]">Todavía no hay pagos registrados en el historial.</p>
+                              )}
                             </div>
 
                             {/* Persist attendance and follow-up in Inscripciones_Citas */}
@@ -1123,6 +1470,32 @@ export function AdminClient({
                 <h2 className="suvoga-serif mt-1 text-3xl font-semibold text-[#0D3B22]">Vista por Curso</h2>
                 <p className="mt-1 text-sm text-[#6B6048]">Cupos, inscritas, anticipos y estado comercial de cada programa.</p>
               </div>
+
+              {events.length > 0 ? (
+                <div className="mb-6 rounded-2xl border border-[#0D3B22]/10 bg-[#FDFBF7] p-4">
+                  <div className="flex items-center justify-between gap-3">
+                    <div>
+                      <p className="text-xs font-semibold uppercase tracking-[0.16em] text-[#6B6048]">Grupos y fechas reales</p>
+                      <p className="mt-1 text-sm text-[#8A7D69]">Seguimiento de cupos y pagos por programación.</p>
+                    </div>
+                    <span className="rounded-full bg-white px-3 py-1 text-xs font-semibold text-[#0D3B22]">{events.length} grupo{events.length === 1 ? "" : "s"}</span>
+                  </div>
+                  <div className="mt-3 grid gap-3 md:grid-cols-2 xl:grid-cols-3">
+                    {events.map((event) => (
+                      <article key={event.id} className="rounded-xl border border-[#E7DAC2] bg-white p-3">
+                        <p className="text-sm font-semibold text-[#0D3B22]">{event.groupName || event.courseName}</p>
+                        <p className="mt-1 text-xs text-[#6B6048]">{formatDate(event.date)} · {event.time}{event.modality ? ` · ${event.modality}` : ""}</p>
+                        <div className="mt-3 grid grid-cols-3 gap-2 text-[11px]">
+                          <div><span className="block text-[#8A7D69]">Cupos</span><strong className="text-[#0D3B22]">{event.remaining}/{event.capacity}</strong></div>
+                          <div><span className="block text-[#8A7D69]">Inscritas</span><strong className="text-[#0D3B22]">{event.enrolled ?? 0}</strong></div>
+                          <div><span className="block text-[#8A7D69]">Cobrado</span><strong className="text-emerald-700">{event.paymentsReceived ? formatDop(event.paymentsReceived) : "—"}</strong></div>
+                        </div>
+                        {event.pendingPayments ? <p className="mt-2 text-[11px] font-semibold text-orange-700">{event.pendingPayments} con balance pendiente</p> : null}
+                      </article>
+                    ))}
+                  </div>
+                </div>
+              ) : null}
 
               {visibleCourseViews.length > 0 ? (
                 <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
@@ -1312,6 +1685,22 @@ export function AdminClient({
                 <label className="block">
                   <span className="text-xs font-semibold uppercase tracking-[0.16em] text-[#6B6048]">Cupos</span>
                   <input value={capacity} onChange={(e) => setCapacity(e.target.value)} inputMode="numeric" placeholder="12" className="mt-2 h-11 w-full rounded-2xl border border-[#D4AF37]/30 bg-[#FDFBF7] px-3 text-sm font-medium text-[#0D3B22] outline-none transition-colors placeholder:text-[#8A7D69] focus:border-[#0D3B22]" />
+                </label>
+
+                <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-1">
+                  <label className="block">
+                    <span className="text-xs font-semibold uppercase tracking-[0.16em] text-[#6B6048]">Nombre del grupo (opcional)</span>
+                    <input value={groupName} onChange={(e) => setGroupName(e.target.value)} placeholder="Grupo de junio" className="mt-2 h-11 w-full rounded-2xl border border-[#D4AF37]/30 bg-[#FDFBF7] px-3 text-sm font-medium text-[#0D3B22] outline-none transition-colors placeholder:text-[#8A7D69] focus:border-[#0D3B22]" />
+                  </label>
+                  <label className="block">
+                    <span className="text-xs font-semibold uppercase tracking-[0.16em] text-[#6B6048]">Modalidad (opcional)</span>
+                    <input value={modality} onChange={(e) => setModality(e.target.value)} placeholder="Presencial / Virtual" className="mt-2 h-11 w-full rounded-2xl border border-[#D4AF37]/30 bg-[#FDFBF7] px-3 text-sm font-medium text-[#0D3B22] outline-none transition-colors placeholder:text-[#8A7D69] focus:border-[#0D3B22]" />
+                  </label>
+                </div>
+
+                <label className="block">
+                  <span className="text-xs font-semibold uppercase tracking-[0.16em] text-[#6B6048]">Nota (opcional)</span>
+                  <textarea value={scheduleNote} onChange={(e) => setScheduleNote(e.target.value)} placeholder="Información operativa del grupo" rows={2} className="mt-2 w-full rounded-2xl border border-[#D4AF37]/30 bg-[#FDFBF7] px-3 py-2 text-sm font-medium text-[#0D3B22] outline-none transition-colors placeholder:text-[#8A7D69] focus:border-[#0D3B22]" />
                 </label>
 
                 {formError ? <p className="rounded-2xl border border-[#D4AF37]/30 bg-[#D4AF37]/10 px-3 py-2 text-sm font-medium text-[#8D7530]">{formError}</p> : null}
