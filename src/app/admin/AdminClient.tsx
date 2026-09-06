@@ -1,6 +1,7 @@
 "use client";
 
 import { FormEvent, useEffect, useMemo, useState } from "react";
+import { useRouter } from "next/navigation";
 import {
   BarChart3,
   BookOpen,
@@ -145,6 +146,19 @@ type SaveMessage = {
   rowId: string;
   type: "success" | "error";
   text: string;
+};
+type ScheduleRequestBody = {
+  idServicio: string;
+  fechaHora: string;
+  cuposTotales: number;
+  nombreGrupo: string;
+  modalidad: string;
+  nota: string;
+};
+type ScheduleDiagnostic = {
+  status: number | null;
+  error: string;
+  payload: ScheduleRequestBody;
 };
 type PaymentDraft = {
   montoPagado: string;
@@ -308,6 +322,16 @@ function todayIsoDate() {
   return new Date().toISOString().slice(0, 10);
 }
 
+function isValidIsoDate(value: string) {
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(value)) return false;
+  const [year, month, day] = value.split("-").map(Number);
+  const parsed = new Date(Date.UTC(year, month - 1, day));
+  return year >= 1
+    && parsed.getUTCFullYear() === year
+    && parsed.getUTCMonth() === month - 1
+    && parsed.getUTCDate() === day;
+}
+
 function normalizeStoredCourses(value: unknown): AdminCourse[] {
   if (!Array.isArray(value)) return [];
   return value
@@ -387,6 +411,7 @@ export function AdminClient({
   historialPagos,
   source,
 }: AdminClientProps) {
+  const router = useRouter();
   const [activeTab, setActiveTab] = useState<AdminTab>("dashboard");
   const [crmQuery, setCrmQuery] = useState("");
   const [crmFilter, setCrmFilter] = useState<string>("Todos");
@@ -410,6 +435,7 @@ export function AdminClient({
   const [localPaymentHistory, setLocalPaymentHistory] = useState<Record<string, AdminPayment[]>>({});
   const [savingKey, setSavingKey] = useState<string | null>(null);
   const [saveMessage, setSaveMessage] = useState<SaveMessage | null>(null);
+  const [scheduleDiagnostic, setScheduleDiagnostic] = useState<ScheduleDiagnostic | null>(null);
   const [expandedRow, setExpandedRow] = useState<string | null>(null);
   const [includeTestRecords, setIncludeTestRecords] = useState(false);
 
@@ -517,38 +543,67 @@ export function AdminClient({
     event.preventDefault();
     setFormError("");
     setSaveMessage(null);
-    const seats = Number.parseInt(capacity, 10);
-    const validDate = /^\d{4}-\d{2}-\d{2}$/.test(selectedDate);
-    const validTime = /^\d{2}:\d{2}$/.test(selectedTime);
-    if (!selectedCourse || !validDate || !validTime || !Number.isFinite(seats) || seats < 1) {
-      setFormError("Completa curso, fecha, hora y cupos con formato valido.");
+    setScheduleDiagnostic(null);
+    const seats = Number(capacity.trim());
+    const requestBody: ScheduleRequestBody = {
+      idServicio: selectedCourse?.idServicio ?? courseId.trim(),
+      fechaHora: selectedDate && selectedTime ? `${selectedDate}T${selectedTime}` : "",
+      cuposTotales: Number.isFinite(seats) ? seats : 0,
+      nombreGrupo: groupName.trim(),
+      modalidad: modality.trim(),
+      nota: scheduleNote.trim(),
+    };
+    const validDate = isValidIsoDate(selectedDate);
+    const validTime = /^(?:[01]\d|2[0-3]):[0-5]\d$/.test(selectedTime);
+    const validCapacity = /^\d+$/.test(capacity.trim()) && Number.isSafeInteger(seats) && seats > 0;
+    const validationError = !courseId.trim() || !selectedCourse
+      ? "Selecciona un curso válido."
+      : !validDate
+        ? "La fecha debe tener formato YYYY-MM-DD."
+        : !validTime
+          ? "La hora debe tener formato HH:mm."
+          : !validCapacity
+            ? "Los cupos deben ser un número entero mayor que 0."
+            : "";
+    if (validationError) {
+      setFormError(validationError);
+      setScheduleDiagnostic({ status: null, error: validationError, payload: requestBody });
       return;
     }
+    const courseToSchedule = selectedCourse;
+    if (!courseToSchedule) return;
 
     setSavingKey("programacion");
     try {
       const response = await fetch("/admin/api/programaciones", {
         method: "POST",
+        credentials: "same-origin",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          idServicio: selectedCourse.idServicio,
-          fechaHora: `${selectedDate}T${selectedTime}`,
-          cuposTotales: seats,
-          nombreGrupo: groupName,
-          modalidad: modality,
-          nota: scheduleNote,
-        }),
+        body: JSON.stringify(requestBody),
       });
-      const payload = (await response.json().catch(() => ({}))) as Partial<AdminScheduledCourse> & { idProgramacion?: string; error?: string };
+      const payload = (await response.json().catch(() => ({}))) as Partial<AdminScheduledCourse> & {
+        idProgramacion?: string;
+        error?: string;
+        message?: string;
+      };
+      const endpointError = typeof payload.error === "string" && payload.error.trim()
+        ? payload.error
+        : typeof payload.message === "string" && payload.message.trim()
+          ? payload.message
+          : SAVE_ERROR_MESSAGE;
       const idProgramacion = payload.idProgramacion;
-      if (!response.ok || !idProgramacion) throw new Error(payload.error || SAVE_ERROR_MESSAGE);
+      if (!response.ok || !idProgramacion) {
+        setScheduleDiagnostic({ status: response.status, error: endpointError, payload: requestBody });
+        setSaveMessage({ rowId: "programacion", type: "error", text: endpointError });
+        return;
+      }
 
       setEvents((current) => [
         ...current,
         {
           id: idProgramacion,
-          courseId: selectedCourse.idServicio,
-          courseName: selectedCourse.nombre,
+          courseId: courseToSchedule.idServicio,
+          courseName: courseToSchedule.nombre,
           date: selectedDate,
           time: selectedTime,
           capacity: seats,
@@ -563,15 +618,18 @@ export function AdminClient({
         },
       ]);
       setCurrentMonth(new Date(`${selectedDate}T12:00:00`));
+      setSaveMessage({ rowId: "programacion", type: "success", text: "Guardado correctamente" });
+      router.refresh();
       setSelectedDate("");
       setSelectedTime("09:00");
-      setCapacity(String(selectedCourse.cuposTotales || 12));
+      setCapacity(String(courseToSchedule.cuposTotales || 12));
       setGroupName("");
       setModality("");
       setScheduleNote("");
-      setSaveMessage({ rowId: "programacion", type: "success", text: "Guardado correctamente" });
-    } catch {
-      setSaveMessage({ rowId: "programacion", type: "error", text: SAVE_ERROR_MESSAGE });
+    } catch (error) {
+      const errorMessage = error instanceof Error && error.message ? error.message : SAVE_ERROR_MESSAGE;
+      setScheduleDiagnostic({ status: null, error: errorMessage, payload: requestBody });
+      setSaveMessage({ rowId: "programacion", type: "error", text: errorMessage });
     } finally {
       setSavingKey(null);
     }
@@ -1673,11 +1731,11 @@ export function AdminClient({
                 <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-1">
                   <label className="block">
                     <span className="text-xs font-semibold uppercase tracking-[0.16em] text-[#6B6048]">Fecha</span>
-                    <input value={selectedDate} onChange={(e) => setSelectedDate(e.target.value)} inputMode="numeric" placeholder="2026-05-18" className="mt-2 h-11 w-full rounded-2xl border border-[#D4AF37]/30 bg-[#FDFBF7] px-3 text-sm font-medium text-[#0D3B22] outline-none transition-colors placeholder:text-[#8A7D69] focus:border-[#0D3B22]" />
+                    <input type="date" value={selectedDate} onChange={(e) => setSelectedDate(e.target.value)} className="mt-2 h-11 w-full rounded-2xl border border-[#D4AF37]/30 bg-[#FDFBF7] px-3 text-sm font-medium text-[#0D3B22] outline-none transition-colors placeholder:text-[#8A7D69] focus:border-[#0D3B22]" />
                   </label>
                   <label className="block">
                     <span className="text-xs font-semibold uppercase tracking-[0.16em] text-[#6B6048]">Hora</span>
-                    <input value={selectedTime} onChange={(e) => setSelectedTime(e.target.value)} inputMode="numeric" placeholder="09:00" className="mt-2 h-11 w-full rounded-2xl border border-[#D4AF37]/30 bg-[#FDFBF7] px-3 text-sm font-medium text-[#0D3B22] outline-none transition-colors placeholder:text-[#8A7D69] focus:border-[#0D3B22]" />
+                    <input type="time" value={selectedTime} onChange={(e) => setSelectedTime(e.target.value)} className="mt-2 h-11 w-full rounded-2xl border border-[#D4AF37]/30 bg-[#FDFBF7] px-3 text-sm font-medium text-[#0D3B22] outline-none transition-colors placeholder:text-[#8A7D69] focus:border-[#0D3B22]" />
                   </label>
                 </div>
 
@@ -1712,7 +1770,35 @@ export function AdminClient({
                     {saveMessage.text}
                   </p>
                 ) : null}
+                {scheduleDiagnostic ? (
+                  <div role="alert" className="rounded-2xl border border-red-200 bg-red-50 px-3 py-3 text-sm text-red-800">
+                    <p className="font-semibold">Diagnóstico temporal</p>
+                    {scheduleDiagnostic.status !== null ? <p className="mt-1">Status HTTP: {scheduleDiagnostic.status}</p> : null}
+                    <p className="mt-1">Error: {scheduleDiagnostic.error}</p>
+                    <pre className="mt-2 overflow-x-auto whitespace-pre-wrap break-all rounded-xl bg-white/70 p-2 text-xs text-red-900">
+                      {JSON.stringify(scheduleDiagnostic.payload, null, 2)}
+                    </pre>
+                  </div>
+                ) : null}
               </form>
+              <div className="mt-6 border-t border-[#D4AF37]/20 pt-5">
+                <h4 className="text-xs font-semibold uppercase tracking-[0.16em] text-[#6B6048]">Programaciones guardadas</h4>
+                {events.length ? (
+                  <ul className="mt-3 space-y-2">
+                    {events.slice(-8).reverse().map((scheduledEvent) => (
+                      <li key={scheduledEvent.id} className="rounded-2xl border border-[#D4AF37]/20 bg-[#FDFBF7] px-3 py-2 text-sm text-[#0D3B22]">
+                        <div className="flex items-center justify-between gap-3">
+                          <span className="font-semibold">{scheduledEvent.date} · {scheduledEvent.time}</span>
+                          <span className="shrink-0 text-xs font-semibold text-[#6B6048]">{scheduledEvent.capacity} cupos</span>
+                        </div>
+                        <p className="mt-1 truncate text-xs text-[#4E6658]">{scheduledEvent.courseName}</p>
+                      </li>
+                    ))}
+                  </ul>
+                ) : (
+                  <p className="mt-3 text-sm text-[#6B6048]">Todavía no hay programaciones.</p>
+                )}
+              </div>
             </aside>
           </section>
         ) : null}
