@@ -117,12 +117,6 @@ export function Footer() {
                 </a>
               </p>
             ) : null}
-            <Link
-              href="/admin"
-              className="flex min-h-11 items-center px-1 hover:text-[#D4AF37] hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#D4AF37]/70 focus-visible:rounded-lg"
-            >
-              Acceso Administrativo
-            </Link>
           </div>
         </div>
       </div>

@@ -23,9 +23,10 @@ export const metadata: Metadata = {
   openGraph: {
     title: seoConfig.defaultTitle,
     description: seoConfig.defaultDescription,
-    url: "/",
+    url: getSiteUrl(),
     siteName: seoConfig.siteName,
     type: "website",
+    ...(seoConfig.openGraphImage ? { images: [seoConfig.openGraphImage] } : {}),
   },
 };
 

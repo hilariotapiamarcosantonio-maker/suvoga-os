@@ -2,7 +2,7 @@ import { academyConfig } from "./academy.config";
 import { brandingConfig } from "./branding.config";
 
 export const seoConfig = {
-  fallbackSiteUrl: "https://suvoga-os-tjaa.vercel.app",
+  fallbackSiteUrl: "https://www.suvogaescuelaycentrodemasajes.com.do",
   defaultTitle: `${brandingConfig.productName} | Masoterapia, estética y bienestar`,
   defaultDescription: academyConfig.description,
   siteName: brandingConfig.productName,
