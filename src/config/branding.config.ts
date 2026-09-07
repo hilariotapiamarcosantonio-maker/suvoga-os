@@ -39,8 +39,8 @@ export const brandingConfig = {
       },
     },
   },
-  favicon: "/favicon.ico",
-  openGraphImage: "",
+  favicon: "/branding/suvoga-favicon.png",
+  openGraphImage: "/branding/suvoga-og.png",
 } as const;
 
 export type BrandingConfig = typeof brandingConfig;

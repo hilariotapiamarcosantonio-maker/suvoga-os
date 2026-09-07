@@ -34,9 +34,9 @@ export function getWhatsAppNumber(): string {
   return OFFICIAL_WHATSAPP_NUMBER;
 }
 
-/** Email address, with optional env override. */
+/** Owner-approved public email address. */
 export function getEmail(): string {
-  return process.env.NEXT_PUBLIC_SUVOGA_EMAIL?.trim() || OFFICIAL_EMAIL;
+  return OFFICIAL_EMAIL;
 }
 
 /** Default (non-course) WhatsApp message, with optional env override. */

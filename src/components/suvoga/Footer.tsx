@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/image";
 import { Mail, MessageCircle } from "lucide-react";
 import { contactInfo } from "@/data/contact";
 import { brand } from "@/lib/brand";
@@ -18,7 +19,13 @@ export function Footer() {
         <div className="grid gap-10 sm:grid-cols-2 lg:grid-cols-3">
           {/* Brand */}
           <div className="space-y-4">
-            <h3 className="suvoga-serif text-2xl font-semibold text-white">{brand.productName}</h3>
+            <Image
+              src="/branding/suvoga-logo.png"
+              alt={brand.productName}
+              width={88}
+              height={89}
+              className="h-20 w-20 object-contain"
+            />
             <p className="max-w-xs text-xs leading-relaxed text-[#EAE2D0]">{brand.tagline}</p>
             <div className="flex flex-col gap-2.5">
               <a

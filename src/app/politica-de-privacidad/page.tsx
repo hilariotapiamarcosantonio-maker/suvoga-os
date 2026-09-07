@@ -3,6 +3,7 @@ import Link from "next/link";
 import { ArrowLeft, ShieldCheck, Mail, Database, Eye } from "lucide-react";
 import { SuvogaWhatsAppButton } from "@/components/suvoga/SuvogaWhatsAppButton";
 import { brandingConfig } from "@/config/branding.config";
+import { contactConfig } from "@/config/contact.config";
 
 export const metadata: Metadata = {
   title: `Política de Privacidad | ${brandingConfig.productName}`,
@@ -109,8 +110,8 @@ export default function PoliticaPrivacidadPage() {
               Tienes derecho a consultar, rectificar, actualizar o solicitar la eliminación definitiva de tus datos personales de nuestros registros en cualquier momento. Para ejercer estos derechos, ponte en contacto enviando una solicitud formal a nuestra dirección oficial de correo electrónico:
             </p>
             <p className="mt-2 text-sm font-semibold text-[#0D3B22]">
-              <a href="mailto:asnamatem@gmail.com" className="underline decoration-[#D4AF37] hover:text-[#145332]">
-                asnamatem@gmail.com
+              <a href={`mailto:${contactConfig.email}`} className="underline decoration-[#D4AF37] hover:text-[#145332]">
+                {contactConfig.email}
               </a>
             </p>
           </div>

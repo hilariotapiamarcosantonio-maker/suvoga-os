@@ -3,6 +3,7 @@ import Link from "next/link";
 import { ArrowLeft, BookOpen, ShieldCheck, HelpCircle, Lock } from "lucide-react";
 import { SuvogaWhatsAppButton } from "@/components/suvoga/SuvogaWhatsAppButton";
 import { brandingConfig } from "@/config/branding.config";
+import { contactConfig } from "@/config/contact.config";
 
 export const metadata: Metadata = {
   title: `Términos y Condiciones | ${brandingConfig.productName}`,
@@ -108,7 +109,7 @@ export default function TerminosCondicionesPage() {
               Para coordinar tu matrícula, aclarar dudas de los términos del servicio o enviar consultas directas, puedes comunicarte a través de nuestros canales autorizados:
             </p>
             <ul className="list-disc pl-6 text-sm text-[#4E6658] space-y-2">
-              <li>Correo oficial: <a href="mailto:asnamatem@gmail.com" className="underline hover:text-[#145332]">asnamatem@gmail.com</a></li>
+              <li>Correo oficial: <a href={`mailto:${contactConfig.email}`} className="underline hover:text-[#145332]">{contactConfig.email}</a></li>
               <li>WhatsApp de atención: <a href="https://wa.me/18298389185" target="_blank" rel="noopener noreferrer" className="underline hover:text-[#145332]">829-838-9185</a></li>
             </ul>
           </div>

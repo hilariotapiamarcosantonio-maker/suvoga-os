@@ -6,7 +6,6 @@ import { SectionHeading } from "@/components/suvoga/SectionHeading";
 import { Reveal } from "@/components/suvoga/Reveal";
 import { SuvogaWhatsAppButton } from "@/components/suvoga/SuvogaWhatsAppButton";
 import { buildWhatsAppLink, suvogaContact } from "@/lib/suvoga-contact";
-import { academyConfig } from "@/config/academy.config";
 import { brandingConfig } from "@/config/branding.config";
 
 export const metadata: Metadata = {
@@ -36,7 +35,7 @@ const faqs = [
   },
   {
     q: "¿La certificación tiene aval?",
-    a: `Sí. Los certificados están avalados por ${academyConfig.shortName} y por la asociación profesional correspondiente, según el programa.`,
+    a: "Sí. Los cursos y certificaciones están avalados por la Asociación Nacional de Masajistas Terapéutas Manuales y Afines (AsNaMaTeM), según corresponda al programa.",
   },
 ];
 

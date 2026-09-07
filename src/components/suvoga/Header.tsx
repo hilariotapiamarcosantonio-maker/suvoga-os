@@ -2,9 +2,10 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { motion, AnimatePresence, useReducedMotion, type Variants } from "framer-motion";
-import { Menu, X, Leaf, MessageCircle, ArrowRight } from "lucide-react";
+import { Menu, X, MessageCircle, ArrowRight } from "lucide-react";
 import { contactInfo } from "@/data/contact";
 import { brand } from "@/lib/brand";
 import { headerNavigationLinks } from "@/config/navigation.config";
@@ -95,17 +96,14 @@ export function Header() {
           href="/"
           className="group inline-flex items-center gap-2 md:gap-3 rounded-2xl focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#D4AF37]/70 focus-visible:ring-offset-2 focus-visible:ring-offset-[#FDFBF7]"
         >
-          <span className="inline-flex h-9 w-9 md:h-11 md:w-11 items-center justify-center rounded-xl md:rounded-2xl border border-[#D4AF37]/30 bg-white text-[#0D3B22] shadow-sm shadow-[#0D3B22]/5 transition-colors group-hover:bg-[#F7F1E7]">
-            <Leaf className="h-4 w-4 md:h-5 md:w-5" />
-          </span>
-          <span className="flex flex-col leading-tight">
-            <span className="suvoga-serif text-lg md:text-2xl font-bold tracking-normal text-[#0D3B22]">
-              SuVoGa
-            </span>
-            <span className="text-[9px] md:text-[11px] font-semibold uppercase tracking-[0.05em] text-[#8A7D69]">
-              Escuela y Centro de Masajes
-            </span>
-          </span>
+          <Image
+            src="/branding/suvoga-logo.png"
+            alt="SuVoGa Escuela y Centro de Masajes"
+            width={64}
+            height={65}
+            priority
+            className="h-12 w-12 shrink-0 object-contain md:h-14 md:w-14"
+          />
         </Link>
 
         {/* Desktop Navigation Links + CTA (grouped so spacing never collapses at md) */}
@@ -171,17 +169,13 @@ export function Header() {
                 onClick={(e) => handleLinkClick(e, "/")}
                 className="group inline-flex items-center gap-2 rounded-2xl"
               >
-                <span className="inline-flex h-9 w-9 items-center justify-center rounded-xl border border-white/20 bg-white/10 text-white shadow-sm transition-colors">
-                  <Leaf className="h-4 w-4" />
-                </span>
-                <span className="flex flex-col leading-tight">
-                  <span className="suvoga-serif text-lg font-semibold tracking-normal text-white">
-                    SuVoGa
-                  </span>
-                  <span className="mt-0.5 text-[9px] font-semibold uppercase tracking-[0.05em] text-[#D4AF37]">
-                    Escuela y Centro de Masajes
-                  </span>
-                </span>
+                <Image
+                  src="/branding/suvoga-logo.png"
+                  alt="SuVoGa Escuela y Centro de Masajes"
+                  width={64}
+                  height={65}
+                  className="h-14 w-14 object-contain"
+                />
               </Link>
 
               {/* Close Button */}
